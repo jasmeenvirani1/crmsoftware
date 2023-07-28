@@ -1,0 +1,20 @@
+#kt_header_mobile_toggler {
+	display: none !important;
+}
+.was-validated .form-control:invalid, .form-control.is-invalid {
+	margin-bottom:0;
+}
+
+.kt-avatar {
+    margin-bottom: 10px;
+}
+
+div#profile_picture-error {
+	bottom: -25px;
+}
+
+.form-group .invalid-feedback, .form-group .valid-feedback {
+    font-weight: 500;
+    font-size: 11px;
+    white-space: nowrap;
+}
