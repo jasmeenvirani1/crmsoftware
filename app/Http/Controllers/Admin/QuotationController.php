@@ -15,6 +15,7 @@ use App\Models\Term;
 use App\Models\User;
 use App\Models\Organization;
 use App\Models\Notification;
+use App\Models\QuotationDetails;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Str;
@@ -91,13 +92,35 @@ class QuotationController extends Controller
 
             $recordId = Quotation::updateOrCreate(['id' => $request->id],  [
                 'companyname' => $request->company_name,
-                'personname' => json_encode(array_filter($request->personmame)),
-                'phonenumber' => json_encode(array_filter($request->phonenumber)),
-                'email' => json_encode(array_filter($request->email)),
                 'address' => $request->address,
                 'gst' => $request->gstin,
                 'notes' => $request->notes
-            ]);
+            ])->id;
+
+            if (request()->has('process_type')) {
+                QuotationDetails::where('quotation_id', $recordId)->delete();
+            }
+            if (request()->has('personmame')) {
+                $quotationDetailsArr = [];
+                for ($i = 0; $i < count($request->personmame); $i++) {
+                    $date_time = GetDateTime();
+                    if ($request->personmame[$i] != null && $request->phonenumber[$i] != null && $request->email[$i] != null) {
+                        $arr = [
+                            'quotation_id' => $recordId,
+                            'name' => $request->personmame[$i],
+                            'phone' => $request->phonenumber[$i],
+                            'email' => $request->email[$i],
+                            'created_at' => $date_time,
+                            'updated_at' => $date_time
+                        ];
+                        if ($i == 2) {
+                            prx($arr);
+                        }
+                        $quotationDetailsArr[] = $arr;
+                    }
+                }
+                QuotationDetails::insert($quotationDetailsArr);
+            }
 
             if ($recordId) {
                 session()->flash('success', 'Vendor created successfully');
@@ -130,7 +153,7 @@ class QuotationController extends Controller
      */
     public function edit($id)
     {
-        $data = Quotation::find($id);
+        $data = Quotation::with('quotationDetails')->find($id);
         $data1 = QuotationItemDetails::with('tech_specification')->select('*')->where('quotation_id', '=', $data->id)->get();
         $data2 = QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get();
         return view('admin.quotation.edit', ['title' => "Vendor", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'customer' => Customer::get(), 'terms' => Term::get(), 'tech' => TechSpecification::get(), 'product' => StockManagement::get(), 'data2' => QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get(), 'user' => User::all(), 'organization' => Organization::all()]);
@@ -145,7 +168,6 @@ class QuotationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
     }
 
     public function invoice($id)

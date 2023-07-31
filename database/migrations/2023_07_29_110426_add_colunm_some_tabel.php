@@ -13,18 +13,18 @@ class AddColunmSomeTabel extends Migration
      */
     public function up()
     {
-        // Schema::table('merchant_categories', function (Blueprint $table) {
-        //     $table->string('group_id')->nullable()->after('images');
-        // });
-        // Schema::table('vendor', function (Blueprint $table) {
-        //     $table->string('group_id')->nullable()->after('vendor_company_pincode');
-        // });
-        // Schema::table('quotation', function (Blueprint $table) {
-        //     $table->string('group_id')->nullable()->after('prepared_by');
-        // });
-        // Schema::table('stock_management', function (Blueprint $table) {
-        //     $table->string('group_id')->nullable()->after('notes');
-        // });
+        Schema::table('merchant_categories', function (Blueprint $table) {
+            $table->string('group_id')->nullable()->after('images');
+        });
+        Schema::table('vendor', function (Blueprint $table) {
+            $table->string('group_id')->nullable()->after('vendor_company_pincode');
+        });
+        Schema::table('quotation', function (Blueprint $table) {
+            $table->string('group_id')->nullable()->after('prepared_by');
+        });
+        Schema::table('stock_management', function (Blueprint $table) {
+            $table->string('group_id')->nullable()->after('notes');
+        });
         Schema::table('customer', function (Blueprint $table) {
             $table->string('group_id')->nullable()->after('cheque');
         });
@@ -37,18 +37,18 @@ class AddColunmSomeTabel extends Migration
      */
     public function down()
     {
-        // Schema::table('merchant_categories', function (Blueprint $table) {
-        //     $table->dropColumn('group_id');
-        // });
-        // Schema::table('vendor', function (Blueprint $table) {
-        //     $table->dropColumn('group_id');
-        // });
-        // Schema::table('quotation', function (Blueprint $table) {
-        //     $table->dropColumn('group_id');
-        // });
-        // Schema::table('stock_management', function (Blueprint $table) {
-        //     $table->dropColumn('group_id');
-        // });
+        Schema::table('merchant_categories', function (Blueprint $table) {
+            $table->dropColumn('group_id');
+        });
+        Schema::table('vendor', function (Blueprint $table) {
+            $table->dropColumn('group_id');
+        });
+        Schema::table('quotation', function (Blueprint $table) {
+            $table->dropColumn('group_id');
+        });
+        Schema::table('stock_management', function (Blueprint $table) {
+            $table->dropColumn('group_id');
+        });
         Schema::table('customer', function (Blueprint $table) {
             $table->dropColumn('group_id');
         });
