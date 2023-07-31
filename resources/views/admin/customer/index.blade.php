@@ -14,9 +14,9 @@
                         Dashboard </a>
                     <span class="kt-subheader__breadcrumbs-separator"></span>
                     <a href="{{url('admin/customer')}}" class="kt-subheader__breadcrumbs-link">
-                        {{$title}} </a>               
+                        {{$title}} </a>
                 </div>
-            </div>         
+            </div>
         </div>
     </div>
     <!-- end:: Subheader -->
@@ -34,7 +34,7 @@
                     </h3>
                 </div>
                 <div class="kt-portlet__head-toolbar">
-                    <div class="kt-portlet__head-wrapper">                
+                    <div class="kt-portlet__head-wrapper">
                         <div class="dropdown dropdown-inline">
                             <a href="{{url('admin/customer/create')}}" class="btn btn-brand btn-icon-sm" aria-expanded="false">
                                 <i class="flaticon2-plus"></i> Add Company
@@ -50,7 +50,7 @@
                 <table class="table table-separate table-head-custom table-checkable" id="customer_datatable">
                     <thead>
                         <tr>
-                            <th>Company Name</th>
+                            {{-- <th>Company Name</th> --}}
                             <th>Phone</th>
                             <th>Email</th>
                             <!--<th>Designation</th>-->

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class Customer extends Model
 {
@@ -34,7 +35,7 @@ class Customer extends Model
             return $value;
         }
     }
-    
+
     public function getPhonenumberAttribute($value)
     {
         try {
@@ -91,9 +92,26 @@ class Customer extends Model
             return $value;
         }
     }
-   
+
     // public function setAttribute($value)
     // {
     //     $this->attributes['name'] = Crypt::encryptString($value);
     // }
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->group_id = Auth::user()->group_id;
+        });
+    }
+
+    public function newQuery($excludeDeleted = true)
+    {
+        // Call the parent method to get the base query builder
+        $query = parent::newQuery($excludeDeleted);
+
+        // Add the default 'role' condition to the query
+        $query->where('group_id', Auth::user()->group_id);
+
+        return $query;
+    }
 }

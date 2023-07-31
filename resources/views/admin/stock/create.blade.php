@@ -68,7 +68,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('stock.store') }}" method="PUT" id="create_category"
+                            <form action="{{ route('stock.store') }}" method="POST" id="create_category"
                                 name="create_category" class="form-horizontal kt-form kt-form--label-right"
                                 enctype="multipart/form-data">
                                 @csrf

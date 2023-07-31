@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Group;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,8 @@ use App\Models\Notification;
 use DateTime;
 use Validator;
 
-class LoginController extends Controller {
+class LoginController extends Controller
+{
     /*
       |--------------------------------------------------------------------------
       | Login Controller
@@ -26,7 +28,7 @@ class LoginController extends Controller {
       |
      */
 
-use AuthenticatesUsers;
+    use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -36,15 +38,18 @@ use AuthenticatesUsers;
     //protected $redirectTo = RouteServiceProvider::HOME;
     protected $redirectTo = '/admin/dashboard';
 
-    public function index() {
+    public function index()
+    {
         return view('auth.login');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
-                    'email' => 'required|email',
-                    'password' => 'required'
+            'email' => 'required|email',
+            'password' => 'required',
+            'group_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -52,6 +57,7 @@ use AuthenticatesUsers;
         }
 
         if (Auth::attempt(['email' => $request->email, 'password' => request('password')])) {
+            User::where('email', $request->email)->update(['group_id' => $request->group_id]);
             $user = Auth::user();
             if ($user->user_type != 'Admin') {
                 \Auth::logout();
@@ -63,7 +69,7 @@ use AuthenticatesUsers;
               \Auth::logout();
               session()->flash('error', config('const.inactiveMsg'));
               return redirect('login');
-              } */        
+              } */
             return redirect()->route('dashboard');
         } else {
             session()->flash('login_error', 'Invalid Credentials');
@@ -76,13 +82,16 @@ use AuthenticatesUsers;
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
+        $group = Group::all();
+        view()->share('group', $group);
         $this->middleware('guest')->except('logout');
     }
 
-    public function logout() {
+    public function logout()
+    {
         \Auth::logout();
         return redirect()->route('login');
     }
-
 }

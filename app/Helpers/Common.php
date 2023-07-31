@@ -18,3 +18,18 @@ function uploadImage($file, $path)
         return $ex->getMessage();
     }
 }
+function AddDateTime($data, $action = 'store')
+{
+    $data = $data->except('_token');
+    $time = GetDateTime();
+    $data['updated_at'] = $time;
+    if ($action == 'store') {
+        $data['created_at'] = $time;
+    }
+    return $data;
+}
+function GetDateTime()
+{
+    $date_time = date('Y-m-d H:i:s');
+    return $date_time;
+}

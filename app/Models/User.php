@@ -9,7 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable {
+class User extends Authenticatable
+{
 
     use HasApiTokens,
         HasFactory,
@@ -30,6 +31,7 @@ class User extends Authenticatable {
         'user_referral_code',
         'user_type',
         'permission',
+        'group_id',
         'is_active',
         'created_at',
         'updated_at',

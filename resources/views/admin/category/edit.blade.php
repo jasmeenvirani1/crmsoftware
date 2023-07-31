@@ -64,7 +64,7 @@
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label">Name</label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <input type="text" pattern="\d*" maxlength="20" name="name" value="{{old('name',isset($data->name)?$data->name:'')}}" id="name" class="form-control" placeholder="category name">
+                                                <input type="text" pattern="" maxlength="20" name="name" value="{{old('name',isset($data->name)?$data->name:'')}}" id="name" class="form-control" placeholder="category name">
                                             </div>
                                         </div>
                                         <!-- <div class="form-group row">

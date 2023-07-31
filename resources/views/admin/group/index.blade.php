@@ -13,7 +13,7 @@
                         <a href="{{ route('dashboard') }}" class="kt-subheader__breadcrumbs-link">
                             Dashboard </a>
                         <span class="kt-subheader__breadcrumbs-separator"></span>
-                        <a href="{{ url('admin/stock') }}" class="kt-subheader__breadcrumbs-link">
+                        <a href="{{ url('admin/vendor') }}" class="kt-subheader__breadcrumbs-link">
                             {{ $title }} </a>
                     </div>
                 </div>
@@ -34,37 +34,27 @@
                         </h3>
                     </div>
                     <div class="kt-portlet__head-toolbar">
-
-                        <div class="kt-portlet__head-wrapper col-md-7">
+                        <div class="kt-portlet__head-wrapper">
                             <div class="dropdown dropdown-inline">
-                                <button href="#" class="btn btn-brand btn-icon-sm" aria-expanded="false" disabled
-                                    id="GetCatalogBtn">
-                                    Get Catalog
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="kt-portlet__head-wrapper col-md-6">
-                            <div class="dropdown dropdown-inline">
-                                <a href="{{ route('catalog.get-catalog', ['type' => 'all']) }}"
-                                    class="btn btn-brand btn-icon-sm" aria-expanded="false">
-                                    All Catalog
+                                <a href="{{ route('group.create') }}" class="btn btn-brand btn-icon-sm"
+                                    aria-expanded="false">
+                                    <i class="flaticon2-plus"></i> Add Group
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="kt-portlet__body kt-portlet__body--fit">
-                    <div class="kt-datatable" id="local_data">
-                    </div>
+                    <!-- <div class="kt-datatable" id="local_data">
+                        </div> -->
                     <div class="card-body">
                         <!--begin: Datatable-->
-                        <table class="table table-separate table-head-custom table-checkable" id="stock_datatable">
+                        <table class="table table-separate table-head-custom table-checkable" id="group_datatable">
                             <thead>
                                 <tr>
-                                    <th>Select</th>
-                                    <th>Product Name</th>
-                                    <th>Product Company</th>
+                                    <th>Name</th>
+                                    <th>Created At</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -75,13 +65,7 @@
         </div>
         <!-- end:: Content -->
     </div>
-    <form action="{{ route('catalog.get-catalog', ['type' => 'selected']) }}" method="get" id="ProductCatalogForm">
-        @csrf
-        <div id="productIdInputs">
-
-        </div>
-    </form>
 @endsection
 @section('script')
-    <script src="{{ url('assets/admin/js/pages/catalog.js') }}" type="text/javascript"></script>
+    <script src="{{ url('assets/admin/js/pages/group.js') }}" type="text/javascript"></script>
 @endsection

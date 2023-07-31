@@ -32,17 +32,6 @@ jQuery(document).ready(function () {
             },
             { data: 'product_name' },
             { data: 'product_company' },
-            {
-                data: null,
-                render: function (data, type, full, meta) {
-                    return '<a href="' + baseUrl + '/admin/stock/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
-                            <i class="la la-edit"></i>\
-                            <a href="javascript:void(0);" id="' + full.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md deleteRecord" title="Delete">\
-                            <i class="la la-trash"></i>\
-                        </a>\
-                       ';
-                }
-            },
         ]
     });
 });
@@ -59,11 +48,16 @@ jQuery(document).on("click", "#GetCatalogBtn", function () {
     var formInputs = $("#productIdInputs");
     formInputs.html("");
     var checkedCheckboxes = $('input[type="checkbox"]:checked');
+    var str = "";
     checkedCheckboxes.each(function () {
-        // selectedIDs.push($(this).data('id'));
-        var str = "<input type='hidden' name='product_ids[]' value='" + $(this).data('id') + "'>";
-        formInputs.append(str);
+        // str += "<input type='hidden' name='product_ids[]' value='" + $(this).data('id') + "'>";
+        str += 'product_ids[]=' + $(this).data('id')+'&';
     });
+    formInputs.append(str);
+    // $("#ProductCatalogForm").submit();
+    var url = window.baseUrl + '/admin/get-catalog/selected?' + str;
+    window.open(url, '_blank');
+
 
 });
 

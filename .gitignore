@@ -50,4 +50,4 @@ Thumbs.db
 
 .env
 docs_other
-vendor
+/vendor/

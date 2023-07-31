@@ -20,11 +20,13 @@ class CatalogController extends Controller
     {
         return view('admin.catalog.index', ['title' => "Catalog"]);
     }
-    public function GetCatalog($type)
+    public function GetCatalog($type, Request $request)
     {
         $sql = StockManagement::with(['productImages']);
         if ($type == 'all') {
             $product_data =  $sql->get();
+        } elseif ($type == 'selected') {
+            $product_data =  $sql->whereIn('id', $request->product_ids)->get();
         }
         view()->share('product_data', $product_data);
 

@@ -31,7 +31,6 @@
                         <span class="kt-menu__link-text">Organization</span>
                     </a>
                 </li> -->
-                @else
                 @endif
                 @if (Auth::user()->permission[1] == 1)
                     <!-- <li class="kt-menu__item  kt-menu__item{{ Route::is('role.index') || Route::is('role.create') || Route::is('role.edit') ? '--active' : '' }}" aria-haspopup="true">
@@ -42,7 +41,6 @@
                         <span class="kt-menu__link-text">Users(Role)</span>
                     </a>
                 </li> -->
-                @else
                 @endif
                 <li class="kt-menu__item  kt-menu__item{{ Route::is('category.index') || Route::is('category.create') || Route::is('category.edit') ? '--active' : '' }}"
                     aria-haspopup="true">
@@ -70,8 +68,19 @@
                             <span class="kt-menu__link-text">Vendor</span>
                         </a>
                     </li>
-                @else
                 @endif
+
+                @if (Auth::user()->permission[2] == 1)
+                <li class="kt-menu__item  kt-menu__item{{ Route::is('group.*') ? '--active' : '' }}"
+                    aria-haspopup="true">
+                    <a href="{{ route('group.index') }}" class="kt-menu__link ">
+                        <span class="kt-menu__link-icon">
+                            <i class="flaticon-layer text-success"></i>
+                        </span>
+                        <span class="kt-menu__link-text">Groups</span>
+                    </a>
+                </li>
+            @endif
                 @if (Auth::user()->permission[3] == 1)
                     <!-- <li class="kt-menu__item  kt-menu__item--submenu {{ Route::is('stock.*') || Route::is('vendor.*') ? 'kt-menu__item--open' : '' }}" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                 <a href="javascript:void(0);" class="kt-menu__link kt-menu__toggle">
@@ -97,7 +106,6 @@
                     <!-- </ul> -->
                     <!-- </div> -->
                     <!-- </li> -->
-                @else
                 @endif
                 <!-- <li class="kt-menu__item  kt-menu__item{{ Route::is('quotation.index') || Route::is('quotation.create') || Route::is('quotation.edit') ? '--active' : '' }}" aria-haspopup="true">
                     <a href="{{ route('quotation.index') }}" class="kt-menu__link ">
@@ -122,7 +130,6 @@
                         <span class="kt-menu__link-text">Purchase</span>
                     </a>
                 </li> -->
-                @else
                 @endif
                 @if (Auth::user()->permission[5] == 1)
                     <li class="kt-menu__item  kt-menu__item{{ Route::is('customer.index') || Route::is('customer.create') || Route::is('customer.edit') ? '--active' : '' }}"
@@ -134,7 +141,6 @@
                             <span class="kt-menu__link-text">Company</span>
                         </a>
                     </li>
-                @else
                 @endif
                 @if (Auth::user()->permission[6] == 1)
                     <!-- <li class="kt-menu__item  kt-menu__item{{ Route::is('technicalspecification.index') || Route::is('technicalspecification.create') || Route::is('technicalspecification.edit') ? '--active' : '' }}" aria-haspopup="true">
@@ -145,7 +151,6 @@
                         <span class="kt-menu__link-text">TechnicalSpecification</span>
                     </a>
                 </li> -->
-                @else
                 @endif
                 @if (Auth::user()->permission[7] == 1)
                     <!-- <li class="kt-menu__item  kt-menu__item{{ Route::is('terms.index') || Route::is('terms.create') || Route::is('terms.edit') ? '--active' : '' }}" aria-haspopup="true"> -->
@@ -167,20 +172,8 @@
                         <span class="kt-menu__link-text">Notification</span>
                     </a>
                 </li> -->
-                @else
                 @endif
-                @if (Auth::user()->permission[9] == 1)
-                    <li class="kt-menu__item  kt-menu__item{{ Route::is('gst.index') || Route::is('gst.create') || Route::is('gst.edit') ? '--active' : '' }}"
-                        aria-haspopup="true">
-                        <a href="{{ route('gst.index') }}" class="kt-menu__link ">
-                            <span class="kt-menu__link-icon">
-                                <i class="flaticon2-settings text-success"></i>
-                            </span>
-                            <span class="kt-menu__link-text">Setting</span>
-                        </a>
-                    </li>
-                @else
-                @endif
+
                 <!-- <li class="kt-menu__item  kt-menu__item{{ Route::is('states.index') || Route::is('states.create') || Route::is('states.edit') ? '--active' : '' }}" aria-haspopup="true">
                     <a href="{{ route('states.index') }}" class="kt-menu__link ">
                         <span class="kt-menu__link-icon">
@@ -205,6 +198,17 @@
                                 <i class="flaticon-layer text-success"></i>
                             </span>
                             <span class="kt-menu__link-text">Catalog</span>
+                        </a>
+                    </li>
+                @endif
+                @if (Auth::user()->permission[9] == 1)
+                    <li class="kt-menu__item  kt-menu__item{{ Route::is('gst.index') || Route::is('gst.create') || Route::is('gst.edit') ? '--active' : '' }}"
+                        aria-haspopup="true">
+                        <a href="{{ route('gst.index') }}" class="kt-menu__link ">
+                            <span class="kt-menu__link-icon">
+                                <i class="flaticon2-settings text-success"></i>
+                            </span>
+                            <span class="kt-menu__link-text">Setting</span>
                         </a>
                     </li>
                 @endif

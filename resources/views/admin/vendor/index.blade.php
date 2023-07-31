@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 @section('content')
-
 <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
     <!-- begin:: Subheader -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
@@ -13,10 +12,10 @@
                     <a href="{{route('dashboard')}}" class="kt-subheader__breadcrumbs-link">
                         Dashboard </a>
                     <span class="kt-subheader__breadcrumbs-separator"></span>
-                    <a href="{{url('admin/stock')}}" class="kt-subheader__breadcrumbs-link">
-                        {{$title}} </a>
+                    <a href="{{url('admin/vendor')}}" class="kt-subheader__breadcrumbs-link">
+                        {{$title}} </a>               
                 </div>
-            </div>
+            </div>         
         </div>
     </div>
     <!-- end:: Subheader -->
@@ -34,30 +33,32 @@
                     </h3>
                 </div>
                 <div class="kt-portlet__head-toolbar">
-                    <div class="kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-wrapper">                
                         <div class="dropdown dropdown-inline">
-                            <a href="{{url('admin/stock/create')}}" class="btn btn-brand btn-icon-sm" aria-expanded="false">
-                                <i class="flaticon2-plus"></i> Add Product
+                            <a href="{{url('admin/vendor/create')}}" class="btn btn-brand btn-icon-sm" aria-expanded="false">
+                                <i class="flaticon2-plus"></i> Add Vendor
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="kt-portlet__body kt-portlet__body--fit">
-                <div class="kt-datatable" id="local_data">
-                </div>
+                <!-- <div class="kt-datatable" id="local_data">
+                </div> -->
                 <div class="card-body">
                 <!--begin: Datatable-->
-                <table class="table table-separate table-head-custom table-checkable" id="stock_datatable">
+                <table class="table table-separate table-head-custom table-checkable" id="vendor_datatable">
                     <thead>
                         <tr>
-                            <th>Product Name</th>
-                            <th>Product Company</th>
-                            <th>Current Balance</th>
-                            <!-- <th>Product Status</th> -->
-                            <th>Add Inward</th>
-                            <th>Add Outward</th>
-                            <th>Transaction</th>
+                            <!--  <th> ID</th> -->
+                            <th>Vendor Company Name</th>
+                            <th>Email</th>
+                            <th>Vendor Contact Number</th>
+                            <th>Contact Person Name</th>
+                            <th>GST No.</th>
+                            <th>PAN No.</th>
+                            <th>created_at</th>
+                            <!-- <th>Active</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -73,5 +74,5 @@
 
 @endsection
 @section('script')
-<script src="{{url('assets/admin/js/pages/stock.js')}}" type="text/javascript"></script>
+<script src="{{url('assets/admin/js/pages/vendor.js')}}" type="text/javascript"></script>
 @endsection

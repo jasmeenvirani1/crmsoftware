@@ -1,8 +1,8 @@
 'use strict';
-
+// Class definition
 jQuery(document).ready(function () {
     // begin first table
-    VendorDatatable = $('#customer_datatable').DataTable({
+    VendorDatatable = $('#group_datatable').DataTable({
         responsive: true,
         searchDelay: 500,
         processing: true,
@@ -15,7 +15,7 @@ jQuery(document).ready(function () {
             'pdfHtml5',
         ],
         ajax: {
-            url: window.baseUrl + '/admin/customer/show',
+            url: window.baseUrl + '/admin/group/show',
             type: 'POST',
             method: 'GET',
             headers: {
@@ -25,15 +25,17 @@ jQuery(document).ready(function () {
             data: {},
         },
         columns: [
-
-            // { data: 'company_name' },
-            // { data: 'phone' },
-            { data: 'email' },
             { data: 'name' },
+            {
+                data: 'created_at',
+                render: function (data, type, full, meta) {
+                    return moment(full.created_at).format('DD/MM/YYYY');
+                }
+            },
             {
                 data: null,
                 render: function (data, type, full, meta) {
-                    return '<a href="' + baseUrl + '/admin/customer/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
+                    return '<a href="' + baseUrl + '/admin/group/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
                             <i class="la la-edit"></i>\
                             <a href="javascript:void(0);" id="' + full.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md deleteRecord" title="Delete">\
                             <i class="la la-trash"></i>\
@@ -47,10 +49,6 @@ jQuery(document).ready(function () {
 
 });
 
-
-
-
-
 $(document).on("click", ".deleteRecord", function () {
     $("#deleteModal").modal('show');
     $("#record_id").val(this.id);
@@ -58,7 +56,7 @@ $(document).on("click", ".deleteRecord", function () {
 $(document).on("click", ".submit_delete", function () {
     var id = $("#record_id").val();
     $.ajax({
-        url: baseUrl + '/admin/customer/' + id,
+        url: baseUrl + '/admin/group/' + id,
         type: "DELETE",
         data: { "id": id },
         dataType: 'json',
@@ -67,7 +65,7 @@ $(document).on("click", ".submit_delete", function () {
                 toastr.error("Oops, There is some thing went wrong.Please try after some time.");
             } else {
                 toastr.success('Record Deleted Successfully.');
-                $('#customer_datatable').DataTable().ajax.reload();
+                $('#group_datatable').DataTable().ajax.reload();
             }
         }, error: function (data) {
             toastr.error("Invalid Request");

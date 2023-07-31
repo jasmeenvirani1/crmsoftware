@@ -15,7 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
 {
-  
+
     /**
      * Display a listing of the resource.
      *
@@ -129,7 +129,7 @@ class CustomerController extends Controller
                 $path = Customer::where('id', '=', $request->id)->first();
                 $files = $path->images;
             }
-    
+
             $vendorimages1 = [];
             if ($request->hasfile('filenamesvendor')) {
                 $image = $request->file('filenamesvendor');
@@ -171,7 +171,7 @@ class CustomerController extends Controller
                 'pancard' => json_encode($vendorimages),
                 'cheque' => json_encode(($clientimage)),
                 ]);
-    
+
             if ($recordId) {
                 session()->flash('success', 'compnay updated successfully');
             } else {
@@ -182,7 +182,7 @@ class CustomerController extends Controller
             //     session()->flash('error', $e->getMessage());
             //     return redirect()->route('stock.create');
             // }
-    
+
     }
 
     /**
@@ -192,7 +192,7 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        return Datatables::of(Customer::orderBy('id','desc')->get())->make(true);
+        return Datatables::of(Customer::orderBy('id', 'desc')->get())->make(true);
     }
 
     /**

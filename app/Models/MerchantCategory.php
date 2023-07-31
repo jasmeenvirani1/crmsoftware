@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class MerchantCategory extends Model
 {
@@ -36,5 +37,22 @@ class MerchantCategory extends Model
     public function setImagesAttribute($value)
     {
         $this->attributes['images'] = json_encode($value);
+    }
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->group_id = Auth::user()->group_id;
+        });
+    }
+
+    public function newQuery($excludeDeleted = true)
+    {
+        // Call the parent method to get the base query builder
+        $query = parent::newQuery($excludeDeleted);
+
+        // Add the default 'role' condition to the query
+        $query->where('group_id', Auth::user()->group_id);
+
+        return $query;
     }
 }

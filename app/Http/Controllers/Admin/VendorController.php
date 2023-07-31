@@ -15,7 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class VendorController extends Controller
 {
-  
+
     /**
      * Display a listing of the resource.
      *
@@ -62,7 +62,7 @@ class VendorController extends Controller
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
-            $recordId = Vendor::updateOrCreate(['id' => $request->id], 
+            $recordId = Vendor::updateOrCreate(['id' => $request->id],
                 ['name' => $request->name,
                 'vendor_company_name' => $request->vendor_company_name,
                 'vendor_gst_no' => $request->vendor_gst_no,
