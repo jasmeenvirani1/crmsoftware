@@ -45,35 +45,44 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
-            'group_id' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors());
-        }
-
-        if (Auth::attempt(['email' => $request->email, 'password' => request('password')])) {
-            User::where('email', $request->email)->update(['group_id' => $request->group_id]);
-            $user = Auth::user();
-            if ($user->user_type != 'Admin') {
-                \Auth::logout();
-                session()->flash('error', 'You are not authorized user to login');
-                return redirect('login');
+        if ($request->ajax()) {
+            if ($validator->fails()) {
+                $response = array('status' => 'error', 'msg' => 'Pass require param.', 'error_code' => 411, 'data' => $validator->errors());
+            } else if (Auth::attempt(['email' => $request->email, 'password' => request('password')])) {
+                $response = array('status' => 'success', 'msg' => 'Successfully.', 'error_code' => 200);
+            } else {
+                $response = array('status' => 'error', 'msg' => 'Invalid Credential.', 'error_code' => 411);
             }
-            /*
+            return response()->json($response, $response['error_code']);
+        } else {
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+
+            if (Auth::attempt(['email' => $request->email, 'password' => request('password')])) {
+                User::where('email', $request->email)->update(['group_id' => $request->group_id]);
+                $user = Auth::user();
+                if ($user->user_type != 'Admin') {
+                    \Auth::logout();
+                    session()->flash('error', 'You are not authorized user to login');
+                    return redirect('login');
+                }
+                /*
               if ($user->status == '0'){
               \Auth::logout();
               session()->flash('error', config('const.inactiveMsg'));
               return redirect('login');
               } */
-            return redirect()->route('dashboard');
-        } else {
-            session()->flash('login_error', 'Invalid Credentials');
-            return redirect('login');
+                return redirect()->route('dashboard');
+            } else {
+                session()->flash('login_error', 'Invalid Credentials');
+                return redirect('login');
+            }
         }
     }
 
@@ -93,5 +102,9 @@ class LoginController extends Controller
     {
         \Auth::logout();
         return redirect()->route('login');
+    }
+    public function checkCredential()
+    {
+        prx(10);
     }
 }

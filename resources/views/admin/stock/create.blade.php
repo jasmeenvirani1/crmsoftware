@@ -214,8 +214,8 @@
                                                     <select class="form-control" id="company_country"
                                                         name="company_country">
                                                         <option value="">SELECT</option>
-                                                        @foreach ($category as $countries)
-                                                            <option value="{{ $countries->name }}">{{ $countries->name }}
+                                                        @foreach ($category as $cat)
+                                                            <option value="{{ $cat->id }}">{{ $cat->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>

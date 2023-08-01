@@ -1,4 +1,4 @@
-<label class="col-lg-2 col-form-label mt-3 text-right"><b>Seleted group </b></label>
+<label class="col-lg-2 col-form-label mt-3 text-right"><b>Selected group </b></label>
 <div class="col-lg-4 col-xl-2 mt-3 float-right" style="margin-left: -393px;">
     <select class="form-control" id="group_id" name="group_id">
         @foreach ($data as $opction)

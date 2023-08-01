@@ -28,11 +28,6 @@ use Request as Input;
                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
                         name="password" required autocomplete="current-password">
                 </div>
-                <!--            <div class="row kt-login__extra">
-                                                <div class="col kt-align-right">
-                                                    <a href="{{ route('password.request') }}" id="kt_login_forgot" class="kt-link kt-login__link">Forget Password ?</a>
-                                                </div>
-                                            </div>-->
 
                 <div class="input-group">
                     <select class="form-control" name="group_id">

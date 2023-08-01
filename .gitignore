@@ -51,3 +51,6 @@ Thumbs.db
 .env
 docs_other
 /vendor/
+public/client_images
+public/product_images
+public/vendor_images

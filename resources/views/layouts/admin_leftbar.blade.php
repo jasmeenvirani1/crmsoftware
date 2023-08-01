@@ -17,7 +17,7 @@
                     aria-haspopup="true">
                     <a href="{{ url('admin/dashboard') }}" class="kt-menu__link ">
                         <span class="kt-menu__link-icon">
-                            <i class="flaticon-layer text-success"></i>
+                            <i class="nav-icon fas fa-tachometer-alt text-success"></i>
                         </span>
                         <span class="kt-menu__link-text">Dashboard</span>
                     </a>
@@ -53,7 +53,7 @@
                                     <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
                                 </g>
                             </svg> -->
-                            <i class="flaticon-layer text-success"></i>
+                            <i class="fas fa-th text-success"></i>
                         </span>
                         <span class="kt-menu__link-text"> Category</span>
                     </a>
@@ -63,7 +63,7 @@
                         aria-haspopup="true">
                         <a href="{{ route('quotation.index') }}" class="kt-menu__link ">
                             <span class="kt-menu__link-icon">
-                                <i class="flaticon-layer text-success"></i>
+                                <i class="fas fa-handshake text-success"></i>
                             </span>
                             <span class="kt-menu__link-text">Vendor</span>
                         </a>
@@ -75,7 +75,7 @@
                     aria-haspopup="true">
                     <a href="{{ route('group.index') }}" class="kt-menu__link ">
                         <span class="kt-menu__link-icon">
-                            <i class="flaticon-layer text-success"></i>
+                            <i class="fas fa-users text-success"></i>
                         </span>
                         <span class="kt-menu__link-text">Groups</span>
                     </a>
@@ -95,7 +95,7 @@
                             aria-haspopup="true">
                             <a href="{{ route('stock.index') }}" class="kt-menu__link ">
                                 <span class="kt-menu__link-icon">
-                                    <i class="flaticon-layer text-success"></i>
+                                    <i class="fas fa-cubes text-success "></i>
                                 </span>
                                 <span class="kt-menu__link-text">Product</span>
                             </a>
@@ -136,7 +136,7 @@
                         aria-haspopup="true">
                         <a href="{{ route('customer.index') }}" class="kt-menu__link ">
                             <span class="kt-menu__link-icon">
-                                <i class="flaticon-layer text-success"></i>
+                                <i class="fas fa-building text-success"></i>
                             </span>
                             <span class="kt-menu__link-text">Company</span>
                         </a>
@@ -195,7 +195,7 @@
                         <a href="{{ route('catalog.index') }}" class="kt-menu__link ">
                             <span class="kt-menu__link-icon">
                                 {{-- <i class="ki-outline ki-calendar-8 fs-2"></i> --}}
-                                <i class="flaticon-layer text-success"></i>
+                                <i class="fas fa-file-alt text-success"></i>
                             </span>
                             <span class="kt-menu__link-text">Catalog</span>
                         </a>

@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\CatalogController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\GstPercentageController;
 use App\Http\Livewire\Edit;
+use Illuminate\Support\Facades\Auth;
 
 /*
   |--------------------------------------------------------------------------
@@ -43,7 +44,9 @@ Route::post('resetpasswordemail', [ResetPasswordController::class, 'forgotPasswo
 Route::get('reset-password/{token}/{ismobile?}', [ResetPasswordController::class, 'showPasswordResetForm']);
 Route::post('reset-password', [ResetPasswordController::class, 'resetPassword'])->name('reset-password');
 // Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('check-login-credential', [LoginController::class, 'checkCredential'])->name('check-credential');
 Route::get('/', [LoginController::class, 'index']);
+// Route::get('/login-temp', [LoginController::class, 'temp'])->name('temp-login');
 Route::redirect('/dashboard', 'admin/dashboard');
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
