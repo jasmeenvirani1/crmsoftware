@@ -115,12 +115,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('stock.update', ['stock' => $data->id]) }}" method="POST" id="create_category"
-                                name="create_category" class="form-horizontal kt-form kt-form--label-right"
-                                enctype="multipart/form-data">
+                            <form action="{{ route('stock.update', ['stock' => $data->id]) }}" method="POST"
+                                id="create_category" name="create_category"
+                                class="form-horizontal kt-form kt-form--label-right" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-
+                                <input type="hidden" name="process_type" value="update">
                                 <input type="hidden" name="id" id="id"
                                     value="{{ isset($data->id) ? $data->id : '' }}">
                                 <div class="kt-portlet__body">
@@ -280,47 +280,75 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Dimension
-                                                    :</b></label>
-                                            <!-- <div class="col-lg-9 col-xl-2"> -->
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Height</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[0]) ? $data->product_dimension[0] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Height">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Weight</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[1]) ? $data->product_dimension[1] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Weigth">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Length</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[2]) ? $data->product_dimension[2] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Length">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Bridth</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[3]) ? $data->product_dimension[3] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Bridth">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Depth</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[4]) ? $data->product_dimension[4] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Depth">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Radius</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[5]) ? $data->product_dimension[5] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Radius">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Thickness</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[6]) ? $data->product_dimension[6] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Thickness">
-                                            <!-- </div> -->
+
+
+                                        <label class="col-xl-0 col-lg-0 col-form-label"
+                                            style="font-size: 15px;margin-left: -10px;"><b>Product Dimension
+                                                :</b></label>
+                                        <button class="btn btn-success add-contact mb-3" type="button"
+                                            style="float: right;">Add
+                                            Dimension</button>
+
+
+                                        <div class="card-body">
+                                            @php
+                                                $quantitiesValues = config('const.quantities');
+                                                $default_product_dimension = config('const.default_product_dimension');
+                                            @endphp
+                                            <!--begin: Datatable-->
+                                            <table class="table table-separate table-head-custom table-checkable border"
+                                                id="stock_datatable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Dimension Name</th>
+                                                        <th>Dimension Value</th>
+                                                        <th>Quantities Value</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="DimensionBody">
+                                                    @foreach ($data->productDimensionData as $product_dimension)
+                                                        <tr>
+                                                            <td><input type="text" maxlength="12"
+                                                                    name="dimension_name[]"
+                                                                    class="col-xl-6 col-lg-6  form-control"
+                                                                    placeholder="Dimension Name"
+                                                                    value="{{ ucfirst($product_dimension->dimension_name) }}"
+                                                                    readonly>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" maxlength="12"
+                                                                    name="dimension_value[]"
+                                                                    class="col-xl-6 col-lg-6  form-control"
+                                                                    placeholder="Dimension Value"
+                                                                    value="{{ $product_dimension->dimension_value }}">
+
+                                                            </td>
+                                                            <td>
+                                                                <select name="quantities_value[]"
+                                                                    class="col-xl-6 col-lg-6  form-control">
+                                                                    @foreach ($quantitiesValues as $quantitie)
+                                                                        <option value="{{ $quantitie }}"
+                                                                            @if ($quantitie == ucfirst($product_dimension->quantities_value)) selected @endif>
+                                                                            {{ $quantitie }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-danger remove-row"
+                                                                    type="button">Remove</button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <!--end: Datatable-->
                                         </div>
+
+
+
+
+
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Company</b></label>
                                             <div class="col-lg-9 col-xl-4">
@@ -376,43 +404,71 @@
                                             </div>
                                         </div>
                                         <!-- <div class="form-group row">
-                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
-                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
-                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
+                                                                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
+                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                        </div> -->
                                         <!-- <div class="form-group row">
-                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
-                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
-                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
+                                                                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
+                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                        </div> -->
+                                        {{-- </div>
+                                </div> --}}
                                     </div>
-                                </div>
+                                    <div class="kt-portlet__foot">
+                                        <div class="kt-form__actions">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-xl-3">
+                                                </div>
+                                                <div class="col-lg-9 col-xl-9">
+                                                    <button type="submit"
+                                                        class="btn btn-success">{{ $btn }}</button>&nbsp;
+                                                    <a href="{{ route('stock.index') }}" id="cancel_btn"
+                                                        class="btn btn-secondary">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </form>
                         </div>
-                        <div class="kt-portlet__foot">
-                            <div class="kt-form__actions">
-                                <div class="row">
-                                    <div class="col-lg-3 col-xl-3">
-                                    </div>
-                                    <div class="col-lg-9 col-xl-9">
-                                        <button type="submit" class="btn btn-success">{{ $btn }}</button>&nbsp;
-                                        <a href="{{ route('stock.index') }}" id="cancel_btn"
-                                            class="btn btn-secondary">Cancel</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </form>
                     </div>
                 </div>
             </div>
+            <!--End:: App Content-->
         </div>
-        <!--End:: App Content-->
-    </div>
-    <!--End::App-->
+        <!--End::App-->
     </div>
     <!-- end :: Contest -->
+    <!-- end :: Contest -->
+    <div class="hidden d-none">
+        <table> <!-- Add a table tag here -->
+            <tbody class="clone-product-dimension"> <!-- Add a tbody tag here -->
+                <tr>
+                    <td>
+                        <input type="text" maxlength="12" name="dimension_name[]" id="product_dimension"
+                            class="col-xl-6 col-lg-6  form-control" placeholder="Dimension Name">
+                    </td>
+                    <td>
+                        <input type="text" maxlength="12" name="dimension_value[]" id="product_dimension"
+                            class="col-xl-6 col-lg-6  form-control" placeholder="Dimension Value">
+                    </td>
+                    <td>
+                        <select name="quantities_value[]" class="col-xl-6 col-lg-6  form-control">
+                            @foreach ($quantitiesValues as $quantitie)
+                                <option>{{ $quantitie }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger remove-row" type="button">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 @endsection
 @section('script')
     <script type="text/javascript">
@@ -485,6 +541,16 @@
                 }
             });
 
+        });
+        $(".add-contact").click(function() {
+            var lsthmtl = $(".clone-product-dimension").html();
+            console.log(lsthmtl);
+            $("#DimensionBody").append(lsthmtl);
+        });
+
+
+        $(document).on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
         });
     </script>
 @endsection

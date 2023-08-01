@@ -113,9 +113,7 @@ class QuotationController extends Controller
                             'created_at' => $date_time,
                             'updated_at' => $date_time
                         ];
-                        if ($i == 2) {
-                            prx($arr);
-                        }
+
                         $quotationDetailsArr[] = $arr;
                     }
                 }

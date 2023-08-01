@@ -11,6 +11,7 @@ use App\Models\OutWard;
 use App\Models\Balanced;
 use App\Models\ClientAndSalesImage;
 use App\Models\product_images;
+use App\Models\ProductDimension;
 use App\Models\ProductImage;
 use App\Models\VendorImage;
 use Illuminate\Support\Facades\Validator;
@@ -87,6 +88,26 @@ class StockManagementController extends Controller
             $files = $this->addImages('client_images', $product_id, $request->file('client_images'));
             ClientAndSalesImage::insert($files);
         }
+        $dimensionDetailsArr = [];
+        if (request()->has('dimension_name')) {
+
+            for ($i = 0; $i < count($request->dimension_name); $i++) {
+                $date_time = GetDateTime();
+                if ($request->dimension_name[$i] != null && $request->dimension_value[$i] != null && $request->quantities_value[$i] != null) {
+                    $arr = [
+                        'product_id' => $product_id,
+                        'dimension_name' => $request->dimension_name[$i],
+                        'dimension_value' => $request->dimension_value[$i],
+                        'quantities_value' => $request->quantities_value[$i],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    ProductDimension::create($arr);
+                    $dimensionDetailsArr[] = $arr;
+                }
+            }
+        }
+
         $recordId1 = Inward::updateOrCreate(
             ['id' => $request->id],
             [
@@ -141,10 +162,9 @@ class StockManagementController extends Controller
      */
     public function edit($id)
     {
-        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages'])->find($id);
+        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData'])->find($id);
         $data1 = Inward::where('stock_id', '=', $id)->get();
         $category = MerchantCategory::get();
-        // prx($data);
         return view('admin.stock.edit', ['title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category]);
     }
     // public function inward($id) {
@@ -166,6 +186,24 @@ class StockManagementController extends Controller
      */
     public function update($id, Request $request)
     {
+
+        StockManagement::updateOrCreate(
+            ['id' => $request->id],
+            [
+                'product_name' => $request->product_name,
+                'partno' => $request->partno,
+                'product_company' => $request->product_company,
+                'product_size' => $request->product_size,
+                'product_price' => $request->product_price,
+                'usd_price' => $request->total_amount,
+                'category' => $request->company_country,
+                'product_dimension' => json_encode($request->product_dimension),
+                'notes' => $request->notes,
+                'specification' => $request->specification,
+                'status' => $request->status
+            ]
+        );
+
         $product_id = $id;
         if ($request->hasfile('product_images')) {
             $files = $this->addImages('product_images', $product_id, $request->file('product_images'));
@@ -178,6 +216,26 @@ class StockManagementController extends Controller
         if ($request->hasfile('client_images')) {
             $files = $this->addImages('client_images', $product_id, $request->file('client_images'));
             ClientAndSalesImage::insert($files);
+        }
+        ProductDimension::where('product_id', $product_id)->delete();
+        $dimensionDetailsArr = [];
+        if (request()->has('dimension_name')) {
+
+            for ($i = 0; $i < count($request->dimension_name); $i++) {
+                $date_time = GetDateTime();
+                if ($request->dimension_name[$i] != null && $request->dimension_value[$i] != null && $request->quantities_value[$i] != null) {
+                    $arr = [
+                        'product_id' => $product_id,
+                        'dimension_name' => $request->dimension_name[$i],
+                        'dimension_value' => $request->dimension_value[$i],
+                        'quantities_value' => $request->quantities_value[$i],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    $dimensionDetailsArr[] = $arr;
+                }
+            }
+            ProductDimension::insert($dimensionDetailsArr);
         }
         if ($product_id) {
             session()->flash('success', 'Product updated successfully');

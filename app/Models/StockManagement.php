@@ -78,15 +78,19 @@ class StockManagement extends Model
     }
     public function productImages()
     {
-        return $this->hasMany(ProductImage::class,'product_id','id');
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
     }
     public function vendorImages()
     {
-        return $this->hasMany(VendorImage::class,'product_id','id');
+        return $this->hasMany(VendorImage::class, 'product_id', 'id');
     }
     public function clientImages()
     {
-        return $this->hasMany(ClientAndSalesImage::class,'product_id','id');
+        return $this->hasMany(ClientAndSalesImage::class, 'product_id', 'id');
+    }
+    public function productDimensionData()
+    {
+        return $this->hasMany(ProductDimension::class, 'product_id', 'id');
     }
 
     // public function getClientImageUrlAttribute($value) {
