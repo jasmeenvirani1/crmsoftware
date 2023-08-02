@@ -28,7 +28,7 @@
                 @endforeach
             </select>
         </div>
-        <input class="next" type="button" value="Next">
+        <input class="next" type="button" value="Login">
     </form>
 </div>
 
@@ -57,7 +57,8 @@
                     $(".input-div").addClass('d-none');
                     $(".select-div").removeClass('d-none');
                     $('.next').attr('type', 'submit');
-                    $('.next').attr('value', 'Login');
+                    $('.next').attr('value', 'Process');
+                    $('.login-title').text('Select group');
                     var url = "{{ route('login') }}";
                     $('#LoginForm').attr('action', url);
                     $('#LoginForm').attr('method', 'post');

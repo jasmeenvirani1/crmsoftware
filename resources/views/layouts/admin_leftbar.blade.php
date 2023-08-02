@@ -71,16 +71,16 @@
                 @endif
 
                 @if (Auth::user()->permission[2] == 1)
-                <li class="kt-menu__item  kt-menu__item{{ Route::is('group.*') ? '--active' : '' }}"
-                    aria-haspopup="true">
-                    <a href="{{ route('group.index') }}" class="kt-menu__link ">
-                        <span class="kt-menu__link-icon">
-                            <i class="fas fa-users text-success"></i>
-                        </span>
-                        <span class="kt-menu__link-text">Groups</span>
-                    </a>
-                </li>
-            @endif
+                    <li class="kt-menu__item  kt-menu__item{{ Route::is('group.*') ? '--active' : '' }}"
+                        aria-haspopup="true">
+                        <a href="{{ route('group.index') }}" class="kt-menu__link ">
+                            <span class="kt-menu__link-icon">
+                                <i class="fas fa-users text-success"></i>
+                            </span>
+                            <span class="kt-menu__link-text">Groups</span>
+                        </a>
+                    </li>
+                @endif
                 @if (Auth::user()->permission[3] == 1)
                     <!-- <li class="kt-menu__item  kt-menu__item--submenu {{ Route::is('stock.*') || Route::is('vendor.*') ? 'kt-menu__item--open' : '' }}" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                 <a href="javascript:void(0);" class="kt-menu__link kt-menu__toggle">
@@ -201,18 +201,17 @@
                         </a>
                     </li>
                 @endif
-                @if (Auth::user()->permission[2] == 1)
+                {{-- @if (Auth::user()->permission[2] == 1)
                 <li class="kt-menu__item  kt-menu__item{{ Route::is('catalog.index') || Route::is('catalog.create') || Route::is('catalog.edit') ? '--active' : '' }}"
                     aria-haspopup="true">
                     <a href="{{ route('permission.index') }}" class="kt-menu__link ">
                         <span class="kt-menu__link-icon">
-                            {{-- <i class="ki-outline ki-calendar-8 fs-2"></i> --}}
                             <i class="fas fa-lock text-success"></i>
                         </span>
                         <span class="kt-menu__link-text">Permissions & Roles</span>
                     </a>
                 </li>
-            @endif
+            @endif --}}
                 @if (Auth::user()->permission[9] == 1)
                     <li class="kt-menu__item  kt-menu__item{{ Route::is('gst.index') || Route::is('gst.create') || Route::is('gst.edit') ? '--active' : '' }}"
                         aria-haspopup="true">
