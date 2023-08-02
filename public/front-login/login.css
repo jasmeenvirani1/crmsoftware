@@ -164,3 +164,23 @@ input[type="password"]:focus {
     font-weight: bold;
     cursor: pointer;
 }
+
+.input-div {
+    flex-direction: column;
+    display: flex;
+}
+
+.select-div {
+    flex-direction: column;
+    display: flex;
+}
+
+.d-none {
+    display: none;
+}
+
+.error-span {
+    font-size: 12px;
+    padding: 0.4rem 1rem;
+    color: red;
+}

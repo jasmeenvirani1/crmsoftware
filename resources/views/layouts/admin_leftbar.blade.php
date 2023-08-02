@@ -65,7 +65,7 @@
                             <span class="kt-menu__link-icon">
                                 <i class="fas fa-handshake text-success"></i>
                             </span>
-                            <span class="kt-menu__link-text">Vendor</span>
+                            <span class="kt-menu__link-text">Vendors</span>
                         </a>
                     </li>
                 @endif
@@ -97,7 +97,7 @@
                                 <span class="kt-menu__link-icon">
                                     <i class="fas fa-cubes text-success "></i>
                                 </span>
-                                <span class="kt-menu__link-text">Product</span>
+                                <span class="kt-menu__link-text">Products</span>
                             </a>
                         </li>
                     </ul>
@@ -201,6 +201,18 @@
                         </a>
                     </li>
                 @endif
+                @if (Auth::user()->permission[2] == 1)
+                <li class="kt-menu__item  kt-menu__item{{ Route::is('catalog.index') || Route::is('catalog.create') || Route::is('catalog.edit') ? '--active' : '' }}"
+                    aria-haspopup="true">
+                    <a href="{{ route('permission.index') }}" class="kt-menu__link ">
+                        <span class="kt-menu__link-icon">
+                            {{-- <i class="ki-outline ki-calendar-8 fs-2"></i> --}}
+                            <i class="fas fa-lock text-success"></i>
+                        </span>
+                        <span class="kt-menu__link-text">Permissions & Roles</span>
+                    </a>
+                </li>
+            @endif
                 @if (Auth::user()->permission[9] == 1)
                     <li class="kt-menu__item  kt-menu__item{{ Route::is('gst.index') || Route::is('gst.create') || Route::is('gst.edit') ? '--active' : '' }}"
                         aria-haspopup="true">

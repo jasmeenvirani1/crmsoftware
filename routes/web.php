@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\OutwardController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\BalancedController;
 use App\Http\Controllers\Admin\CatalogController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\GstPercentageController;
 use App\Http\Livewire\Edit;
@@ -90,6 +91,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::get('get-catalog/{type?}', [CatalogController::class, 'GetCatalog'])->name('catalog.get-catalog');
         Route::resource('group', GroupController::class);
         Route::post('group/change-group-id', [GroupController::class, 'ChangeGroupId'])->name('change-group-id');
+        Route::resource('permission', PermissionController::class);
     });
 });
 

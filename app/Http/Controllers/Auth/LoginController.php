@@ -52,11 +52,11 @@ class LoginController extends Controller
 
         if ($request->ajax()) {
             if ($validator->fails()) {
-                $response = array('status' => 'error', 'msg' => 'Pass require param.', 'error_code' => 411, 'data' => $validator->errors());
-            } else if (Auth::attempt(['email' => $request->email, 'password' => request('password')])) {
-                $response = array('status' => 'success', 'msg' => 'Successfully.', 'error_code' => 200);
+                $response = array('status' => '411', 'msg' => 'Pass require param.', 'error_code' => 411, 'data' => $validator->errors());
+            } else if (Auth::validate(['email' => $request->email, 'password' => request('password')])) {
+                $response = array('status' => '200', 'msg' => 'Successfully.', 'error_code' => 200);
             } else {
-                $response = array('status' => 'error', 'msg' => 'Invalid Credential.', 'error_code' => 411);
+                $response = array('status' => '411', 'msg' => 'Invalid Credential.', 'error_code' => 200);
             }
             return response()->json($response, $response['error_code']);
         } else {
