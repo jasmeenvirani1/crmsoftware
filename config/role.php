@@ -1,32 +1,54 @@
 <?php
 
 return [
-
-    'General' => [
-        'users' => [
-            'users.list',
-            'users.create',
-            'users.update',
-            'users.view',
-            'users.destroy',
-            'users.auto_login',
+    'roles' => [
+        'dashboard' => [
+            'view',
         ],
-        'profile' => [
-            'user_profiles.view',
+        'category' => [
+            'create',
+            'view',
+            'update',
+            'delete',
         ],
-        'roles' => [
-            'roles.create',
-            'roles.view',
-            'roles.update',
-            'roles.delete',
+        'vendor' => [
+            'create',
+            'view',
+            'update',
+            'delete',
+        ],
+        'group' => [
+            'create',
+            'view',
+            'update',
+            'delete',
+        ],
+        'product' => [
+            'create',
+            'view',
+            'update',
+            'delete',
+        ],
+        'company' => [
+            'create',
+            'view',
+            'update',
+            'delete',
+        ],
+        'catalog' => [
+            'view',
+        ],
+        'role' => [
+            'create',
+            'view',
+            'update',
+            'delete',
         ],
         'setting' => [
-            'setting.view',
-            'setting.update',
-        ],
-    ],
-
+            'create',
+            'view',
+            'update',
+            'delete',
+        ]
+    ]
 ];
-
-
-
