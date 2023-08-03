@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MerchantCategoryController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RoleController;
@@ -91,7 +91,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::get('get-catalog/{type?}', [CatalogController::class, 'GetCatalog'])->name('catalog.get-catalog');
         Route::resource('group', GroupController::class);
         Route::post('group/change-group-id', [GroupController::class, 'ChangeGroupId'])->name('change-group-id');
-        Route::resource('permission', PermissionController::class);
+        Route::resource('role', RoleController::class);
     });
 });
 
