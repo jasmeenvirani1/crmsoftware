@@ -1,8 +1,10 @@
 #kt_header_mobile_toggler {
-	display: none !important;
+    display: none !important;
 }
-.was-validated .form-control:invalid, .form-control.is-invalid {
-	margin-bottom:0;
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+    margin-bottom: 0;
 }
 
 .kt-avatar {
@@ -10,11 +12,22 @@
 }
 
 div#profile_picture-error {
-	bottom: -25px;
+    bottom: -25px;
 }
 
-.form-group .invalid-feedback, .form-group .valid-feedback {
+.form-group .invalid-feedback,
+.form-group .valid-feedback {
     font-weight: 500;
     font-size: 11px;
     white-space: nowrap;
+}
+
+.selected-company {
+    color: #1bc5bd;
+    font-size: 13px;
+    font-weight: 500;
+}
+.select-company{
+    font-size: 13px;
+    font-weight: 500;
 }

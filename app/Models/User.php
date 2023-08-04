@@ -33,6 +33,7 @@ class User extends Authenticatable
         'permission',
         'group_id',
         'is_active',
+        'role_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -75,4 +76,8 @@ class User extends Authenticatable
      *
      * @var array
      */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

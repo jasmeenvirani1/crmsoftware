@@ -12,6 +12,7 @@ use App\Models\Quotation;
 use App\Models\PurchaseOrder;
 use App\Models\User;
 use App\Models\Notification;
+use App\Models\Role;
 use DateTime;
 use Validator;
 
@@ -66,7 +67,7 @@ class LoginController extends Controller
 
             if (Auth::attempt(['email' => $request->email, 'password' => request('password')])) {
                 User::where('email', $request->email)->update(['group_id' => $request->group_id]);
-                $user = Auth::user();
+                $user = Auth::user()->load('role');
                 if ($user->user_type != 'Admin') {
                     \Auth::logout();
                     session()->flash('error', 'You are not authorized user to login');

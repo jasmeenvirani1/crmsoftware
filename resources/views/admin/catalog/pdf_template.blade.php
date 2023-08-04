@@ -13,7 +13,21 @@
     <link rel="stylesheet" href="{{ asset('css/catalog/style.css') }}" crossorigin>
 
     <title>Document</title>
-
+    <style>
+        .logo_wrapper::after {
+            content: '';
+            height: 100%;
+            width: 100%;
+            background-image: url('{{ asset($catalog_data->logo) }}');
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-size: 100%;
+            background-position: center;
+            z-index: 0;
+            opacity: 0.04;
+        }
+    </style>
 </head>
 
 <body>
@@ -22,12 +36,11 @@
     <!-- Page1 Start -->
     <div class="grid-container">
         <div class="logo_wrapper">
-            <img src="{{ asset('images/logo.jpg') }}" alt="">
+            <img src="{{ asset($catalog_data->logo) }}" alt="Logo">
         </div>
         <div class="footer">
-            A-405, PNTC (Prahlad Nagar Trade Center), Times of India Press
-            Road, B/H Titanium City Center, Vejalpur, Ahmedabad - 380015, &nbsp;&nbsp; <b>Mobile :</b>7897897897
-            &nbsp;&nbsp; <b>Email : </b> example@mail.com
+            {{ $catalog_data->address }}&nbsp;&nbsp; <b>Mobile :</b>{{ $catalog_data->phonenumber }}
+            &nbsp;&nbsp; <b>Email : </b>{{ $catalog_data->email }}
         </div>
     </div>
     <!-- Page1 End -->
@@ -36,8 +49,7 @@
         <div class="header">
             <div class="logo"><img src="{{ asset('images/logo.jpg') }}" alt=""></div>
             <div class="add">
-                <p>A-405, PNTC (Prahlad Nagar Trade Center), Times of India Press
-                    Road, B/H Titanium City Center, Vejalpur, Ahmedabad - 380015</p>
+                <p>{{ $catalog_data->address }}</p>
             </div>
         </div>
         <div class="product_title">

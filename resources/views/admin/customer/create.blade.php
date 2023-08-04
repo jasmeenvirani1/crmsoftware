@@ -72,55 +72,74 @@
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Company Name</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="text" name="vendor_company_name" value="{{old('vendor_company_name',isset($data->vendor_company_name)?$data->vendor_company_name:'')}}" id="vendor_company_name" class="form-control" placeholder="Company Name">
+                                                    <input type="text" name="vendor_company_name"
+                                                        value="{{ old('vendor_company_name', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        id="vendor_company_name" class="form-control"
+                                                        placeholder="Company Name">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Email</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="email" name="vendor_company_name" value="{{old('vendor_company_name',isset($data->vendor_company_name)?$data->vendor_company_name:'')}}" id="vendor_company_name" class="form-control" placeholder="Email">
+                                                    <input type="email" name="email"
+                                                        value="{{ old('vendor_company_name', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        id="vendor_company_name" class="form-control" placeholder="Email">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Phone Number</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="text" name="vendor_company_name" value="{{old('vendor_company_name',isset($data->vendor_company_name)?$data->vendor_company_name:'')}}" id="vendor_company_name" class="form-control" placeholder="Phone Number">
+                                                    <input type="text" name="phonenumber"
+                                                        value="{{ old('vendor_company_name', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        id="vendor_company_name" class="form-control"
+                                                        placeholder="Phone Number">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Address</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="text" name="vendor_company_name" value="{{old('vendor_company_name',isset($data->vendor_company_name)?$data->vendor_company_name:'')}}" id="vendor_company_name" class="form-control" placeholder="Address">
+                                                    <input type="text" name="address"
+                                                        value="{{ old('vendor_company_name', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        id="vendor_company_name" class="form-control" placeholder="Address">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>GST</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="text" name="vendor_company_name" value="{{old('vendor_company_name',isset($data->vendor_company_name)?$data->vendor_company_name:'')}}" id="vendor_company_name" class="form-control" placeholder="GST">
+                                                    <input type="text" name="gst" id="gst" class="form-control"
+                                                        placeholder="GST">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Logo</b></label>
+                                                <div class="col-lg-6 col-xl-4">
+                                                    <input type="file" name="logo" class="form-control"
+                                                        placeholder="Logo" accept="image/png, image/jpeg" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Pan Card</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="pancard[]" class="form-control" placeholder="GST">
+                                                    <input type="file" name="pancard" class="form-control"
+                                                        placeholder="GST" accept="image/png, image/jpeg" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Cheque</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="cheque[]" class="form-control" placeholder="Cheque">
+                                                    <input type="file" name="cheque" class="form-control"
+                                                        placeholder="Cheque" accept="image/png, image/jpeg" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>MSME Certificate</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>MSME
+                                                        Certificate</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="certificate" class="form-control" placeholder="MSME Certificate">
+                                                    <input type="file" name="msme" class="form-control"
+                                                        placeholder="MSME Certificate" accept="image/png, image/jpeg"
+                                                        required>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <button class="btn btn-success products_img" type="button">Add</button>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -157,17 +176,4 @@
             }, "Letters only please");
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            $(".products_img").click(function() {
-                var lsthmtl = $(".clone").html();
-                console.log(lsthmtl);
-                $(".increment").after(lsthmtl);
-            });
-            $("body").on("click", ".remove_btn", function() {
-                $(this).parents(".demo").remove();
-            });
-        });
-    </script>
-
 @endsection

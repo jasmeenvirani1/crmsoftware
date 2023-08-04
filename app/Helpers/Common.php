@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Auth;
+
 function prx($data)
 {
     echo "<pre>";
@@ -32,4 +35,22 @@ function GetDateTime()
 {
     $date_time = date('Y-m-d H:i:s');
     return $date_time;
+}
+function CheckPermissionForUser($module, $operation)
+{
+    return false;
+
+    $role_data = Auth::user()->role()->first();
+    prx($role);
+    if ($role_data) {
+        $role = json_decode($role_data->permissions);
+        $role = get_object_vars();
+        if (property_exists($role, $module) && in_array($operation, $role )) {
+
+        }else{
+            return false;
+        }
+    } else {
+        return false;
+    }
 }

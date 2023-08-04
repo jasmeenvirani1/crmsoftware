@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\StockManagement;
 use Illuminate\Http\Request;
 use Spipu\Html2Pdf\Html2Pdf;
@@ -20,8 +21,10 @@ class CatalogController extends Controller
     {
         return view('admin.catalog.index', ['title' => "Catalog"]);
     }
+
     public function GetCatalog($type, Request $request)
     {
+        $catalog_data = Customer::where('default', '1')->first();
         $sql = StockManagement::with(['productImages']);
         if ($type == 'all') {
             $product_data =  $sql->get();
@@ -29,6 +32,7 @@ class CatalogController extends Controller
             $product_data =  $sql->whereIn('id', $request->product_ids)->get();
         }
         view()->share('product_data', $product_data);
+        view()->share('catalog_data', $catalog_data);
 
         return view('admin.catalog.pdf_template');
     }

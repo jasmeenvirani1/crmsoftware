@@ -64,6 +64,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::resource('quotation', QuotationController::class);
         Route::resource('editquotation', EditQuotationController::class);
         Route::resource('customer', CustomerController::class);
+        Route::post('customer/default', [CustomerController::class, 'defaultCustomer']);
+
         Route::resource('stock', StockManagementController::class);
         Route::post('editstore', [StockManagementController::class, 'editstore'])->name('editstore');
         Route::post('customereditstore', [CustomerController::class, 'customereditstore'])->name('customereditstore');
