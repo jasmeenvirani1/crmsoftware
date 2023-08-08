@@ -118,7 +118,7 @@ class RoleController extends Controller
             }
 
             $temp = AddDateTime($request);
-            unset($temp['name'], $temp['created_at'], $temp['updated_at']);
+            unset($temp['name'], $temp['created_at'], $temp['updated_at'],$temp['_method']);
 
             $input['permissions'] = json_encode($temp);
             $input['name'] = $request->name;

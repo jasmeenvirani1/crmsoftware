@@ -38,16 +38,12 @@ function GetDateTime()
 }
 function CheckPermissionForUser($module, $operation)
 {
-    return false;
-
     $role_data = Auth::user()->role()->first();
-    prx($role);
     if ($role_data) {
         $role = json_decode($role_data->permissions);
-        $role = get_object_vars();
-        if (property_exists($role, $module) && in_array($operation, $role )) {
-
-        }else{
+        if (property_exists($role, $module) && in_array($operation, $role->$module)) {
+            return true;
+        } else {
             return false;
         }
     } else {

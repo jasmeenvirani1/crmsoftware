@@ -47,7 +47,7 @@
     <!-- Page2 Start -->
     <div class="grid-container">
         <div class="header">
-            <div class="logo"><img src="{{ asset('images/logo.jpg') }}" alt=""></div>
+            <div class="logo"><img src="{{ asset($catalog_data->logo) }}" alt=""></div>
             <div class="add">
                 <p>{{ $catalog_data->address }}</p>
             </div>

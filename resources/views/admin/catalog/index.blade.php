@@ -47,7 +47,7 @@
                         <div class="kt-portlet__head-wrapper col-md-6">
                             <div class="dropdown dropdown-inline">
                                 <a href="{{ route('catalog.get-catalog', ['type' => 'all']) }}"
-                                    class="btn btn-brand btn-icon-sm" aria-expanded="false">
+                                    class="btn btn-brand btn-icon-sm" aria-expanded="false" target="_blank">
                                     All Catalog
                                 </a>
                             </div>
