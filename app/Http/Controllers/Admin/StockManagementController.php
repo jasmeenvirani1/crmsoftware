@@ -13,6 +13,9 @@ use App\Models\ClientAndSalesImage;
 use App\Models\product_images;
 use App\Models\ProductDimension;
 use App\Models\ProductImage;
+use App\Models\Quotation;
+use App\Models\StockVendor;
+use App\Models\Vendor;
 use App\Models\VendorImage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -41,7 +44,9 @@ class StockManagementController extends Controller
     public function create()
     {
         $category = MerchantCategory::get();
-        return view('admin.stock.create', ['title' => "Product", 'btn' => "Save", 'data' => [], 'category' => $category]);
+        $vendors = Quotation::all();
+
+        return view('admin.stock.create', ['title' => "Product", 'btn' => "Save", 'data' => [], 'category' => $category, 'vendors' => $vendors]);
     }
 
     /**
@@ -134,6 +139,11 @@ class StockManagementController extends Controller
                 'status' => $request->status
             ]
         );
+        $vendor_data = [];
+        foreach ($request->vendors as $vendor) {
+            $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+        }
+        StockVendor::insert($vendor_data);
 
         if ($product_id) {
             session()->flash('success', 'Product created successfully');
@@ -151,7 +161,8 @@ class StockManagementController extends Controller
      */
     public function show($id)
     {
-        return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get())->make(true);
+        $data = StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get();
+        return Datatables::of($data)->make(true);
     }
 
     /**
@@ -165,7 +176,9 @@ class StockManagementController extends Controller
         $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData'])->find($id);
         $data1 = Inward::where('stock_id', '=', $id)->get();
         $category = MerchantCategory::get();
-        return view('admin.stock.edit', ['title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category]);
+        $vendors = Quotation::all();
+        $selected_vendors = StockVendor::where('product_id', $id)->pluck('quotation_id')->toArray();
+        return view('admin.stock.edit', ['title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category, 'vendors' => $vendors, 'selected_vendors' => $selected_vendors]);
     }
     // public function inward($id) {
     //     return view('admin.stock.inward', ['title' => "Inward", 'btn' => "Save", 'data' => []]);
@@ -237,6 +250,12 @@ class StockManagementController extends Controller
             }
             ProductDimension::insert($dimensionDetailsArr);
         }
+        StockVendor::where('product_id', $product_id)->delete();
+        $vendor_data = [];
+        foreach ($request->vendors as $vendor) {
+            $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+        }
+        StockVendor::insert($vendor_data);
         if ($product_id) {
             session()->flash('success', 'Product updated successfully');
         } else {
@@ -321,16 +340,11 @@ class StockManagementController extends Controller
             session()->flash('error', "There is some thing went, Please try after some time.");
         }
         return redirect()->route('stock.index');
-        // } catch (\Exception $e) {
-        //     session()->flash('error', $e->getMessage());
-        //     return redirect()->route('stock.create');
-        // }
-
     }
     public function view($id)
     {
-        $data2 = StockManagement::where('id', $id)->get();
-        $data = Inward::where('stock_id', $id)->get();
+        $data2 = StockManagement::findOrFail($id);
+        $data = Inward::with('vendors')->where('stock_id', $id)->get();
         $data1 = Balanced::where('stock_id', $id)->get();
         return view('admin.stock.view', ['title' => "Transaction", 'btn' => "Save", 'data' => $data, 'data1' => $data1, 'data2' => $data2]);
     }

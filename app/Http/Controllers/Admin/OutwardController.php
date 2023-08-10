@@ -18,34 +18,40 @@ class OutwardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        $data = Balanced::where('stock_id','=',$request->stock_id)->get();
-        $data1 = ($data[0]['balanced_qty']) - ($request->outward_qty);
+    public function store(Request $request)
+    {
+
+        $balance_id = "";
+        $balance_stock_id = "";
+        $balanced_qty = '0';
         try {
             $validator = Validator::make($request->all(), [
-                        // 'product_name' => 'required',
+                // 'product_name' => 'required',
             ]);
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
+            $balance = Balanced::where('stock_id', '=', $request->stock_id)->first();
+            if ($balance) {
+                $balanced_qty = ($balance->balanced_qty) - ($request->outward_qty);
+                $balance_id = $balance->id;
+                $balance_stock_id = $balance->stock_id;
+            }
+
             $recordId = new Inward;
             $recordId->stock_id = $request->stock_id;
-            $recordId->inward_qty = $request->inward_qty;
-            $recordId->vendor_name = $request->vendor_name;
             $recordId->outward_qty = $request->outward_qty;
-            $recordId->lpm_no = $request->lpm_no;
-            $recordId->project_name = $request->project_name;
-            $recordId->notes = $request->notes;
-            $recordId->balanced_qty = $data1;
+            $recordId->balanced_qty = $balanced_qty;
             $recordId->save();
-            // $recordId = OutWard::updateOrCreate(['id' => $request->id], 
-            //     ['stock_id' => $request->stock_id,
-            //     'outward_qty' => $request->outward_qty,
-            //     'status' => $request->status]);
-            $recordId = Balanced::updateOrCreate(['id' => $data[0]['id']], 
-                ['stock_id' => $data[0]['stock_id'],
-                'balanced_qty' => $data1,
-                'status' => $request->status]);
+
+            $recordId = Balanced::updateOrCreate(
+                ['id' => $balance_id],
+                [
+                    'stock_id' => $balance_stock_id,
+                    'balanced_qty' => $balanced_qty,
+                    'status' => $request->status
+                ]
+            );
             if ($recordId) {
                 session()->flash('success', 'Outward created successfully');
             } else {
@@ -58,9 +64,9 @@ class OutwardController extends Controller
         }
     }
 
-    public function edit($id) {
-        $data = OutWard::where('stock_id','=',$id)->get();
-        return view('admin.stock.outward', ['title' => "Outward", 'btn' => "Save", 'data' => OutWard::where('stock_id','=',$id)->get()]);
+    public function edit($id)
+    {
+        $data = OutWard::where('stock_id', '=', $id)->get();
+        return view('admin.stock.outward', ['title' => "Outward", 'btn' => "Save", 'data' => OutWard::where('stock_id', '=', $id)->get()]);
     }
-
 }

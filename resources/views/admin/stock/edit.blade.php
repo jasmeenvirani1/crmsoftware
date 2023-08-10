@@ -273,7 +273,9 @@
                                                 <select class="form-control" id="company_country" name="company_country">
                                                     <option value="">SELECT</option>
                                                     @foreach ($category as $cat)
-                                                        <option value="{{ $cat->id }}" @if($cat->id == $data->category) selected @endif>{{ $cat->name }}
+                                                        <option value="{{ $cat->id }}"
+                                                            @if ($cat->id == $data->category) selected @endif>
+                                                            {{ $cat->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -344,11 +346,6 @@
                                             </table>
                                             <!--end: Datatable-->
                                         </div>
-
-
-
-
-
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Company</b></label>
                                             <div class="col-lg-9 col-xl-4">
@@ -361,9 +358,14 @@
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor</b></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <input type="text" name="product_size"
-                                                    value="{{ old('product_size', isset($data->product_size) ? $data->product_size : '') }}"
-                                                    id="product_size" class="form-control" placeholder="Vendor">
+                                                <select class="form-control selectpicker" data-live-search="true"
+                                                    id="vendor_name" name="vendors[]" multiple>
+                                                    <option value="">---SELECT---</option>
+                                                    @foreach ($vendors as $vendor)
+                                                        <option value="{{ $vendor->id }}" @if(in_array($vendor->id,$selected_vendors)) selected @endif>{{ $vendor->companyname }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group row" id="productprice">
@@ -404,17 +406,17 @@
                                             </div>
                                         </div>
                                         <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
-                                                                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
-                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
+                                                                                                                                                                                                                                                                                <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                                    <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
+                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                            </div> -->
                                         <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
-                                                                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
-                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
+                                                                                                                                                                                                                                                                                <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                                    <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
+                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                            </div> -->
                                         {{-- </div>
                                 </div> --}}
                                     </div>
