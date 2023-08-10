@@ -62,10 +62,17 @@
                                 <div class="kt-section kt-section--first">
                                     <div class="kt-section__body">
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label">Name</label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                <b>Name</b>
+                                                <span class="text-danger">*</span>
+                                            </label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" pattern="" maxlength="20" name="name" value="{{old('name',isset($data->name)?$data->name:'')}}" id="name" class="form-control" placeholder="Category Name">
+                                                @error('name')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                             </div>
+                                            @error('vendor_company_name')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
                                         </div>
                                         <!-- <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label">Image</label>
@@ -103,6 +110,7 @@
 <!-- end :: Contest -->
 @endsection
 @section('script')
+
 <script type="text/javascript">
     $(document).ready(function() {
         $.validator.addMethod("alpha", function(value, element) {
@@ -113,7 +121,7 @@
             rules: {
                 name: {
                     required: true,
-                    alpha: true
+                    alpha: false
                 }
             },
         });

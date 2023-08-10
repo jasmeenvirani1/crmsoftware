@@ -1,5 +1,41 @@
 @extends('layouts.admin')
 @section('content')
+    <style>
+        .invalid-feedback {
+            color: #dc3545;
+            /* Red color for error messages */
+            display: block;
+            /* Display each error message on a new line */
+            font-size: 14px;
+            /* Adjust the font size as needed */
+            margin-top: 5px;
+            /* Add a little spacing above the error message */
+        }
+
+        .text-left {
+            text-align: left;
+            /* Align the error message text to the left */
+        }
+
+        .alert {
+            background-color: #f8d7da;
+            /* Light red background for alert */
+            border: 1px solid #f5c6cb;
+            /* Border color for alert */
+            color: #721c24;
+            /* Text color for alert */
+            padding: 8px;
+            /* Padding for alert */
+            border-radius: 4px;
+            /* Rounded corners for alert */
+            margin-top: 5px;
+            /* Add spacing above the alert */
+        }
+
+        /* .alert strong {
+                            font-weight: bold;
+                        } */
+    </style>
     <!-- begin:: Bradcrubs -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
         <div class="kt-container  kt-container--fluid ">
@@ -11,7 +47,7 @@
                     <a href="{{ route('dashboard') }}" class="kt-subheader__breadcrumbs-link">
                         Dashboard </a>
                     <span class="kt-subheader__breadcrumbs-separator"></span>
-                    <a href="{{ url('admin/quotation') }}" class="kt-subheader__breadcrumbs-link">
+                    <a href="{{ url('admin/vendors') }}" class="kt-subheader__breadcrumbs-link">
                         Vendor </a>
                     <span class="kt-subheader__breadcrumbs-separator"></span>
                     <a href="javascript:void(0);" class="kt-subheader__breadcrumbs-link">
@@ -38,7 +74,7 @@
                 <div class="row">
                     <div class="col-xl-12">
 
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
 
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
@@ -48,7 +84,7 @@
                                 </div>
                                 <div class="kt-portlet__head-toolbar">
                                     <div class="kt-portlet__head-wrapper">
-                                        <a href="{{ route('quotation.index') }}" class="btn btn-clean btn-icon-sm">
+                                        <a href="{{ route('vendors.index') }}" class="btn btn-clean btn-icon-sm">
                                             <i class="la la-long-arrow-left"></i>
                                             Back
                                         </a>
@@ -56,7 +92,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('quotation.store') }}" method="POST" id="create_category"
+                            <form action="{{ route('vendors.store') }}" method="POST" id="create_category"
                                 name="create_category" class="form-horizontal kt-form kt-form--label-right"
                                 enctype="multipart/form-data">
                                 @csrf
@@ -71,7 +107,11 @@
                                                         class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" maxlength="20" name="company_name"
-                                                        id="company_name" class="form-control" placeholder="Company Name">
+                                                        id="company_name" class="form-control" placeholder="Company Name" value="{{ old('company_name', isset($data->company_name) ? $data->company_name : '') }}">
+                                                    @error('company_name')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
 
@@ -82,15 +122,23 @@
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" maxlength="50" name="address" id="address"
-                                                    class="form-control" placeholder="Address">
+                                                    class="form-control" placeholder="Address" value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                                @error('address')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>GST
                                                     IN</b><span class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <input type="text" maxlength="16" name="gstin" id="gstin"
-                                                    class="form-control gst" placeholder="Gst Details">
+                                                <input type="text" name="gstin" id="gstin" class="form-control gst"
+                                                    placeholder="Gst Details" value="{{ old('gstin', isset($data->gstin) ? $data->gstin : '') }}">
+                                                @error('gstin')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -100,90 +148,86 @@
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" maxlength="50" name="notes" id="notes"
-                                                    class="form-control" placeholder="Notes">
+                                                    class="form-control" placeholder="Notes" value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}">
+                                                @error('notes')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
-
-
-
                                         <label class="col-xl-3 col-lg-3 col-form-label"
                                             style="font-size: 15px;margin-left: -10px;"><b>Contact
                                                 Details</b></label>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
-                                                <div class="col-lg-5 col-xl-3">
-                                                    <input type="text" maxlength="12" name="personmame[]"
-                                                        class="form-control">
-                                                </div>
-
-                                                <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
-                                                <div class="col-lg-5 col-xl-3">
-                                                    <input type="text" maxlength="12" name="phonenumber[]"
-                                                        class="form-control allownumericwithoutdecimal">
-                                                </div>
-
-                                                <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
-                                                <div class="col-lg-5 col-xl-3">
-                                                    <input type="text" name="email[]" class="form-control">
-                                                </div>
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-success add-contact"
-                                                        type="button">Add</button>
-                                                </div>
+                                        <div class="row">
+                                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
+                                            <div class="col-lg-3 col-xl-3">
+                                                <input type="text" maxlength="12" name="personmame[]"
+                                                    class="form-control">
                                             </div>
+                                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
+                                            <div class="col-lg-3 ol-xl-3">
+                                                <input type="text" maxlength="12" name="phonenumber[]"
+                                                    class="form-control allownumericwithoutdecimal">
+                                            </div>
+                                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
+                                            <div class="col-lg-3 col-xl-3">
+                                                <input type="text" name="email[]" class="form-control">
+                                            </div>
+                                            <button class="btn btn-success col-lg-1"
+                                            type="button">Add</button>
+                                            {{-- <label class="col-xl-0 col-lg-0 col-form-label"><b>&nbsp;</b></label> --}}
+                                            {{-- <div class="col-lg- col-xl-2">
+                                            </div> --}}
+
+                                                {{-- <div class="input-group-btn">
+
+                                                </div> --}}
+
                                         </div>
-
-                                        <div class="increment form-group">
-
-                                        </div>
-
-
-
-
-
-
-
-                                        <!-- <div class="form-group row" id="add_button">
-                                                                                                                                                                                                                                                                                                                        <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Customer Name</b><span class="text-danger">*</span></label>
-                                                                                                                                                                                                                                                                                                                        <div class="col-lg-4 col-xl-4">
-                                                                                                                                                                                                                                                                                                                            <select class="form-control selectpicker" id="customer_name" name="customer_name" data-live-search="true" required>
-                                                                                                                                                                                                                                                                                                                                <option value="">---SELECT---</option>
-                                                                                                                                                                                                                                                                                                                                @foreach ($customer as $customers)
-    <option value="{{ $customers->id }}">{{ $customers->company_name }}</option>
-    @endforeach
-                                                                                                                                                                                                                                                                                                                            </select></div>
-                                                                                                                                                                                                                                                                                                                            <a class="btn btn-brand btn-icon-sm col-xl-2 col-lg-2" id="add_button1" aria-expanded="false">
-                                                                                                                                                                                                                                                                                                                            <i class="flaticon2-plus"></i><span style="color:white;">Add Customer</span>
-                                                                                                                                                                                                                                                                                                                        </a>
-                                                                                                                                                                                                                                                                                                                    </div> -->
-                                        <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                                                                                    <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Price Unit</b><span class="text-danger">*</span></label>
-                                                                                                                                                                                                                                                                                                                    <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                                                                        <select class="form-control selectpicker" id="price_unit" name="price_unit" data-live-search="true" required>
-                                                                                                                                                                                                                                                                                                                            <option value="">---SELECT---</option>
-                                                                                                                                                                                                                                                                                                                            <option value="$">$(Dollar)</option>
-                                                                                                                                                                                                                                                                                                                            <option value="₹" >₹(INR)</option>
-                                                                                                                                                                                                                                                                                                                            <option value="Other" >Other</option>
-                                                                                                                                                                                                                                                                                                                        </select>
-                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                </div> -->
-                                        <!-- <div class="form-group row" id="ts1">
-                                                                                                                                                                                                                                                                                                                        <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Add Product</b></label>
-                                                                                                                                                                                                                                                                                                                        <a id="ts" class="btn btn-brand btn-icon-sm col-xl-2 col-lg-2" aria-expanded="false">
-                                                                                                                                                                                                                                                                                                                                    <i class="flaticon2-plus"></i><span style="color:white;">Add Product</span>
-                                                                                                                                                                                                                                                                                                                        </a> -->
                                     </div>
-                                    <!-- <div class="form-group row">-->
-                                    <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Prepared
+                                    <div class="increment form-group">
+                                    </div>
+                                    {{-- <div class="form-group row" id="add_button"><option value="{{ $customers->id }}">{{ $customers->company_name }}</option>@endforeach</div> --}}
+                                    <!-- <div class="form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Price Unit</b><span class="text-danger">*</span></label>
+                                                            <div class="col-lg-9 col-xl-4">
+                                                               <select class="form-control selectpicker" id="price_unit" name="price_unit" data-live-search="true" required>
+                                                                    <option value="">---SELECT---</option>
+                                                                    <option value="$">$(Dollar)</option>
+                                                                    <option value="₹" >₹(INR)</option>
+                                                                    <option value="Other" >Other</option>
+                                                                </select>
+                                                            </div>
+                                                         </div> -->
+                                    <!-- <div class="form-group row" id="ts1">
+                                                      <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Add Product</b></label>
+                                                          <a id="ts" class="btn btn-brand btn-icon-sm col-xl-2 col-lg-2" aria-expanded="false">
+                                                                 <i class="flaticon2-plus"></i><span style="color:white;">Add Product</span>
+                                                          </a> -->
+                                </div>
+                                <!-- <div class="form-group row">-->
+                                {{-- <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Prepared
                                             By:</b><span class="text-danger">*</span></label>
                                     <div class="col-lg-4 col-xl-4">
                                         <input class="form-control" type="text" name="prepared_by" id="prepared_by"
-                                            value="{{ Auth::user()->name }}" required="">
-                                    </div>
-
-                                </div>
+                                            value="{{ Auth::user()->name }}" required=""> --}}
                                 <div class="kt-portlet__foot">
+                                    <div class="kt-form__actions">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-xl-3">
+                                            </div>
+                                            <div class="col-lg-9 col-xl-9">
+                                                <button type="submit" class="btn btn-success">Save</button>&nbsp;
+                                                <a href="{{ route('vendors.index') }}" id="cancel_btn"
+                                                    class="btn btn-secondary">Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                    </div>
+                    {{-- <div class="kt-portlet__foot">
                                     <div class="kt-form__actions">
                                         <div class="row">
                                             <div class="col-lg-3 col-xl-3">
@@ -195,39 +239,39 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
-                            <div class="clone hidden d-none">
-                                <div class="row mt-3">
-                                    <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
-                                    <div class="col-lg-5 col-xl-3">
-                                        <input type="text" maxlength="12" name="personmame[]" class="form-control">
-                                    </div>
-
-                                    <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
-                                    <div class="col-lg-5 col-xl-3">
-                                        <input type="text" maxlength="12" name="phonenumber[]"
-                                            class="form-control allownumericwithoutdecimal">
-                                    </div>
-
-                                    <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
-                                    <div class="col-lg-5 col-xl-3">
-                                        <input type="text" name="email[]" class="form-control">
-                                    </div>
-
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-danger remove-row" type="button">Remove</button>
-                                    </div>
-                                </div>
+                                </div> --}}
+                    </form>
+                    <div class="clone hidden d-none">
+                        <div class="row mt-3">
+                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
+                            <div class="col-lg-5 col-xl-3">
+                                <input type="text" maxlength="12" name="personmame[]" class="form-control">
                             </div>
 
+                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
+                            <div class="col-lg-5 col-xl-3">
+                                <input type="text" maxlength="12" name="phonenumber[]"
+                                    class="form-control allownumericwithoutdecimal">
+                            </div>
+
+                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
+                            <div class="col-lg-5 col-xl-3">
+                                <input type="text" name="email[]" class="form-control">
+                            </div>
+
+                            <div class="input-group-btn">
+                                <button class="btn btn-danger remove-row" type="button">Remove</button>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-            <!--End:: App Content-->
         </div>
-        <!--End::App-->
+    </div>
+    <!--End:: App Content-->
+    </div>
+    <!--End::App-->
     </div>
     <!-- end :: Contest -->
 @endsection

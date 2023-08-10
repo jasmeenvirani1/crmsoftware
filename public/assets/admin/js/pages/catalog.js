@@ -30,7 +30,7 @@ jQuery(document).ready(function () {
                     return '<input type="checkbox" class="form-control form-control-sm catalog-checkbox" placeholder="" aria-controls="stock_datatable" data-id="' + full.id + '" >';
                 },
             },
-            { data: 'product_name' },
+           
             {
                 render: function (data, type, full, meta) {
                     var image_url = window.baseUrl;
@@ -40,6 +40,17 @@ jQuery(document).ready(function () {
                         image_url += '/images/logo.jpg';
                     }
                     return '<img src="' + image_url + '" style="height: 50px;width: 50px;">';
+                },
+            },
+            { data: 'product_name' },
+            {
+                render: function (data, type, full, meta) {
+                    if(full.category != null){
+                         return full.category.name
+                        }else{
+                        return null;
+                    }
+                    
                 },
             },
             { data: 'product_company' },

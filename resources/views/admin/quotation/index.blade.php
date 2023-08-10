@@ -13,7 +13,7 @@
                     <a href="{{route('dashboard')}}" class="kt-subheader__breadcrumbs-link">
                         Dashboard </a>
                     <span class="kt-subheader__breadcrumbs-separator"></span>
-                    <a href="{{url('admin/quotation')}}" class="kt-subheader__breadcrumbs-link">
+                    <a href="{{url('admin/vendors')}}" class="kt-subheader__breadcrumbs-link">
                         {{$title}} </a>               
                 </div>
             </div>         
@@ -36,7 +36,7 @@
                 <div class="kt-portlet__head-toolbar">
                     <div class="kt-portlet__head-wrapper">                
                         <div class="dropdown dropdown-inline">
-                            <a href="{{url('admin/quotation/create')}}" class="btn btn-brand btn-icon-sm" aria-expanded="false">
+                            <a href="{{url('admin/vendors/create')}}" class="btn btn-brand btn-icon-sm" aria-expanded="false">
                                 <i class="flaticon2-plus"></i> Add Vendor
                             </a>
                         </div>
@@ -57,7 +57,8 @@
                 <table class="table table-separate table-head-custom table-checkable" id="quotation_datatable">
                     <thead>
                         <tr>
-                            <th>compnay Name</th>
+                            <th>Created At</th>
+                            <th>Compnay Name</th>
                             <th>Address</th>
                             <th>Action</th>
                         </tr>

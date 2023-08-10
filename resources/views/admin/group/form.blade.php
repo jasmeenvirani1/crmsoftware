@@ -37,7 +37,7 @@
             <div class="kt-grid__item kt-grid__item--fluid kt-app__content">
                 <div class="row">
                     <div class="col-xl-12">
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
                                 <div class="kt-portlet__head-label">
@@ -74,13 +74,20 @@
                                 <div class="kt-section kt-section--first">
                                     <div class="kt-section__body">
                                         <div class="form-group row">
-                                            {!! Form::label('group_name', 'Enter group name', ['class' => 'col-xl-3 col-lg-3 col-form-label']) !!}
+                                            {{-- {!! Form::label('group_name', 'Group Name', ['class' => 'col-xl-3 col-lg-3 col-form-label required']) !!}       --}}
+                                            {!! Form::label('group_name', 'Enter group name', ['class' => 'col-xl-3 col-lg-3 col-form-label required-label font-weight-bold']) !!}
+
                                             <div class="col-lg-9 col-xl-4">
-                                                {!! Form::text('name', null, [
+                                                {!! Form::text('name',  old('name'), [
                                                     'id' => 'group_name',
                                                     'class' => 'form-control',
                                                     'placeholder' => 'Group Name',
                                                 ]) !!}
+                                                @error('name')
+                                                <span class="alert invalid-feedback text-left" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -109,4 +116,13 @@
         <!--End::App-->
     </div>
     <!-- end :: Contest -->
+@endsection
+
+@section('script')
+<style>
+.required-label::after {
+    content: ' *';
+    color: red;
+}
+</style>
 @endsection

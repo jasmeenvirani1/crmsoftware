@@ -52,8 +52,8 @@
                         <table class="table table-separate table-head-custom table-checkable" id="group_datatable">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
                                     <th>Created At</th>
+                                    <th>Name</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

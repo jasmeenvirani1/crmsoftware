@@ -59,6 +59,8 @@ class StockManagementController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_name' => 'required',
+            'partno'=> 'required',
+            'company_country'=>'required',
         ]);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
@@ -161,8 +163,8 @@ class StockManagementController extends Controller
      */
     public function show($id)
     {
-        $data = StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get();
-        return Datatables::of($data)->make(true);
+        // return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get())->make(true);
+        return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('updated_at', 'desc')->get())->make(true);
     }
 
     /**

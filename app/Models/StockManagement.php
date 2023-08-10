@@ -92,9 +92,9 @@ class StockManagement extends Model
     {
         return $this->hasMany(ProductDimension::class, 'product_id', 'id');
     }
-    public function vendors()
+    public function category()
     {
-        return $this->hasMany(StockVendor::class, 'product_id', 'id');
+        return $this->belongsTo(MerchantCategory::class,'category', 'id');
     }
 
     // public function getClientImageUrlAttribute($value) {

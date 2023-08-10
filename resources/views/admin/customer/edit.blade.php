@@ -1,5 +1,31 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .invalid-feedback {
+        color: #dc3545; /* Red color for error messages */
+        display: block; /* Display each error message on a new line */
+        font-size: 14px; /* Adjust the font size as needed */
+        margin-top: 5px; /* Add a little spacing above the error message */
+    }
+
+    .text-left {
+        text-align: left; /* Align the error message text to the left */
+    }
+
+    .alert {
+        background-color: #f8d7da; /* Light red background for alert */
+        border: 1px solid #f5c6cb; /* Border color for alert */
+        color: #721c24; /* Text color for alert */
+        padding: 8px; /* Padding for alert */
+        border-radius: 4px; /* Rounded corners for alert */
+        margin-top: 5px; /* Add spacing above the alert */
+    }
+
+    /* .alert strong {
+        font-weight: bold; 
+    } */
+</style>
+
     <!-- begin:: Bradcrubs -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
         <div class="kt-container  kt-container--fluid ">
@@ -38,7 +64,7 @@
                 <div class="row">
                     <div class="col-xl-12">
 
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
 
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
@@ -48,7 +74,7 @@
                                 </div>
                                 <div class="kt-portlet__head-toolbar">
                                     <div class="kt-portlet__head-wrapper">
-                                        <a href="{{ route('customer.index') }}" class="btn btn-clean btn-icon-sm">
+                                        <a href="{{ route('company.index') }}" class="btn btn-clean btn-icon-sm">
                                             <i class="la la-long-arrow-left"></i>
                                             Back
                                         </a>
@@ -57,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <form action="{{ route('customer.update', ['customer' => $data->id]) }}" method="POST"
+                            <form action="{{ route('company.update', ['company' => $data->id]) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -69,33 +95,49 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Company Name</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                    <b>Company Name</b>
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="vendor_company_name"
                                                         value="{{ $data->name }}" id="vendor_company_name"
                                                         class="form-control" placeholder="Company Name">
+                                                        @error('vendor_company_name')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Email</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                    <b>Email</b>
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="email" name="email" value="{{ $data->email }}"
-                                                        id="vendor_company_name" class="form-control" placeholder="Email">
+                                                        id="email" class="form-control" placeholder="Email">
+                                                        @error('email')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Phone Number</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                    <b>Phone Number</b>
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="phonenumber"
-                                                        value="{{ $data->phonenumber }}" id="vendor_company_name"
+                                                        value="{{ $data->phonenumber }}" id="phonenumber"
                                                         class="form-control" placeholder="Phone Number">
+                                                        @error('phonenumber')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Address</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                    <b>Address</b>
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="address" value="{{ $data->address }}"
-                                                        id="vendor_company_name" class="form-control" placeholder="Address">
+                                                        id="address" class="form-control" placeholder="Address">
+                                                        @error('address')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -103,10 +145,14 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="gst" id="gst" class="form-control"
                                                         placeholder="GST" value="{{ $data->gst }}">
+                                                        @error('gst')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Logo</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                    <b>Logo</b>
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="file" name="logo" class="form-control"
                                                         placeholder="Logo" accept="image/png, image/jpeg">
@@ -152,7 +198,7 @@
                                             <div class="col-lg-9 col-xl-9">
                                                 <button type="submit"
                                                     class="btn btn-success">{{ $btn }}</button>&nbsp;
-                                                <a href="{{ route('customer.index') }}" id="cancel_btn"
+                                                <a href="{{ route('company.index') }}" id="cancel_btn"
                                                     class="btn btn-secondary">Cancel</a>
                                             </div>
                                         </div>

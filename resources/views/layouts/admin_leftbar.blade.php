@@ -35,9 +35,9 @@
                     </li>
                 @endif
                 @if (CheckPermissionForUser('vendor', 'view'))
-                    <li class="kt-menu__item  kt-menu__item{{ Route::is('quotation.*') ? '--active' : '' }}"
+                    <li class="kt-menu__item  kt-menu__item{{ Route::is('vendors.*') ? '--active' : '' }}"
                         aria-haspopup="true">
-                        <a href="{{ route('quotation.index') }}" class="kt-menu__link ">
+                        <a href="{{ route('vendors.index') }}" class="kt-menu__link ">
                             <span class="kt-menu__link-icon">
                                 <i class="fas fa-handshake text-success"></i>
                             </span>
@@ -71,9 +71,9 @@
                 @endif
 
                 @if (CheckPermissionForUser('product', 'view'))
-                    <li class="kt-menu__item  kt-menu__item{{ Route::is('customer.*') ? '--active' : '' }}"
+                    <li class="kt-menu__item  kt-menu__item{{ Route::is('company.*') ? '--active' : '' }}"
                         aria-haspopup="true">
-                        <a href="{{ route('customer.index') }}" class="kt-menu__link ">
+                        <a href="{{ route('company.index') }}" class="kt-menu__link ">
                             <span class="kt-menu__link-icon">
                                 <i class="fas fa-building text-success"></i>
                             </span>

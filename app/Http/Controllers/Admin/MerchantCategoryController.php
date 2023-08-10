@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\MerchantCategory;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
+use Auth;
+
+
 
 class MerchantCategoryController extends Controller
 {
@@ -40,9 +44,25 @@ class MerchantCategoryController extends Controller
     public function store(Request $request)
     {
         try {
+            // $validator = Validator::make($request->all(), [
+            //     'name' => 'required | unique:merchant_categories',
+            // ]);
+            // $validator = Validator::make($request->all(), [
+            //     'name' => [
+            //         'required',
+            //         Rule::unique('merchant_categories')->ignore($request->id, 'id')
+            //     ],
+            // ]);
+            $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => [
+                    'required',
+                    Rule::unique('merchant_categories')->where(function ($query) use ($request,$group_id) {
+                        return $query->where('group_id',$group_id);
+                    })->ignore($request->id, 'id')
+                ],
             ]);
+
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
@@ -78,7 +98,9 @@ class MerchantCategoryController extends Controller
      */
     public function show($id)
     {
-        return Datatables::of(MerchantCategory::all())->make(true);
+        // return Datatables::of(MerchantCategory::all())->make(true);
+        $merchantCategoriesQuery = MerchantCategory::orderBy('updated_at', 'desc'); // Order by updated_at in descending order
+        return Datatables::of($merchantCategoriesQuery)->make(true);
     }
 
     /**

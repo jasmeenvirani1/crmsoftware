@@ -38,7 +38,9 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        return Datatables::of(Group::orderBy('id', 'desc')->get())->make(true);
+        // return Datatables::of(Group::orderBy('id', 'desc')->get())->make(true);
+        $groupQuery = Group::orderBy('id', 'desc')->orderBy('updated_at', 'desc');
+        return Datatables::of($groupQuery)->make(true);
     }
 
     /**
@@ -58,6 +60,28 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
+        // try {
+        //     $validator = Validator::make($request->all(), [
+        //         'name' => 'required',
+        //     ]);
+        //     if ($validator->fails()) {
+        //         return back()->withInput()->withErrors($validator->errors());
+        //     }
+        //     DB::beginTransaction();
+        //     $input = AddDateTime($request);
+        //     $model = Group::insert($input);
+        //     DB::commit();
+        //     if ($model) {
+        //         session()->flash('success', 'Group created successfully');
+        //     } else {
+        //         session()->flash('error', "There is some thing went, Please try after some time.");
+        //     }
+        //     return redirect()->route('group.index');
+        // } catch (Exception $e) {
+        //     DB::rollback();
+        //     session()->flash('error', $e->getMessage());
+        //     return redirect()->back();
+        // }
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
@@ -65,14 +89,17 @@ class GroupController extends Controller
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
+
             DB::beginTransaction();
             $input = AddDateTime($request);
-            $model = Group::insert($input);
+            // Apply desired ordering here
+            $model = Group::orderBy('id', 'desc')->orderBy('created_at', 'desc')->insert($input);
             DB::commit();
+
             if ($model) {
                 session()->flash('success', 'Group created successfully');
             } else {
-                session()->flash('error', "There is some thing went, Please try after some time.");
+                session()->flash('error', "There is something wrong. Please try again later.");
             }
             return redirect()->route('group.index');
         } catch (Exception $e) {
@@ -92,6 +119,29 @@ class GroupController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // try {
+        //     $validator = Validator::make($request->all(), [
+        //         'name' => 'required',
+        //     ]);
+        //     if ($validator->fails()) {
+        //         return back()->withInput()->withErrors($validator->errors());
+        //     }
+        //     DB::beginTransaction();
+        //     $input = AddDateTime($request, 'edit');
+        //     $model = Group::find($id)->update($input);
+        //     DB::commit();
+        //     if ($model) {
+        //         session()->flash('success', 'Group updated successfully');
+        //     } else {
+        //         session()->flash('error', "There is some thing went, Please try after some time.");
+        //     }
+        //     return redirect()->route('group.index');
+        // } catch (Exception $e) {
+        //     DB::rollback();
+        //     session()->flash('error', $e->getMessage());
+        //     return redirect()->back();
+        // }
+
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
@@ -101,12 +151,15 @@ class GroupController extends Controller
             }
             DB::beginTransaction();
             $input = AddDateTime($request, 'edit');
-            $model = Group::find($id)->update($input);
+
+            // Apply desired ordering here
+            $model = Group::orderBy('created_at', 'desc')->find($id)->update($input);
             DB::commit();
+
             if ($model) {
                 session()->flash('success', 'Group updated successfully');
             } else {
-                session()->flash('error', "There is some thing went, Please try after some time.");
+                session()->flash('error', "There is something wrong. Please try again later.");
             }
             return redirect()->route('group.index');
         } catch (Exception $e) {

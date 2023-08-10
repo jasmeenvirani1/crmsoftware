@@ -2012,12 +2012,21 @@ textarea.form-control {
   -webkit-box-shadow: 0 0 0 0.2rem rgba(10, 187, 135, 0.25);
   box-shadow: 0 0 0 0.2rem rgba(10, 187, 135, 0.25); }
 
-.invalid-feedback {
+/* .invalid-feedback {
   display: none;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 80%;
-  color: #fd397a; }
+  color: #fd397a; } */
+
+  .invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+  }
+
 
 .invalid-tooltip {
   position: absolute;
