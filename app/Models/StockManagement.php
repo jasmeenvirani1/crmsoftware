@@ -92,6 +92,10 @@ class StockManagement extends Model
     {
         return $this->hasMany(ProductDimension::class, 'product_id', 'id');
     }
+    public function category()
+    {
+        return $this->belongsTo(MerchantCategory::class,'category', 'id');
+    }
 
     // public function getClientImageUrlAttribute($value) {
     //     return Storage::disk('public')->url('client_image/' . $this->clientimage);

@@ -25,7 +25,7 @@ class CatalogController extends Controller
     public function GetCatalog($type, Request $request)
     {
         $catalog_data = Customer::where('default', '1')->first();
-        $sql = StockManagement::with(['productImages']);
+        $sql = StockManagement::with(['productImages','category']);
         if ($type == 'all') {
             $product_data =  $sql->get();
         } elseif ($type == 'selected') {
@@ -45,6 +45,11 @@ class CatalogController extends Controller
      */
     public function show($id)
     {
-        return DataTables::of(StockManagement::with('productImages')->select('*')->orderBy('id', 'desc')->get())->make(true);
+        // return DataTables::of(StockManagement::with('productImages')->select('*')->orderBy('id', 'desc')->get())->make(true);
+        return DataTables::of(StockManagement::with('productImages','category')
+        ->select('*')
+        ->orderBy('updated_at', 'desc') // Order by updated_at column in descending order
+        ->get())
+        ->make(true);
     }
 }

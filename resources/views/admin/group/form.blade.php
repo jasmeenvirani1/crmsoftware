@@ -78,7 +78,7 @@
                                             {!! Form::label('group_name', 'Enter group name', ['class' => 'col-xl-3 col-lg-3 col-form-label required-label font-weight-bold']) !!}
 
                                             <div class="col-lg-9 col-xl-4">
-                                                {!! Form::text('name', null, [
+                                                {!! Form::text('name',  old('name'), [
                                                     'id' => 'group_name',
                                                     'class' => 'form-control',
                                                     'placeholder' => 'Group Name',

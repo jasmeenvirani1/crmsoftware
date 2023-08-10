@@ -63,8 +63,9 @@
                             <thead>
                                 <tr>
                                     <th>Select</th>
-                                    <th>Product Name</th>
                                     <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
                                     <th>Product Company</th>
                                 </tr>
                             </thead>

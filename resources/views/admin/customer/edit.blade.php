@@ -103,9 +103,7 @@
                                                     <input type="text" name="vendor_company_name"
                                                         value="{{ $data->name }}" id="vendor_company_name"
                                                         class="form-control" placeholder="Company Name">
-                                                        @foreach ($errors->get('vendor_company_name') as $error)
-                                                        <p class="text-danger">{{ $error }}</p>
-                                                    @endforeach
+                                                        @error('vendor_company_name')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -116,9 +114,7 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="email" name="email" value="{{ $data->email }}"
                                                         id="email" class="form-control" placeholder="Email">
-                                                        @foreach ($errors->get('email') as $error)
-                                                        <p class="text-danger">{{ $error }}</p>
-                                                    @endforeach
+                                                        @error('email')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -130,9 +126,7 @@
                                                     <input type="text" name="phonenumber"
                                                         value="{{ $data->phonenumber }}" id="phonenumber"
                                                         class="form-control" placeholder="Phone Number">
-                                                        @foreach ($errors->get('phonenumber') as $error)
-                                                        <p class="text-danger">{{ $error }}</p>
-                                                    @endforeach
+                                                        @error('phonenumber')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -143,9 +137,7 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="address" value="{{ $data->address }}"
                                                         id="address" class="form-control" placeholder="Address">
-                                                        @foreach ($errors->get('address') as $error)
-                                                        <p class="text-danger">{{ $error }}</p>
-                                                    @endforeach
+                                                        @error('address')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">

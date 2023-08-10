@@ -20,9 +20,11 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
+use Auth;
 
 class QuotationController extends Controller
 {
@@ -83,8 +85,18 @@ class QuotationController extends Controller
     public function store(Request $request)
     {
         try {
+            $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'gstin' => 'string|size:15',   
+                'companyname'=>
+                [
+                    'required',
+                    Rule::unique('quotation')->where(function ($query) use ($group_id) {
+                        return $query->where('group_id', $group_id);
+                    }),
+                ],
+                'address'=>'required',
+                'notes'=>'required',
+                'gstin' => 'required|string|size:15',   
             ]);
 
             if ($validator->fails()) {

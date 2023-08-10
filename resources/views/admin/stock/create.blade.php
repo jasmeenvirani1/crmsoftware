@@ -6,6 +6,29 @@
             margin: 8px 1rem;
             width: 100%;
         }
+        .invalid-feedback {
+        color: #dc3545; /* Red color for error messages */
+        display: block; /* Display each error message on a new line */
+        font-size: 14px; /* Adjust the font size as needed */
+        margin-top: 5px; /* Add a little spacing above the error message */
+    }
+
+    .text-left {
+        text-align: left; /* Align the error message text to the left */
+    }
+
+    .alert {
+        background-color: #f8d7da; /* Light red background for alert */
+        border: 1px solid #f5c6cb; /* Border color for alert */
+        color: #721c24; /* Text color for alert */
+        padding: 8px; /* Padding for alert */
+        border-radius: 4px; /* Rounded corners for alert */
+        margin-top: 5px; /* Add spacing above the alert */
+    }
+
+    /* .alert strong {
+        font-weight: bold; 
+    } */
     </style>
     <?php
     $usdprice = DB::table('gst_percentage')
@@ -50,7 +73,7 @@
                 <div class="row">
                     <div class="col-xl-12">
 
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
 
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
@@ -78,20 +101,23 @@
                                     <div class="kt-section kt-section--first">
                                         <div class="kt-section__body">
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Name</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Name</b>
+                                                    <span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="product_name" id="product_name"
                                                         class="form-control" placeholder="Product Name">
+                                                        @error('product_name')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product
-                                                        Image(s)</b></label>
-                                                <div class="input-group demo control-group lst increment">
+                                                        Image(s)</b><span class="text-danger">*</span></label></label>
+
+                                                        <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple>
+                                                        accept="image/png, image/jpeg" multiple required>
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success products_img"
                                                             type="button">Add</button>
@@ -117,12 +143,12 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor
-                                                        Image(s)</b></label>
+                                                        Image(s)</b><span class="text-danger">*</span></label>
                                                 <div class="input-group demo1 control-group lst increment1 parth"
                                                     id="vendor_img_div">
                                                     <input type="file" name="vendor_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple>
+                                                        accept="image/png, image/jpeg" multiple required>
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success id1" id="vendor_img"
                                                             type="button">Add</button>
@@ -159,12 +185,12 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Client/Sales
-                                                        Image(s)</b></label>
+                                                        Image(s)</b><span class="text-danger">*</span></label>
                                                 <div class="input-group demo2 control-group lst increment2"
                                                     id="client_img_div">
                                                     <input type="file" name="client_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple>
+                                                        accept="image/png, image/jpeg" multiple required>
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success id2 client_img"
                                                             type="button">Add</button>
@@ -200,16 +226,17 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product
-                                                        PartNo</b></label>
+                                                        PartNo</b><span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="partno"
                                                         value="{{ old('partno', isset($data->partno) ? $data->partno : '') }}"
                                                         id="partno" class="form-control" placeholder="Product PartNo">
+                                                        @error('partno')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                        Category</b></label>
+                                                        Category</b><span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <select class="form-control" id="company_country"
                                                         name="company_country">
@@ -219,9 +246,9 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    @error('company_country')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror     
                                                 </div>
                                             </div>
-
 
 
                                             <label class="col-xl-0 col-lg-0 col-form-label"
@@ -308,7 +335,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row" id="productprice">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In INR.)</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In
+                                                        INR.)</b></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" pattern="\d*" maxlength="5"
                                                         name="product_price"
@@ -319,7 +347,8 @@
                                             </div>
 
                                             <div class="form-group row ">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD $.)
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD
+                                                        $.)
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="total_amount" id="total_amount"
@@ -346,17 +375,17 @@
                                                 </div>
                                             </div>
                                             <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                                                                                                                                                                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
-                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
                                             <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                                                                                                                                                                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
-                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -414,6 +443,8 @@
 @section('script')
     <script type="text/javascript">
         var st_km = "<?php echo $usdprice->cgst; ?>";
+
+
         $(document).ready(function() {
             $.validator.addMethod("alpha", function(value, element) {
                 return this.optional(element) || value == value.match(/^[a-zA-Z\s]+$/);
@@ -447,7 +478,10 @@
 
         $(".allownumericwithoutdecimal").on("keypress keyup blur", function(event) {
 
-            document.getElementById("total_amount").value = $(this).val() / st_km;
+            var product_price = $(this).val() / st_km;
+            var rounded_price = product_price.toFixed(2); // Round to two decimal places
+
+            document.getElementById("total_amount").value = rounded_price;
 
             $(this).val($(this).val().replace(/[^\d].+/, ""));
             if ((event.which < 48 || event.which > 57)) {

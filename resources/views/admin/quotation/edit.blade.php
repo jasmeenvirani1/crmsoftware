@@ -108,6 +108,10 @@
                                                     <input type="text" maxlength="50" name="company_name"
                                                         value="{{ old('company_name', isset($data->companyname) ? $data->companyname : '') }}"
                                                         id="company_name" class="form-control" placeholder="Company Name">
+                                                        @error('company_name')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
 
@@ -120,6 +124,10 @@
                                                 <input type="text" maxlength="50" name="address"
                                                     value="{{ old('address', isset($data->address) ? $data->address : '') }}"
                                                     id="address" class="form-control" placeholder="Address">
+                                                    @error('address')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -129,6 +137,7 @@
                                                 <input type="text" name="gstin"
                                                     value="{{ old('gstin', isset($data->gst) ? $data->gst : '') }}"
                                                     id="gstin" class="form-control gst" placeholder="Gst Details">
+
                                                 @error('gstin')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
@@ -144,6 +153,10 @@
                                                 <input type="text" maxlength="20" name="notes"
                                                     value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}"
                                                     id="notes" class="form-control" placeholder="Notes">
+                                                    @error('notes')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div>
