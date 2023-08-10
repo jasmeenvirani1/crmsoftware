@@ -51,6 +51,7 @@
                 <table class="table table-separate table-head-custom table-checkable" id="stock_datatable">
                     <thead>
                         <tr>
+                            <th>Created At</th>
                             <th>Product Name</th>
                             <th>Product Company</th>
                             <th>Current Balance</th>

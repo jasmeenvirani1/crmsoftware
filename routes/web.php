@@ -61,14 +61,14 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::resource('category', MerchantCategoryController::class);
         Route::resource('notification', NotificationController::class);
         Route::resource('role', RoleController::class);
-        Route::resource('quotation', QuotationController::class);
-        Route::resource('editquotation', EditQuotationController::class);
-        Route::resource('customer', CustomerController::class);
-        Route::post('customer/default', [CustomerController::class, 'defaultCustomer']);
+        Route::resource('vendors', QuotationController::class);
+        Route::resource('editvendors', EditQuotationController::class);
+        Route::resource('company', CustomerController::class);
+        Route::post('company/default', [CustomerController::class, 'defaultCustomer']);
 
         Route::resource('stock', StockManagementController::class);
         Route::post('editstore', [StockManagementController::class, 'editstore'])->name('editstore');
-        Route::post('customereditstore', [CustomerController::class, 'customereditstore'])->name('customereditstore');
+        Route::post('customereditstore', [CustomerController::class, 'customereditstore'])->name('companyeditstore');
         Route::resource('vendor', VendorController::class);
         Route::resource('terms', TermsController::class);
         Route::resource('technicalspecification', TechnicalSpecificationController::class);
@@ -81,14 +81,14 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::resource('balanced', BalancedController::class);
         Route::resource('gst', GstPercentageController::class);
         Route::get('stock/{id}/view', [StockManagementController::class, 'view']);
-        Route::get('quotation/{id}/view', [Edit::class, 'increment']);
+        Route::get('vendors/{id}/view', [Edit::class, 'increment']);
         Route::get('stock/{id}/view', [StockManagementController::class, 'view']);
         Route::get('stock/{id}/inward', [StockManagementController::class, 'inward']);
         Route::get('stock/{id}/balanced', [StockManagementController::class, 'balanced']);
         Route::get('stock/{id}/outward', [StockManagementController::class, 'outward']);
         Route::post('product-image-delete', [StockManagementController::class, 'productImageDelete'])->name('product.image.delete');
         Route::get('purchase/invoice/{id}', [PurchaseOrderController::class, 'invoice']);
-        Route::get('quotation/invoice/{id}', [QuotationController::class, 'invoice']);
+        Route::get('vendors/invoice/{id}', [QuotationController::class, 'invoice']);
         Route::resource('catalog', CatalogController::class);
         Route::get('get-catalog/{type?}', [CatalogController::class, 'GetCatalog'])->name('catalog.get-catalog');
         Route::resource('group', GroupController::class);

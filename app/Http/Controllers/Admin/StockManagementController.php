@@ -151,7 +151,8 @@ class StockManagementController extends Controller
      */
     public function show($id)
     {
-        return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get())->make(true);
+        // return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get())->make(true);
+        return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('updated_at', 'desc')->get())->make(true);
     }
 
     /**

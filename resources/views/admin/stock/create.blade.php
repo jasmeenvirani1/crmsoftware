@@ -308,8 +308,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row" id="productprice">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                        Price</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In INR.)</b></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" pattern="\d*" maxlength="5"
                                                         name="product_price"
@@ -320,7 +319,7 @@
                                             </div>
 
                                             <div class="form-group row ">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>product price in usd
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD $.)
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="total_amount" id="total_amount"
@@ -448,7 +447,7 @@
 
         $(".allownumericwithoutdecimal").on("keypress keyup blur", function(event) {
 
-            document.getElementById("total_amount").value = $(this).val() * st_km;
+            document.getElementById("total_amount").value = $(this).val() / st_km;
 
             $(this).val($(this).val().replace(/[^\d].+/, ""));
             if ((event.which < 48 || event.which > 57)) {

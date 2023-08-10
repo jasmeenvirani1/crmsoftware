@@ -15,7 +15,7 @@ jQuery(document).ready(function () {
                 'pdfHtml5',
             ],
             ajax: {
-                url: window.baseUrl + '/admin/quotation/show',
+                url: window.baseUrl + '/admin/vendors/show',
                 type: 'POST',
                 method: 'GET',
                 headers: {
@@ -25,7 +25,12 @@ jQuery(document).ready(function () {
                 data: {},
             },
             columns: [
-               
+                {
+                    data: 'created_at',
+                    render: function (data, type, full, meta) {
+                        return moment(full.created_at).format('DD-MM-YYYY hh:mm a');
+                    }
+                },
                 {data: 'companyname'},      
                 {data: 'address'
                
@@ -42,7 +47,7 @@ jQuery(document).ready(function () {
                 {
                     data: null,
                     render: function (data, type, full, meta) {
-                        return '<a href="' + baseUrl + '/admin/quotation/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
+                        return '<a href="' + baseUrl + '/admin/vendors/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
                             <i class="la la-edit"></i>\
                             <a href="javascript:void(0);" id="' + full.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md deleteRecord" title="Delete">\
                             <i class="la la-trash"></i>\
@@ -84,7 +89,7 @@ $(document).on("click", ".deleteRecord", function () {
 $(document).on("click", ".submit_delete", function () {
     var id = $("#record_id").val();
     $.ajax({
-        url: baseUrl + '/admin/quotation/' + id,
+        url: baseUrl + '/admin/vendors/' + id,
         type: "DELETE",
         data: {"id": id},
         dataType: 'json',

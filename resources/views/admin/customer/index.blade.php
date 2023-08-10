@@ -36,7 +36,7 @@
                     <div class="kt-portlet__head-toolbar">
                         <div class="kt-portlet__head-wrapper">
                             <div class="dropdown dropdown-inline">
-                                <a href="{{ url('admin/customer/create') }}" class="btn btn-brand btn-icon-sm"
+                                <a href="{{ url('admin/company/create') }}" class="btn btn-brand btn-icon-sm"
                                     aria-expanded="false">
                                     <i class="flaticon2-plus"></i> Add Company
                                 </a>

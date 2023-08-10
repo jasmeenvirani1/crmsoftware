@@ -84,11 +84,14 @@ class QuotationController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                // 'quotation_no' => 'required',
+                'gstin' => 'string|size:15',   
             ]);
+
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
+
+            $records = Quotation::orderBy('created_at', 'desc')->get();
 
             $recordId = Quotation::updateOrCreate(['id' => $request->id],  [
                 'companyname' => $request->company_name,
@@ -125,10 +128,11 @@ class QuotationController extends Controller
             } else {
                 session()->flash('error', "There is some thing went, Please try after some time.");
             }
-            return redirect()->route('quotation.index');
+            return redirect()->route('vendors.index', ['records' => $records]);
+
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
-            return redirect()->route('quotation.create');
+            return redirect()->route('vendors.create');
         }
     }
 
@@ -140,7 +144,9 @@ class QuotationController extends Controller
      */
     public function show($id)
     {
-        return Datatables::of(Quotation::orderBy('id', 'desc')->get())->make(true);
+        $quotationQuery = Quotation::orderBy('updated_at', 'desc'); 
+        return Datatables::of($quotationQuery)->make(true);
+        // return Datatables::of(Quotation::orderBy('id', 'desc')->get())->make(true);
     }
 
     /**

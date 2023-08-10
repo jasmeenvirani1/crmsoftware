@@ -60,6 +60,17 @@ class CustomerController extends Controller
     {
         try {
 
+            $validator = Validator::make($request->all(), [
+                'vendor_company_name' => 'required',
+                'email'=> 'required',
+                'phonenumber'=> 'required|max:10',
+                'address'=>'required',
+                'gst' => 'string|size:15',
+            ]);
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+
             $logo_path = "";
             if ($request->hasfile('logo')) {
                 $logo_path =  uploadImage($request->file('logo'), 'company/logo');
@@ -83,6 +94,7 @@ class CustomerController extends Controller
                 $msme_path = 'company/msme/' . $msme_path;
             }
 
+
             $recordId = Customer::Create(
                 [
                     'name' => $request->vendor_company_name,
@@ -101,18 +113,22 @@ class CustomerController extends Controller
             } else {
                 session()->flash('error', "There is some thing went, Please try after some time.");
             }
-            return redirect()->route('customer.index');
+            return redirect()->route('company.index');
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
-            return redirect()->route('customer.create');
+            return redirect()->route('company.create');
         }
     }
 
     public function customereditstore(Request $request)
     {
-        // try {
+    //   try {
         $validator = Validator::make($request->all(), [
-            // 'product_name' => 'required',
+            'vendor_company_name' => 'required',
+            'email'=> 'required',
+            'phonenumber'=> 'required|max:10',
+            'address'=>'required',
+            'gst' => 'string|size:15',
         ]);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
@@ -197,7 +213,9 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        $data = Customer::orderBy('default', 'desc')->get();
+        // $data = Customer::orderBy('default', 'desc')->get();
+        // return Datatables::of($data)->make(true);
+        $data = Customer::orderBy('updated_at', 'desc')->get();
         return Datatables::of($data)->make(true);
     }
 
@@ -231,6 +249,17 @@ class CustomerController extends Controller
         ];
         try {
 
+            $validator = Validator::make($request->all(), [
+                'vendor_company_name' => 'required',
+                'email'=> 'required',
+                'phonenumber'=> 'required|max:10',
+                'address'=>'required',
+                'gst' => 'string|size:15',
+            ]);
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+
             $logo_path = "";
             if ($request->hasfile('logo')) {
                 $logo_path =  uploadImage($request->file('logo'), 'company/logo');
@@ -260,10 +289,10 @@ class CustomerController extends Controller
             } else {
                 session()->flash('error', "There is some thing went, Please try after some time.");
             }
-            return redirect()->route('customer.index');
+            return redirect()->route('company.index');
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
-            return redirect()->route('customer.create');
+            return redirect()->route('company.create');
         }
     }
 

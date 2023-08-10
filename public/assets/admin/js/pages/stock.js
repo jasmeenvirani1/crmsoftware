@@ -25,6 +25,12 @@ jQuery(document).ready(function () {
                 data: {},
             },
             columns: [
+                {
+                    data: 'created_at',
+                    render: function (data, type, full, meta) {
+                        return moment(full.created_at).format('DD-MM-YYYY hh:mm a');
+                    }
+                },
                 {data: 'product_name'},
                 {data: 'product_company'},
                 {data: 'inward_qty',

@@ -15,7 +15,7 @@ jQuery(document).ready(function () {
             'pdfHtml5',
         ],
         ajax: {
-            url: window.baseUrl + '/admin/customer/show',
+            url: window.baseUrl + '/admin/company/show',
             type: 'POST',
             method: 'GET',
             headers: {
@@ -34,7 +34,7 @@ jQuery(document).ready(function () {
                 render: function (data, type, full, meta) {
                     if (full.default == '0' || full.default == null) {
                         return '<a href="javascript:void(0);" class="default-company select-company" data-id="' + full.id + '" title="Default Company">\
-                        Select\
+                        Select Primary\
                                 ';
                     } else {
                         return '<a href="javascript:void(0);"  class="selected-company" data-id="' + full.id + '" title="Default Company">\
@@ -47,7 +47,7 @@ jQuery(document).ready(function () {
                 data: null,
                 orderable: false,
                 render: function (data, type, full, meta) {
-                    return '<a href="' + baseUrl + '/admin/customer/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
+                    return '<a href="' + baseUrl + '/admin/company/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
                             <i class="la la-edit"></i>\
                             <a href="javascript:void(0);" id="' + full.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md deleteRecord" title="Delete">\
                             <i class="la la-trash"></i>\
@@ -72,7 +72,7 @@ $(document).on("click", ".deleteRecord", function () {
 $(document).on("click", ".submit_delete", function () {
     var id = $("#record_id").val();
     $.ajax({
-        url: baseUrl + '/admin/customer/' + id,
+        url: baseUrl + '/admin/company/' + id,
         type: "DELETE",
         data: { "id": id },
         dataType: 'json',
@@ -93,7 +93,7 @@ $(document).on("click", ".submit_delete", function () {
 $(document).on("click", ".default-company", function () {
     var id = $(this).data('id');
     $.ajax({
-        url: baseUrl + '/admin/customer/default',
+        url: baseUrl + '/admin/company/default',
         type: "POST",
         data: { "id": id },
         dataType: 'json',

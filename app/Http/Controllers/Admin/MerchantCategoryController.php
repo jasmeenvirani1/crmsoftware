@@ -78,7 +78,9 @@ class MerchantCategoryController extends Controller
      */
     public function show($id)
     {
-        return Datatables::of(MerchantCategory::all())->make(true);
+        // return Datatables::of(MerchantCategory::all())->make(true);
+        $merchantCategoriesQuery = MerchantCategory::orderBy('updated_at', 'desc'); // Order by updated_at in descending order
+        return Datatables::of($merchantCategoriesQuery)->make(true);
     }
 
     /**
