@@ -30,7 +30,7 @@ jQuery(document).ready(function () {
                     return '<input type="checkbox" class="form-control form-control-sm catalog-checkbox" placeholder="" aria-controls="stock_datatable" data-id="' + full.id + '" >';
                 },
             },
-           
+
             {
                 render: function (data, type, full, meta) {
                     var image_url = window.baseUrl;
@@ -50,7 +50,7 @@ jQuery(document).ready(function () {
                         }else{
                         return null;
                     }
-                    
+
                 },
             },
             { data: 'product_company' },
