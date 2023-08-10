@@ -33,7 +33,7 @@ jQuery(document).ready(function () {
             },
 
             { data: 'name' },
-           
+
             {
                 data: null,
                 render: function (data, type, full, meta) {

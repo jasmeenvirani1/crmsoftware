@@ -65,7 +65,8 @@ class CustomerController extends Controller
                 'email'=> 'required',
                 'phonenumber'=> 'required|max:10',
                 'address'=>'required',
-                'gst' => 'string|size:15',
+                'gst' => 'required|string|size:15',
+                'logo' => 'required|image|mimes:jpeg,png,jpg,gif',
             ]);
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());

@@ -69,15 +69,12 @@ input {
 select {
     border: 1px gray solid;
     border-radius: 4px;
-    padding: 0.4rem 4rem;
+    padding-top: 0.4rem ;
+    padding-bottom: 0.4rem ;
     text-align: center;
     width: auto;
     margin-top: 11px;
     margin: 0.8rem;
-}
-
-select option {
-    float: left;
 }
 
 input[type="text"] {
