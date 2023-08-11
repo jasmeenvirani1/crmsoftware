@@ -24,7 +24,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class QuotationController extends Controller
 {
@@ -87,19 +87,19 @@ class QuotationController extends Controller
         try {
             $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'company_name'=>
-                [
+                'company_name' => [
                     'required',
                     Rule::unique('quotation', 'companyname')->where(function ($query) use ($group_id, $request) {
                         return $query->where('group_id', $group_id);
-                    })->ignore($request->input('id')), // Add the ignore rule for updating
+                    })->ignore($request->input('id')),
                 ],
                 'address' => 'required',
                 'notes' => 'required',
-                'gstin' =>'required|string|size:15', [
-                    Rule::unique('quotation', 'gst')->where(function ($query) use ($request) {
-                        return $query->where('gst', $request->gstin);
-                    })->ignore($request->input('id')),
+                'gstin' => [
+                    'required', 'string', 'size:15',
+                    Rule::unique('quotation', 'gst')->where(function ($query) use ($request, $group_id) {
+                        return $query->where('gst', $request->gstin)->where('group_id', $group_id);
+                    })->ignore($request->input('id'))
                 ],
             ]);
 

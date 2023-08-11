@@ -143,7 +143,14 @@ class CustomerController extends Controller
             'email' => 'required',
             'phonenumber' => 'required|numeric|digits:10',
             'address' => 'required',
-            'gst' => 'required|string|digits:15',
+            'gst' =>  [
+                'required',
+                'string',
+                'size:15',
+                Rule::unique('customer', 'gst')->where(function ($query) use ($request) {
+                    return $query->where('gst', $request->gst);
+                })->ignore($request->input('id')),
+            ],
         ]);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
@@ -269,7 +276,14 @@ class CustomerController extends Controller
                 'email' => 'required',
                 'phonenumber' => 'required|numeric|digits:10',
                 'address' => 'required',
-                'gst' => 'required|string|digits:15',
+                'gst' =>  [
+                    'required',
+                    'string',
+                    'size:15',
+                    Rule::unique('customer', 'gst')->where(function ($query) use ($request) {
+                        return $query->where('gst', $request->gst);
+                    })->ignore($request->input('id')),
+                ],
             ]);
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
