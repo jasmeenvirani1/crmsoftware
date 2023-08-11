@@ -15,10 +15,10 @@ use App\Http\Controllers\API\V1\CategoryController;
   |
  */
 // Auth::routes();
+Route::post('v1/login', [App\Http\Controllers\API\V1\AuthController::class, 'login']);
+Route::post('v1/signup', [App\Http\Controllers\API\V1\AuthController::class, 'signup']);
 Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => 'checkHeader'], function () {
-    Route::group(['middleware' => ['guest:api']], function () {
-        Route::post('login', [App\Http\Controllers\API\V1\AuthController::class, 'login']);     // ->name('login');
-        Route::post('signup', [App\Http\Controllers\API\V1\AuthController::class, 'signup']);
+    // Route::group(['middleware' => ['guest:api']], function () {
         Route::post('otp_verification', [App\Http\Controllers\API\V1\AuthController::class, 'verifyOTP']);
         // Route::post('create-category',[CategoryController::class,'create'])->name('create');
         Route::get('get-state', [App\Http\Controllers\API\V1\CommanList::class, 'getState']);
@@ -33,7 +33,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => 'checkH
         Route::post('create-vendor', [App\Http\Controllers\API\V1\CommanList::class, 'createvendor']);
         Route::post('edit-vendor/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'editvendor']);
         Route::post('delete-vendor/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'deletevendor']);
-    });
+    // });
 });
 
 Route::group(['middleware' => ['checkHeader', 'auth:api']], function () {

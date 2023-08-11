@@ -508,8 +508,11 @@
 
         });
         $(".allownumericwithoutdecimal").on("keypress keyup blur", function(event) {
+            var product_price = $(this).val() / st_km;
+            var rounded_price = product_price.toFixed(2);
 
-            document.getElementById("total_amount").value = $(this).val() * st_km;
+            // document.getElementById("total_amount").value = $(this).val() * st_km;
+            document.getElementById("total_amount").value = rounded_price;
 
             $(this).val($(this).val().replace(/[^\d].+/, ""));
             if ((event.which < 48 || event.which > 57)) {
