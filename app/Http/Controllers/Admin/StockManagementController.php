@@ -33,7 +33,8 @@ class StockManagementController extends Controller
      */
     public function index()
     {
-        return view('admin.stock.index', ['title' => "Product"]);
+        $category = MerchantCategory::all();
+        return view('admin.stock.index', ['title' => "Product", 'categories' => $category]);
     }
 
     /**
@@ -161,10 +162,13 @@ class StockManagementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        // return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get())->make(true);
-        return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('updated_at', 'desc')->get())->make(true);
+        $sql = StockManagement::with('balanced', 'productImages')->select('*')->orderBy('updated_at', 'desc');
+        if (request()->has('category_id')) {
+            $sql = $sql->where('category', $request->category_id);
+        }
+        return Datatables::of($sql->get())->make(true);
     }
 
     /**

@@ -87,7 +87,8 @@ class QuotationController extends Controller
         try {
             $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'company_name' => [
+                'company_name'=>
+                [
                     'required',
                     Rule::unique('quotation', 'companyname')->where(function ($query) use ($group_id, $request) {
                         return $query->where('group_id', $group_id);
