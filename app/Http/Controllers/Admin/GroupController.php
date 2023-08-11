@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 
 class GroupController extends Controller
@@ -60,32 +61,16 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        // try {
-        //     $validator = Validator::make($request->all(), [
-        //         'name' => 'required',
-        //     ]);
-        //     if ($validator->fails()) {
-        //         return back()->withInput()->withErrors($validator->errors());
-        //     }
-        //     DB::beginTransaction();
-        //     $input = AddDateTime($request);
-        //     $model = Group::insert($input);
-        //     DB::commit();
-        //     if ($model) {
-        //         session()->flash('success', 'Group created successfully');
-        //     } else {
-        //         session()->flash('error', "There is some thing went, Please try after some time.");
-        //     }
-        //     return redirect()->route('group.index');
-        // } catch (Exception $e) {
-        //     DB::rollback();
-        //     session()->flash('error', $e->getMessage());
-        //     return redirect()->back();
-        // }
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => [
+                    'required',
+                    Rule::unique('groups', 'name')->where(function ($query) {
+                        return $query->whereNull('deleted_at');
+                    })
+                ],
             ]);
+
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
@@ -119,33 +104,16 @@ class GroupController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // try {
-        //     $validator = Validator::make($request->all(), [
-        //         'name' => 'required',
-        //     ]);
-        //     if ($validator->fails()) {
-        //         return back()->withInput()->withErrors($validator->errors());
-        //     }
-        //     DB::beginTransaction();
-        //     $input = AddDateTime($request, 'edit');
-        //     $model = Group::find($id)->update($input);
-        //     DB::commit();
-        //     if ($model) {
-        //         session()->flash('success', 'Group updated successfully');
-        //     } else {
-        //         session()->flash('error', "There is some thing went, Please try after some time.");
-        //     }
-        //     return redirect()->route('group.index');
-        // } catch (Exception $e) {
-        //     DB::rollback();
-        //     session()->flash('error', $e->getMessage());
-        //     return redirect()->back();
-        // }
-
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => [
+                    'required',
+                    Rule::unique('groups', 'name')->where(function ($query) {
+                        return $query->whereNull('deleted_at');
+                    })->ignore($id),
+                ],
             ]);
+
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }

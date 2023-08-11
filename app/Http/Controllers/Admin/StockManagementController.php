@@ -17,11 +17,14 @@ use App\Models\Quotation;
 use App\Models\StockVendor;
 use App\Models\Vendor;
 use App\Models\VendorImage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
+
 
 class StockManagementController extends Controller
 {
@@ -58,11 +61,18 @@ class StockManagementController extends Controller
      */
     public function store(Request $request)
     {
+        $group_id = Auth::user()->group_id;
         $validator = Validator::make($request->all(), [
-            'product_name' => 'required',
+            'product_name' =>  [
+                'required',
+                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })->ignore($request->input('id'))
+            ],
             'partno' => 'required',
             'company_country' => 'required',
         ]);
+
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
         }
@@ -272,8 +282,16 @@ class StockManagementController extends Controller
     public function editstore(Request $request)
     {
         // try {
+        $group_id = Auth::user()->group_id;
         $validator = Validator::make($request->all(), [
-            // 'product_name' => 'required',
+            'product_name' =>  [
+                'required',
+                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })->ignore($request->input('id'))
+            ],
+            'partno' => 'required',
+            'company_country' => 'required',
         ]);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());

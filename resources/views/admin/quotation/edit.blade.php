@@ -33,8 +33,8 @@
         }
 
         /* .alert strong {
-                        font-weight: bold;
-                    } */
+                                                                                                                    font-weight: bold;
+                                                                                                                } */
     </style>
     <!-- begin:: Bradcrubs -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
@@ -108,7 +108,7 @@
                                                     <input type="text" maxlength="50" name="company_name"
                                                         value="{{ old('company_name', isset($data->companyname) ? $data->companyname : '') }}"
                                                         id="company_name" class="form-control" placeholder="Company Name">
-                                                        @error('company_name')
+                                                    @error('company_name')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
                                                     @enderror
@@ -124,7 +124,7 @@
                                                 <input type="text" maxlength="50" name="address"
                                                     value="{{ old('address', isset($data->address) ? $data->address : '') }}"
                                                     id="address" class="form-control" placeholder="Address">
-                                                    @error('address')
+                                                @error('address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
                                                 @enderror
@@ -153,7 +153,7 @@
                                                 <input type="text" maxlength="20" name="notes"
                                                     value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}"
                                                     id="notes" class="form-control" placeholder="Notes">
-                                                    @error('notes')
+                                                @error('notes')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
                                                 @enderror
@@ -166,103 +166,48 @@
                                             <button class="btn btn-success add-contact mb-3" type="button">Add</button>
                                         </div>
 
-                                        @foreach ($data->quotationDetails as $quotationDetails)
-                                            <div class="form-group">
-                                                <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label"><b>No Name</b></label>
-                                                    <div class="col-lg-5 col-xl-3">
+                                        <div class="form-group">
+                                            <div class="form-group row">
+                                                @foreach ($data->quotationDetails as $quotationDetails)
+                                                    <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
+                                                    <div class="col-lg-3 col-xl-3">
                                                         <input type="text" maxlength="12" name="personmame[]"
                                                             class="form-control" value="{{ $quotationDetails->name }}">
                                                     </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label"><b>Phone</b></label>
-                                                    <div class="col-lg-5 col-xl-3">
+
+                                                    <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
+                                                    <div class="col-lg-3 col-xl-3">
                                                         <input type="text" maxlength="12" name="phonenumber[]"
                                                             class="form-control allownumericwithoutdecimal"
                                                             value="{{ $quotationDetails->phone }}">
                                                     </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label"><b>Email</b></label>
-                                                    <div class="col-lg-5 col-xl-3">
+                                                    <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
+                                                    <div class="col-lg-3 col-xl-3">
                                                         <input type="text" name="email[]" class="form-control"
                                                             value="{{ $quotationDetails->email }}">
                                                     </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-danger remove-row"
-                                                            type="button">Remove</button>
-                                                    </div>
-                                                </div>
+                                                    <button class="btn btn-danger  remove-row" id="btn_product_remove"
+                                                        type="button">Remove</button>
+                                                @endforeach
                                             </div>
-                                        @endforeach
-
-
-                                        <div class="increment form-group">
-
                                         </div>
-
-
-
-
-
-
+                                        <div class="increment form-group">
+                                        </div>
                                     </div>
-
-
-
-
-
-
-
-
                                     <!-- <div class="form-group row">
-                                                                                                                                    <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Quotation No.</b><span class="text-danger">*</span></label>
-                                                                                                                                    <div class="col-lg-4 col-xl-4">
-                                                                                                                                        <input type="text"  name="quotation_of" value="{{ $data->quotation_of }}" id="quotation_no" class="form-control" placeholder="Quotation_No" readonly>
-                                                                                                                                        <input type="hidden" id="quotation_of"  name="quotation_no" value="{{ $data->quotation_no }}"  class="form-control" >
-                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                </div> -->
                                     <!-- <div class="col-lg-5 col-xl-2">
-                                                                                                                                        <select class="form-control selectpicker" id="revision" name="revision_no" data-live-search="true">
-                                                                                                                                        <option value="R0" {{ $data->revision_no == 'R0' ? 'selected' : '' }}>R0</option>
-                                                                                                                                        <option value="R1" {{ $data->revision_no == 'R1' ? 'selected' : '' }}>R1</option>
-                                                                                                                                        <option value="R2" {{ $data->revision_no == 'R2' ? 'selected' : '' }}>R2</option>
-                                                                                                                                        <option value="R3" {{ $data->revision_no == 'R3' ? 'selected' : '' }}>R3</option>
-                                                                                                                                        <option value="R4" {{ $data->revision_no == 'R4' ? 'selected' : '' }}>R4</option>
-                                                                                                                                        <option value="R5" {{ $data->revision_no == 'R5' ? 'selected' : '' }}>R5</option>
-                                                                                                                                        <option value="R6" {{ $data->revision_no == 'R6' ? 'selected' : '' }}>R6</option>
-                                                                                                                                        <option value="R7" {{ $data->revision_no == 'R7' ? 'selected' : '' }}>R7</option>
-                                                                                                                                        <option value="R8" {{ $data->revision_no == 'R8' ? 'selected' : '' }}>R8</option>
-                                                                                                                                        <option value="R9" {{ $data->revision_no == 'R9' ? 'selected' : '' }}>R9</option>
-                                                                                                                                        <option value="R10" {{ $data->revision_no == 'R10' ? 'selected' : '' }}>R10</option>
-                                                                                                                                        </select>
-                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                </div> -->
                                     <!-- </div> -->
                                     <!-- <div class="form-group row" id="add_button">
-                                                                                                                                    <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Customer Name</b><span class="text-danger">*</span></label>
-                                                                                                                                    <div class="col-lg-4 col-xl-4">
-                                                                                                                                        <select class="form-control selectpicker" id="customer_name" name="customer_name" data-live-search="true">
-                                                                                                                                            <option value="">---SELECT---</option>
-                                                                                                                                            @foreach ($customer as $customers)
+                                                                                                                                                                                                                                    <select class="form-control selectpicker" id="customer_name" name="customer_name" data-live-search="true">
+                                                                                                                                                                                                                                        <option value="">---SELECT---</option>
+                                                                                                                                                                                                                                        @foreach ($customer as $customers)
     <option value="{{ $customers->id }}" {{ $data->customer_name == $customers->id ? 'selected' : '' }}>{{ $customers->company_name }}</option>
     @endforeach
-                                                                                                                                        </select></div>
-                                                                                                                                        <a class="btn btn-brand btn-icon-sm col-xl-2 col-lg-2" id="add_button1" aria-expanded="false">
-                                                                                                                                        <i class="flaticon2-plus"></i><span style="color:white;">Add Customer</span></a>
-                                                                                                                                </div> -->
+                                                                                                                                                                                                                            </div> -->
                                     <!-- <div class="form-group row">
-                                                                                                                                <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Price Unit</b><span class="text-danger">*</span></label>
-                                                                                                                                <div class="col-lg-9 col-xl-4">
-                                                                                                                                    <select class="form-control selectpicker" id="price_unit" name="price_unit" data-live-search="true" required>
-                                                                                                                                        <option value="">---SELECT---</option>
-                                                                                                                                        <option value="$" {{ $data->price_unit == '$' ? 'selected' : '' }}>$(Dollar)</option>
-                                                                                                                                        <option value="₹" {{ $data->price_unit == '₹' ? 'selected' : '' }}>₹(INR)</option>
-                                                                                                                                        <option value="Other" {{ $data->price_unit == 'Other' ? 'selected' : '' }} >Other</option>
-                                                                                                                                    </select>
-                                                                                                                                </div>
-                                                                                                                            </div>   -->
+                                                                                                                                                                                                                        </div>   -->
                                     {{-- </div>
                         </div> --}}
                                 </div>
@@ -281,37 +226,27 @@
                                 </div>
                             </form>
                             <div class="clone hidden d-none">
-
                                 <div class="form-group">
                                     <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label"><b>Name</b></label>
-                                        <div class="col-lg-5 col-xl-3">
+                                        <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
+                                        <div class="col-lg-3 col-xl-3">
                                             <input type="text" maxlength="12" name="personmame[]"
                                                 class="form-control">
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label"><b>Phone</b></label>
-                                        <div class="col-lg-5 col-xl-3">
+                                        <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
+                                        <div class="col-lg-3 col-xl-3">
                                             <input type="text" maxlength="12" name="phonenumber[]"
                                                 class="form-control allownumericwithoutdecimal">
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label"><b>Email</b></label>
-                                        <div class="col-lg-5 col-xl-3">
+                                        <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
+                                        <div class="col-lg-3 col-xl-3">
                                             <input type="text" name="email[]" class="form-control">
                                         </div>
-                                    </div>
-                                    {{-- <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label"><b>&nbsp;</b></label>
-                                        <div class="col-lg-5 col-xl-3">
-                                            <input type="text" name="email[]" class="form-control">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-danger remove-row" type="button">Remove</button>
                                         </div>
-                                    </div> --}}
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-danger remove-row" type="button">Remove</button>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -377,6 +312,47 @@
 
         $(document).on('click', '.remove-row', function() {
             $(this).closest('.form-group').remove(); // Remove the closest parent form-group
+        });
+    </script>
+
+
+
+    <script>
+        $(document).ready(function() {
+            // Initialize validation for existing and dynamically added rows
+            $(document).on('focusout', '.form-group input', function() {
+                $(this).valid();
+            });
+            // Validate and submit when the button is clicked
+            $('#validateAndSubmit').click(function() {
+                var isValid = true;
+
+                // Loop through each dynamic form group
+                $('.form-group').each(function(index) {
+                    var group = $(this);
+                    var validFields = group.find('input')
+                        .valid(); // Validate fields within the group
+
+                    if (!validFields) {
+                        isValid = false;
+                    }
+                });
+
+                // If all groups are valid, submit the form
+                if (isValid) {
+                    $('#yourForm').submit();
+                }
+            });
+            // Initialize validation for the form
+            $("#yourForm").validate({
+                // Validation rules and messages
+                rules: {
+                    // ... your rules ...
+                },
+                messages: {
+                    // ... your messages ...
+                }
+            });
         });
     </script>
 @endsection

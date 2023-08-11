@@ -97,7 +97,7 @@
                 <div class="row">
                     <div class="col-xl-12">
 
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
 
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
@@ -132,6 +132,7 @@
                                                     <input type="text" name="product_name"
                                                         value="{{ old('product_name', isset($data->product_name) ? $data->product_name : '') }}"
                                                         id="product_name" class="form-control" placeholder="Product Name">
+                                                        @error('product_name')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                                 </div>
                                             </div>
 
@@ -141,7 +142,7 @@
                                                 <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple>
+                                                        accept="image/png, image/jpeg">
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success products_img"
                                                             type="button">Add</button>
@@ -264,6 +265,7 @@
                                                 <input type="text" name="partno"
                                                     value="{{ old('partno', isset($data->partno) ? $data->partno : '') }}"
                                                     id="partno" class="form-control" placeholder="Product PartNo">
+                                                    @error('partno')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -279,6 +281,7 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                @error('company_country')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                             </div>
                                         </div>
 

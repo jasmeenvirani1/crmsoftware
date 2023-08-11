@@ -24,7 +24,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class QuotationController extends Controller
 {
@@ -87,16 +87,20 @@ class QuotationController extends Controller
         try {
             $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'company_name'=>
-                [
+                'company_name' => [
                     'required',
-                    Rule::unique('quotation')->where(function ($query) use ($group_id) {
+                    Rule::unique('quotation', 'companyname')->where(function ($query) use ($group_id, $request) {
                         return $query->where('group_id', $group_id);
-                    }),
+                    })->ignore($request->input('id')),
                 ],
-                'address'=>'required',
-                'notes'=>'required',
-                'gstin' => 'required|string|size:15',
+                'address' => 'required',
+                'notes' => 'required',
+                'gstin' => [
+                    'required', 'string', 'size:15',
+                    Rule::unique('quotation', 'gst')->where(function ($query) use ($request, $group_id) {
+                        return $query->where('gst', $request->gstin)->where('group_id', $group_id);
+                    })->ignore($request->input('id'))
+                ],
             ]);
 
             if ($validator->fails()) {
@@ -141,7 +145,6 @@ class QuotationController extends Controller
                 session()->flash('error', "There is some thing went, Please try after some time.");
             }
             return redirect()->route('vendors.index', ['records' => $records]);
-
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
             return redirect()->route('vendors.create');

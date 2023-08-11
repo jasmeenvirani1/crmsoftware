@@ -33,8 +33,8 @@
         }
 
         /* .alert strong {
-                            font-weight: bold;
-                        } */
+                                                                                                font-weight: bold;
+                                                                                            } */
     </style>
     <!-- begin:: Bradcrubs -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
@@ -107,7 +107,8 @@
                                                         class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" maxlength="20" name="company_name"
-                                                        id="company_name" class="form-control" placeholder="Company Name" value="{{ old('company_name', isset($data->company_name) ? $data->company_name : '') }}">
+                                                        id="company_name" class="form-control" placeholder="Company Name"
+                                                        value="{{ old('company_name', isset($data->company_name) ? $data->company_name : '') }}">
                                                     @error('company_name')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -122,7 +123,8 @@
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" maxlength="50" name="address" id="address"
-                                                    class="form-control" placeholder="Address" value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                                    class="form-control" placeholder="Address"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
                                                 @error('address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
@@ -134,7 +136,8 @@
                                                     IN</b><span class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="gstin" id="gstin" class="form-control gst"
-                                                    placeholder="Gst Details" value="{{ old('gstin', isset($data->gstin) ? $data->gstin : '') }}">
+                                                    placeholder="Gst Details"
+                                                    value="{{ old('gstin', isset($data->gstin) ? $data->gstin : '') }}">
                                                 @error('gstin')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
@@ -148,7 +151,8 @@
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" maxlength="50" name="notes" id="notes"
-                                                    class="form-control" placeholder="Notes" value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}">
+                                                    class="form-control" placeholder="Notes"
+                                                    value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}">
                                                 @error('notes')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
@@ -173,37 +177,29 @@
                                             <div class="col-lg-3 col-xl-3">
                                                 <input type="text" name="email[]" class="form-control">
                                             </div>
-                                            <button class="btn btn-success col-lg-1"
-                                            type="button">Add</button>
-                                            {{-- <label class="col-xl-0 col-lg-0 col-form-label"><b>&nbsp;</b></label> --}}
-                                            {{-- <div class="col-lg- col-xl-2">
-                                            </div> --}}
-
-                                                {{-- <div class="input-group-btn">
-
-                                                </div> --}}
-
+                                            <button class="btn btn-success col-lg-1 add-contact " id="btn_product_add"
+                                                type="button">Add</button>
                                         </div>
                                     </div>
                                     <div class="increment form-group">
                                     </div>
                                     {{-- <div class="form-group row" id="add_button"><option value="{{ $customers->id }}">{{ $customers->company_name }}</option>@endforeach</div> --}}
                                     <!-- <div class="form-group row">
-                                                        <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Price Unit</b><span class="text-danger">*</span></label>
-                                                            <div class="col-lg-9 col-xl-4">
-                                                               <select class="form-control selectpicker" id="price_unit" name="price_unit" data-live-search="true" required>
-                                                                    <option value="">---SELECT---</option>
-                                                                    <option value="$">$(Dollar)</option>
-                                                                    <option value="₹" >₹(INR)</option>
-                                                                    <option value="Other" >Other</option>
-                                                                </select>
-                                                            </div>
-                                                         </div> -->
+                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Price Unit</b><span class="text-danger">*</span></label>
+                                                                                                                                <div class="col-lg-9 col-xl-4">
+                                                                                                                                   <select class="form-control selectpicker" id="price_unit" name="price_unit" data-live-search="true" required>
+                                                                                                                                        <option value="">---SELECT---</option>
+                                                                                                                                        <option value="$">$(Dollar)</option>
+                                                                                                                                        <option value="₹" >₹(INR)</option>
+                                                                                                                                        <option value="Other" >Other</option>
+                                                                                                                                    </select>
+                                                                                                                                </div>
+                                                                                                                             </div> -->
                                     <!-- <div class="form-group row" id="ts1">
-                                                      <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Add Product</b></label>
-                                                          <a id="ts" class="btn btn-brand btn-icon-sm col-xl-2 col-lg-2" aria-expanded="false">
-                                                                 <i class="flaticon2-plus"></i><span style="color:white;">Add Product</span>
-                                                          </a> -->
+                                                                                                                          <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Add Product</b></label>
+                                                                                                                              <a id="ts" class="btn btn-brand btn-icon-sm col-xl-2 col-lg-2" aria-expanded="false">
+                                                                                                                                     <i class="flaticon2-plus"></i><span style="color:white;">Add Product</span>
+                                                                                                                              </a> -->
                                 </div>
                                 <!-- <div class="form-group row">-->
                                 {{-- <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>Prepared
@@ -242,7 +238,25 @@
                                 </div> --}}
                     </form>
                     <div class="clone hidden d-none">
-                        <div class="row mt-3">
+                        <div class="row mt-2">
+                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
+                            <div class="col-lg-3 col-xl-3">
+                                <input type="text" maxlength="12" name="personmame[]" class="form-control">
+                            </div>
+                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
+                            <div class="col-lg-3 ol-xl-3">
+                                <input type="text" maxlength="12" name="phonenumber[]"
+                                    class="form-control allownumericwithoutdecimal">
+                            </div>
+                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
+                            <div class="col-lg-3 col-xl-3">
+                                <input type="text" name="email[]" class="form-control">
+                            </div>
+                            <button class="btn btn-danger  remove-row" id="btn_product_remove"
+                                type="button">Remove</button>
+                        </div>
+
+                        {{-- <div class="row mt-3">
                             <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
                             <div class="col-lg-5 col-xl-3">
                                 <input type="text" maxlength="12" name="personmame[]" class="form-control">
@@ -260,9 +274,9 @@
                             </div>
 
                             <div class="input-group-btn">
-                                <button class="btn btn-danger remove-row" type="button">Remove</button>
+                                <button class="btn btn-danger  remove-row" type="button">Remove</button>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                 </div>
@@ -276,6 +290,26 @@
     <!-- end :: Contest -->
 @endsection
 @section('script')
+    <script>
+        mobileRemoveButton();
+        const element = document.getElementById('btn_product_add');
+        const screenWidth = window.innerWidth;
+        if (screenWidth <= 768) {
+            element.classList.add('mt-2');
+        }
+
+        function mobileRemoveButton() {
+            const element = document.getElementById('btn_product_remove');
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 768) {
+                element.classList.add('mt-2');
+            }
+
+
+
+        }
+    </script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             $.validator.addMethod("alpha", function(value, element) {
@@ -293,6 +327,7 @@
             $(".add-contact").click(function() {
                 var lsthmtl = $(".clone").html()
                 $(".increment").append(lsthmtl);
+                mobileRemoveButton();
             });
 
 
