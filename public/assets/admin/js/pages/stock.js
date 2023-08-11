@@ -13,6 +13,7 @@ jQuery(document).ready(function () {
             searchDelay: 500,
             processing: true,
             serverSide: true,
+            ordering: false,
             buttons: [
                 'print',
                 'copyHtml5',
