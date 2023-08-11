@@ -1,5 +1,30 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .invalid-feedback {
+        color: #dc3545; /* Red color for error messages */
+        display: block; /* Display each error message on a new line */
+        font-size: 14px; /* Adjust the font size as needed */
+        margin-top: 5px; /* Add a little spacing above the error message */
+    }
+
+    .text-left {
+        text-align: left; /* Align the error message text to the left */
+    }
+
+    .alert {
+        background-color: #f8d7da; 
+        border: 1px solid #f5c6cb; 
+        color: #721c24; 
+        padding: 8px; 
+        border-radius: 4px; 
+        margin-top: 5px;
+    }
+
+    /* .alert strong {
+        font-weight: bold; 
+    } */
+</style>
 <!-- begin:: Bradcrubs -->
 <div class="kt-subheader   kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
@@ -63,16 +88,14 @@
                                     <div class="kt-section__body">
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label required">
-                                                <b>Name</b>
+                                                <b>Category Name</b>
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" pattern="" maxlength="20" name="name" value="{{old('name',isset($data->name)?$data->name:'')}}" id="name" class="form-control" placeholder="Category Name">
                                                 @error('name')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                             </div>
-                                            @error('vendor_company_name')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
+                                            
                                         </div>
                                         <!-- <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label">Image</label>

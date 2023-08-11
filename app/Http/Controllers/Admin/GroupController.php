@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 
 class GroupController extends Controller
@@ -83,9 +84,15 @@ class GroupController extends Controller
         //     return redirect()->back();
         // }
         try {
+            // $id = Auth::user()->group_id;
+            $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => [
+                    'required',
+                    Rule::unique('groups', 'name')->ignore($request->input('id')), // Add the ignore rule for updating
+                ],
             ]);
+
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
@@ -144,7 +151,10 @@ class GroupController extends Controller
 
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => [
+                    'required',
+                    Rule::unique('groups', 'name')->ignore($request->input('id')), // Add the ignore rule for updating
+                ],
             ]);
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());

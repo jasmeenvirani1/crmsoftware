@@ -8,10 +8,12 @@ use App\Models\Customer;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
@@ -59,13 +61,26 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         try {
-
+            $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'vendor_company_name' => 'required',
-                'email'=> 'required',
-                'phonenumber'=> 'required|max:10',
-                'address'=>'required',
-                'gst' => 'string|size:15',
+                'vendor_company_name' =>  [
+                    'required',
+                    Rule::unique('customer', 'name')->where(function ($query) use ($group_id) {
+                        return $query->where('group_id', $group_id);
+                    })->ignore($request->input('id'))
+                ],
+
+                'email' => 'required',
+                'phonenumber' => 'required|numeric|digits:10',
+                'address' => 'required',
+                'gst' =>  [
+                    'required',
+                    'string',
+                    'size:15',
+                    Rule::unique('customer', 'gst')->where(function ($query) use ($request) {
+                        return $query->where('gst', $request->gst);
+                    })->ignore($request->input('id')),
+                ],
             ]);
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
@@ -122,13 +137,13 @@ class CustomerController extends Controller
 
     public function customereditstore(Request $request)
     {
-    //   try {
+        //   try {
         $validator = Validator::make($request->all(), [
             'vendor_company_name' => 'required',
-            'email'=> 'required',
-            'phonenumber'=> 'required|max:10',
-            'address'=>'required',
-            'gst' => 'string|size:15',
+            'email' => 'required',
+            'phonenumber' => 'required|numeric|digits:10',
+            'address' => 'required',
+            'gst' => 'required|string|digits:15',
         ]);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
@@ -251,10 +266,10 @@ class CustomerController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'vendor_company_name' => 'required',
-                'email'=> 'required',
-                'phonenumber'=> 'required|max:10',
-                'address'=>'required',
-                'gst' => 'string|size:15',
+                'email' => 'required',
+                'phonenumber' => 'required|numeric|digits:10',
+                'address' => 'required',
+                'gst' => 'required|string|digits:15',
             ]);
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());

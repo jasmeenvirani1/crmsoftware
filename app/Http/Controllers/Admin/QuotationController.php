@@ -87,16 +87,19 @@ class QuotationController extends Controller
         try {
             $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
-                'companyname'=>
-                [
+                'company_name' => [
                     'required',
-                    Rule::unique('quotation')->where(function ($query) use ($group_id) {
+                    Rule::unique('quotation', 'companyname')->where(function ($query) use ($group_id, $request) {
                         return $query->where('group_id', $group_id);
-                    }),
+                    })->ignore($request->input('id')), // Add the ignore rule for updating
                 ],
-                'address'=>'required',
-                'notes'=>'required',
-                'gstin' => 'required|string|size:15',   
+                'address' => 'required',
+                'notes' => 'required',
+                'gstin' =>'required|string|size:15', [
+                    Rule::unique('quotation', 'gst')->where(function ($query) use ($request) {
+                        return $query->where('gst', $request->gstin);
+                    })->ignore($request->input('id')),
+                ],
             ]);
 
             if ($validator->fails()) {
@@ -141,7 +144,6 @@ class QuotationController extends Controller
                 session()->flash('error', "There is some thing went, Please try after some time.");
             }
             return redirect()->route('vendors.index', ['records' => $records]);
-
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
             return redirect()->route('vendors.create');
@@ -156,7 +158,7 @@ class QuotationController extends Controller
      */
     public function show($id)
     {
-        $quotationQuery = Quotation::orderBy('updated_at', 'desc'); 
+        $quotationQuery = Quotation::orderBy('updated_at', 'desc');
         return Datatables::of($quotationQuery)->make(true);
         // return Datatables::of(Quotation::orderBy('id', 'desc')->get())->make(true);
     }
