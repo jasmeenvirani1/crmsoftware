@@ -49,6 +49,7 @@ Thumbs.db
 *.wmv
 
 .env
+composer.lock
 docs_other
 /vendor/
 public/client_images
