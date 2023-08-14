@@ -12,7 +12,7 @@ class StockManagement extends Model
     use HasFactory;
     public function __construct($group_id = null)
     {
-        if ($group_id == null) {
+        if (isset(Auth::user()->group_id)) {
             $this->group_id = Auth::user()->group_id;
         } else {
             $this->group_id = $group_id;

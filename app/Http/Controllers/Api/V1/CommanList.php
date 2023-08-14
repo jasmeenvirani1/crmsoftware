@@ -85,7 +85,7 @@ class CommanList extends Controller
     {
         $group_id = $this->user->group_id;
 
-        $stock_management_model = new StockManagement($this->user->group_id);
+        $stock_management_model = new StockManagement($group_id);
         $data = $request->json()->all();
 
         // $validator = Validator::make($data, [
