@@ -169,7 +169,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>GST</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>GST</b>
+                                                    <span class="text-danger">*</span></label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="gst" id="gst"
                                                         class="form-control" placeholder="GST">
