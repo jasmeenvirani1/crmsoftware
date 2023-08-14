@@ -113,7 +113,7 @@
             rules: {
                 name: {
                     required: true,
-                    alpha: false
+                    alpha: true
                 }
             },
         });

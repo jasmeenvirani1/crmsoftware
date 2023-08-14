@@ -12,8 +12,10 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
+
 class GroupController extends Controller
 {
+
     public function __construct()
     {
         $this->data['title'] = 'Groups';
@@ -38,7 +40,7 @@ class GroupController extends Controller
     public function show($id)
     {
         // return Datatables::of(Group::orderBy('id', 'desc')->get())->make(true);
-        $groupQuery = Group::latest('updated_at');
+        $groupQuery = Group::orderBy('id', 'desc')->orderBy('updated_at', 'desc');
         return Datatables::of($groupQuery)->make(true);
     }
 
@@ -49,7 +51,7 @@ class GroupController extends Controller
      */
     public function create()
     {
-        return view('admin.group.form', ['title' => $this->data['title'], 'btn' => 'Save', 'action' => 'create']);
+        return view('admin.group.form', ['title' => $this->data['title'], 'btn' => "Save", 'action' => 'create']);
     }
 
     /**
@@ -65,28 +67,24 @@ class GroupController extends Controller
                     'required',
                     Rule::unique('groups', 'name')->where(function ($query) {
                         return $query->whereNull('deleted_at');
-                    }),
+                    })
                 ],
             ]);
 
             if ($validator->fails()) {
-                return back()
-                    ->withInput()
-                    ->withErrors($validator->errors());
+                return back()->withInput()->withErrors($validator->errors());
             }
 
             DB::beginTransaction();
             $input = AddDateTime($request);
             // Apply desired ordering here
-            $model = Group::orderBy('id', 'desc')
-                ->orderBy('created_at', 'desc')
-                ->insert($input);
+            $model = Group::orderBy('id', 'desc')->orderBy('created_at', 'desc')->insert($input);
             DB::commit();
 
             if ($model) {
                 session()->flash('success', 'Group created successfully');
             } else {
-                session()->flash('error', 'There is something wrong. Please try again later.');
+                session()->flash('error', "There is something wrong. Please try again later.");
             }
             return redirect()->route('group.index');
         } catch (Exception $e) {
@@ -95,6 +93,7 @@ class GroupController extends Controller
             return redirect()->back();
         }
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -109,32 +108,26 @@ class GroupController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => [
                     'required',
-                    Rule::unique('groups', 'name')
-                        ->where(function ($query) {
-                            return $query->whereNull('deleted_at');
-                        })
-                        ->ignore($id),
+                    Rule::unique('groups', 'name')->where(function ($query) {
+                        return $query->whereNull('deleted_at');
+                    })->ignore($id),
                 ],
             ]);
 
             if ($validator->fails()) {
-                return back()
-                    ->withInput()
-                    ->withErrors($validator->errors());
+                return back()->withInput()->withErrors($validator->errors());
             }
             DB::beginTransaction();
             $input = AddDateTime($request, 'edit');
 
             // Apply desired ordering here
-            $model = Group::orderBy('created_at', 'desc')
-                ->find($id)
-                ->update($input);
+            $model = Group::orderBy('created_at', 'desc')->find($id)->update($input);
             DB::commit();
 
             if ($model) {
                 session()->flash('success', 'Group updated successfully');
             } else {
-                session()->flash('error', 'There is something wrong. Please try again later.');
+                session()->flash('error', "There is something wrong. Please try again later.");
             }
             return redirect()->route('group.index');
         } catch (Exception $e) {
@@ -154,8 +147,9 @@ class GroupController extends Controller
     public function edit($id)
     {
         $data = Group::find($id);
-        return view('admin.group.form', ['title' => $this->data['title'], 'btn' => 'Update', 'action' => 'edit', 'data' => $data]);
+        return view('admin.group.form', ['title' => $this->data['title'], 'btn' => "Update", 'action' => 'edit', 'data' => $data]);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -165,12 +159,12 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        $arr['deleted_at'] = GetDateTime();
+        $arr['deleted_at'] =  GetDateTime();
         try {
             Group::findorfail($id)->update($arr);
-            $response = ['status' => 'success', 'msg' => 'Record Deleted Successfully.', 'error_code' => 200];
+            $response = array('status' => 'success', 'msg' => 'Record Deleted Successfully.', 'error_code' => 200);
         } catch (Exception $e) {
-            $response = ['status' => 'error', 'msg' => $e->getMessage(), 'error_code' => 422];
+            $response = array('status' => 'error', 'msg' => $e->getMessage(), 'error_code' => 422);
         }
         return response()->json($response, $response['error_code']);
     }

@@ -8,6 +8,7 @@ use App\Helpers\Helper;
 use Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -22,14 +23,19 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 return Helper::fail([], Helper::error_parse($validator->errors()));
             }
-            // $auth = Auth::attempt(['email' => request('email'), 'password' => request('password'), 'is_active' => '1']);
-            // dd($auth);
-            // if ($auth) {
             $user = User::where('email', '=', $request->email)->first();
             if ($user != null) {
-                $success['user'] = $user;
-                $success['token'] = $user->createToken('token')->accessToken;
-                return Helper::success($success, 'User Login Successfully');
+                if (Hash::check($request->password, $user->password)) {
+                    $success['user'] = $user;
+                    $success['token'] = $token = $user->createToken('token')->accessToken;
+                    $model = User::find($user->id)->update(['api_token' => $token]);
+                    if ($model) {
+                        return Helper::success($success, 'User Login Successfully');
+                    }
+                    return Helper::fail([], 'Something went wrong');
+                } else {
+                    return Helper::fail([], 'Invalid password');
+                }
             } else {
                 return Helper::fail([], 'Unauthorised');
             }
