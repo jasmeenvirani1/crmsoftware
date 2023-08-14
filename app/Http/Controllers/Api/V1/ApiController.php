@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
+use App\Models\Customer;
 use App\Models\MerchantCategory;
 use App\Models\StockManagement;
 use Exception;
@@ -52,6 +53,25 @@ class ApiController extends Controller
             return Helper::fail([], $e->getMessage());
         }
     }
+    public function EditCategory(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return Helper::fail([], Helper::error_parse($validator->errors()));
+        }
+        try {
+            $group_id = $this->user->group_id;
+            $model = new MerchantCategory($group_id);
+            $model = $model->findOrFail($request->id);
+
+            return Helper::success($model, 'Category Loaded Successfully');
+        } catch (Exception $e) {
+            return Helper::fail([], $e->getMessage());
+        }
+    }
     public function UpdateCategory(Request $request)
     {
         try {
@@ -63,6 +83,7 @@ class ApiController extends Controller
                         return $query->where('group_id', $group_id);
                     })->ignore($request->id, 'id')
                 ],
+                'id' => ['required']
             ]);
 
             if ($validator->fails()) {
@@ -71,7 +92,7 @@ class ApiController extends Controller
 
             $model = new MerchantCategory($group_id);
 
-            $model = $model->find($request->id);
+            $model = $model->findOrFail($request->id);
             $model->name = $request->name;
             $model->updated_at = GetDateTime();
             $recordId  = $model->save();
@@ -101,5 +122,25 @@ class ApiController extends Controller
         } catch (Exception $e) {
             return Helper::fail([], $e->getMessage());
         }
+    }
+    public function GetCatalogue(Request $request)
+    {
+        $group_id = $this->user->group_id;
+
+        $customer_model = new Customer($group_id);
+        $catalog_data = $customer_model->where('default', '1')->first();
+        $sql = StockManagement::with(['productImages', 'category']);
+
+        $data = $request->json()->all();
+        if (isset($data['ids'])) {
+            $ids = $data['ids'];
+            $product_data = $sql->whereIn('id', $request->product_ids)->get();
+        } else {
+            $product_data = $sql->get();
+        }
+        if (!$catalog_data) {
+            return Helper::fail([], 'Please select company');
+        }
+        return Helper::success($product_data, 'Catalogue Loaded Successfully');
     }
 }
