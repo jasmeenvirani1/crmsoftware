@@ -1,5 +1,41 @@
 @extends('layouts.admin')
 @section('content')
+    <style>
+        .invalid-feedback {
+            color: #dc3545;
+            /* Red color for error messages */
+            display: block;
+            /* Display each error message on a new line */
+            font-size: 14px;
+            /* Adjust the font size as needed */
+            margin-top: 5px;
+            /* Add a little spacing above the error message */
+        }
+
+        .text-left {
+            text-align: left;
+            /* Align the error message text to the left */
+        }
+
+        .alert {
+            background-color: #f8d7da;
+            /* Light red background for alert */
+            border: 1px solid #f5c6cb;
+            /* Border color for alert */
+            color: #721c24;
+            /* Text color for alert */
+            padding: 8px;
+            /* Padding for alert */
+            border-radius: 4px;
+            /* Rounded corners for alert */
+            margin-top: 5px;
+            /* Add spacing above the alert */
+        }
+
+        /* .alert strong {
+                    font-weight: bold;
+                } */
+    </style>
     <!-- begin:: Bradcrubs -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
         <div class="kt-container  kt-container--fluid ">
@@ -38,7 +74,7 @@
                 <div class="row">
                     <div class="col-xl-12">
 
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
 
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
@@ -67,14 +103,22 @@
                                     <div class="kt-section kt-section--first">
                                         <div class="kt-section__body">
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Inward Qty.</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Inward Qty.</b>
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="number" step="1" name="inward_qty" id="inward_qty"
                                                         class="form-control" placeholder="Inward Qty.">
+                                                    @error('inward_qty')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Name</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Name</b>
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <select class="form-control selectpicker" data-live-search="true"
                                                         id="vendor_name" name="vendor_name">
@@ -84,20 +128,34 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    @error('vendor_name')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price</b>
+                                                    <span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="number" step="1" name="product_price"
                                                         id="product_price" class="form-control" placeholder="Product Price">
+                                                    @error('product_price')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>PO No.</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>PO No.</b>
+                                                    <span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="po_no" id="po_no" class="form-control"
                                                         placeholder="PO No.">
+                                                    @error('po_no')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>

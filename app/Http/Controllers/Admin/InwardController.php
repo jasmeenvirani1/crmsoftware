@@ -27,7 +27,10 @@ class InwardController extends Controller
         $balanced_qty = $request->inward_qty;
         try {
             $validator = Validator::make($request->all(), [
-                // 'product_name' => 'required',
+                 'inward_qty' => 'required',
+                 'vendor_name' => 'required',
+                 'product_price' => 'required',
+                 'po_no' => 'required'
             ]);
 
             if ($validator->fails()) {
