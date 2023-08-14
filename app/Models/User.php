@@ -38,7 +38,6 @@ class User extends Authenticatable
         'updated_at',
         'deleted_at',
         'remember_token',
-        'api_token',
         'email_verified_at',
     ];
 

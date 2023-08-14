@@ -80,7 +80,7 @@
                                                         class="col-xl-3 col-lg-3 col-form-label"><b>{{ ucfirst($key) }}</b><span
                                                             class="text-danger"></span></label>
                                                     @foreach ($value as $operation)
-                                                        <div class="col-lg-2 col-xl-2 col-md-2 col-sm-2">
+                                                        <div class="col-lg-4 col-xl-2">
                                                             <span class="switch switch-info">
                                                                 <label>
                                                                     <input type="checkbox" name="{{ $key }}[]"

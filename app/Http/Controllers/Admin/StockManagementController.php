@@ -25,10 +25,8 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
 
-
 class StockManagementController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +35,7 @@ class StockManagementController extends Controller
     public function index()
     {
         $category = MerchantCategory::all();
-        return view('admin.stock.index', ['title' => "Product", 'categories' => $category]);
+        return view('admin.stock.index', ['title' => 'Product', 'categories' => $category]);
     }
 
     /**
@@ -50,7 +48,7 @@ class StockManagementController extends Controller
         $category = MerchantCategory::get();
         $vendors = Quotation::all();
 
-        return view('admin.stock.create', ['title' => "Product", 'btn' => "Save", 'data' => [], 'category' => $category, 'vendors' => $vendors]);
+        return view('admin.stock.create', ['title' => 'Product', 'btn' => 'Save', 'data' => [], 'category' => $category, 'vendors' => $vendors]);
     }
 
     /**
@@ -61,20 +59,25 @@ class StockManagementController extends Controller
      */
     public function store(Request $request)
     {
+        // prx('test');
         $group_id = Auth::user()->group_id;
         $validator = Validator::make($request->all(), [
-            'product_name' =>  [
+            'product_name' => [
                 'required',
-                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
-                    return $query->where('group_id', $group_id);
-                })->ignore($request->input('id'))
+                Rule::unique('stock_management', 'product_name')
+                    ->where(function ($query) use ($group_id) {
+                        return $query->where('group_id', $group_id);
+                    })
+                    ->ignore($request->input('id')),
             ],
             'partno' => 'required',
             'company_country' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors());
+            return back()
+                ->withInput()
+                ->withErrors($validator->errors());
         }
 
         $recordId = StockManagement::updateOrCreate(
@@ -90,8 +93,8 @@ class StockManagementController extends Controller
                 'product_dimension' => json_encode($request->product_dimension),
                 'notes' => $request->notes,
                 'specification' => $request->specification,
-                'status' => $request->status
-            ]
+                'status' => $request->status,
+            ],
         );
         $product_id = $recordId->id;
         if ($request->hasfile('product_images')) {
@@ -108,7 +111,6 @@ class StockManagementController extends Controller
         }
         $dimensionDetailsArr = [];
         if (request()->has('dimension_name')) {
-
             for ($i = 0; $i < count($request->dimension_name); $i++) {
                 $date_time = GetDateTime();
                 if ($request->dimension_name[$i] != null && $request->dimension_value[$i] != null && $request->quantities_value[$i] != null) {
@@ -118,7 +120,7 @@ class StockManagementController extends Controller
                         'dimension_value' => $request->dimension_value[$i],
                         'quantities_value' => $request->quantities_value[$i],
                         'created_at' => $date_time,
-                        'updated_at' => $date_time
+                        'updated_at' => $date_time,
                     ];
                     ProductDimension::create($arr);
                     $dimensionDetailsArr[] = $arr;
@@ -133,35 +135,37 @@ class StockManagementController extends Controller
                 'inward_qty' => $request->inward_qty,
                 'outward_qty' => $request->outward_qty,
                 'balanced_qty' => $request->inward_qty,
-                'status' => $request->status
-            ]
+                'status' => $request->status,
+            ],
         );
         $recordId2 = OutWard::updateOrCreate(
             ['id' => $request->id],
             [
                 'stock_id' => $product_id,
                 'outward_qty' => $request->outward_qty,
-                'status' => $request->status
-            ]
+                'status' => $request->status,
+            ],
         );
         $recordId3 = Balanced::updateOrCreate(
             ['id' => $request->id],
             [
                 'stock_id' => $product_id,
                 'balanced_qty' => $request->inward_qty,
-                'status' => $request->status
-            ]
+                'status' => $request->status,
+            ],
         );
         $vendor_data = [];
-        foreach ($request->vendors as $vendor) {
-            $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+        if (isset($request->vendors[0])) {
+            foreach ($request->vendors as $vendor) {
+                $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+            }
         }
         StockVendor::insert($vendor_data);
 
         if ($product_id) {
             session()->flash('success', 'Product created successfully');
         } else {
-            session()->flash('error', "There is some thing went, Please try after some time.");
+            session()->flash('error', 'There is some thing went, Please try after some time.');
         }
         return redirect()->route('stock.index');
     }
@@ -174,11 +178,13 @@ class StockManagementController extends Controller
      */
     public function show($id, Request $request)
     {
-        $sql = StockManagement::with('balanced', 'productImages')->select('*')->orderBy('updated_at', 'desc');
+        $sql = StockManagement::with('balanced', 'productImages')->select('*');
         if (request()->has('category_id')) {
             $sql = $sql->where('category', $request->category_id);
         }
-        return Datatables::of($sql->get())->make(true);
+        // $sql = $sql->get();
+        // prx($sql);
+        return Datatables::of($sql->latest('updated_at')->get())->make(true);
     }
 
     /**
@@ -193,8 +199,10 @@ class StockManagementController extends Controller
         $data1 = Inward::where('stock_id', '=', $id)->get();
         $category = MerchantCategory::get();
         $vendors = Quotation::all();
-        $selected_vendors = StockVendor::where('product_id', $id)->pluck('quotation_id')->toArray();
-        return view('admin.stock.edit', ['title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category, 'vendors' => $vendors, 'selected_vendors' => $selected_vendors]);
+        $selected_vendors = StockVendor::where('product_id', $id)
+            ->pluck('quotation_id')
+            ->toArray();
+        return view('admin.stock.edit', ['title' => 'Product', 'btn' => 'Update', 'data' => $data, 'data1' => $data1, 'category' => $category, 'vendors' => $vendors, 'selected_vendors' => $selected_vendors]);
     }
     // public function inward($id) {
     //     return view('admin.stock.inward', ['title' => "Inward", 'btn' => "Save", 'data' => []]);
@@ -215,7 +223,6 @@ class StockManagementController extends Controller
      */
     public function update($id, Request $request)
     {
-
         StockManagement::updateOrCreate(
             ['id' => $request->id],
             [
@@ -229,8 +236,8 @@ class StockManagementController extends Controller
                 'product_dimension' => json_encode($request->product_dimension),
                 'notes' => $request->notes,
                 'specification' => $request->specification,
-                'status' => $request->status
-            ]
+                'status' => $request->status,
+            ],
         );
 
         $product_id = $id;
@@ -249,7 +256,6 @@ class StockManagementController extends Controller
         ProductDimension::where('product_id', $product_id)->delete();
         $dimensionDetailsArr = [];
         if (request()->has('dimension_name')) {
-
             for ($i = 0; $i < count($request->dimension_name); $i++) {
                 $date_time = GetDateTime();
                 if ($request->dimension_name[$i] != null && $request->dimension_value[$i] != null && $request->quantities_value[$i] != null) {
@@ -259,7 +265,7 @@ class StockManagementController extends Controller
                         'dimension_value' => $request->dimension_value[$i],
                         'quantities_value' => $request->quantities_value[$i],
                         'created_at' => $date_time,
-                        'updated_at' => $date_time
+                        'updated_at' => $date_time,
                     ];
                     $dimensionDetailsArr[] = $arr;
                 }
@@ -268,14 +274,20 @@ class StockManagementController extends Controller
         }
         StockVendor::where('product_id', $product_id)->delete();
         $vendor_data = [];
-        foreach ($request->vendors as $vendor) {
-            $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+
+        // prx($request->all());
+
+        if (isset($request->vendors[0])) {
+            foreach ($request->vendors as $vendor) {
+                $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+            }
+            StockVendor::insert($vendor_data);
         }
-        StockVendor::insert($vendor_data);
+
         if ($product_id) {
             session()->flash('success', 'Product updated successfully');
         } else {
-            session()->flash('error', "There is some thing went, Please try after some time.");
+            session()->flash('error', 'There is some thing went, Please try after some time.');
         }
         return redirect()->route('stock.index');
     }
@@ -284,28 +296,32 @@ class StockManagementController extends Controller
         // try {
         $group_id = Auth::user()->group_id;
         $validator = Validator::make($request->all(), [
-            'product_name' =>  [
+            'product_name' => [
                 'required',
-                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
-                    return $query->where('group_id', $group_id);
-                })->ignore($request->input('id'))
+                Rule::unique('stock_management', 'product_name')
+                    ->where(function ($query) use ($group_id) {
+                        return $query->where('group_id', $group_id);
+                    })
+                    ->ignore($request->input('id')),
             ],
             'partno' => 'required',
             'company_country' => 'required',
         ]);
         if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors());
+            return back()
+                ->withInput()
+                ->withErrors($validator->errors());
         }
         $files1 = [];
         if ($request->hasfile('filenames')) {
             $image = $request->file('filenames');
             $data1 = StockManagement::where('id', '=', $request->id)->first();
-            foreach ($request->file('filenames') as  $file) {
+            foreach ($request->file('filenames') as $file) {
                 $name = time() . rand(1, 50) . '.' . $file->extension();
                 $file->move(public_path('product_image'), $name);
                 $files1[] = $name;
             }
-            $files = array_merge($files1, (isset($data1->images) && is_array($data1->images) ? $data1->images : []));
+            $files = array_merge($files1, isset($data1->images) && is_array($data1->images) ? $data1->images : []);
         } else {
             $path = StockManagement::where('id', '=', $request->id)->first();
             $files = $path->images;
@@ -316,12 +332,12 @@ class StockManagementController extends Controller
             $image = $request->file('filenamesvendor');
             $data1 = StockManagement::where('id', '=', $request->id)->first();
             $oldImage = isset($data1->images);
-            foreach ($request->file('filenamesvendor') as $key =>  $file1) {
+            foreach ($request->file('filenamesvendor') as $key => $file1) {
                 $name1 = time() . rand(1, 50) . '.' . $file1->extension();
                 $file1->move(public_path('vendor_image'), $name1);
                 $vendorimages1[] = $name1;
             }
-            $vendorimages = array_merge($vendorimages1, (isset($data1->vendorimage) && is_array($data1->vendorimage) ? $data1->vendorimage : []));
+            $vendorimages = array_merge($vendorimages1, isset($data1->vendorimage) && is_array($data1->vendorimage) ? $data1->vendorimage : []);
         } else {
             $path = StockManagement::where('id', '=', $request->id)->first();
             $vendorimages = $path->vendorimage;
@@ -336,41 +352,41 @@ class StockManagementController extends Controller
                 $file2->move(public_path('client_image'), $name2);
                 $clientimage1[] = $name2;
             }
-            $clientimage = array_merge($clientimage1, (isset($data1->clientimage) && is_array($data1->clientimage) ? $data1->clientimage : []));
+            $clientimage = array_merge($clientimage1, isset($data1->clientimage) && is_array($data1->clientimage) ? $data1->clientimage : []);
         } else {
             $path = StockManagement::where('id', '=', $request->id)->first();
             $clientimage = $path->clientimage;
         }
-        $recordId = StockManagement::where('id', '=', $request->id)->update(
-            [
-                'product_name' => $request->product_name,
-                'product_size' => $request->product_size,
-                'product_price' => $request->product_price,
-                'usd_price' => $request->total_amount,
-                'category' => $request->company_country,
-                'product_dimension' => json_encode($request->product_dimension),
-                'images' => json_encode($files),
-                'vendorimage' => json_encode($vendorimages),
-                'clientimage' => json_encode($clientimage),
-                'notes' => $request->notes,
-                'specification' => $request->specification,
-                'status' => $request->status
-            ]
-        );
+        $recordId = StockManagement::where('id', '=', $request->id)->update([
+            'product_name' => $request->product_name,
+            'product_size' => $request->product_size,
+            'product_price' => $request->product_price,
+            'usd_price' => $request->total_amount,
+            'category' => $request->company_country,
+            'product_dimension' => json_encode($request->product_dimension),
+            'images' => json_encode($files),
+            'vendorimage' => json_encode($vendorimages),
+            'clientimage' => json_encode($clientimage),
+            'notes' => $request->notes,
+            'specification' => $request->specification,
+            'status' => $request->status,
+        ]);
 
         if ($recordId) {
             session()->flash('success', 'Product updated successfully');
         } else {
-            session()->flash('error', "There is some thing went, Please try after some time.");
+            session()->flash('error', 'There is some thing went, Please try after some time.');
         }
         return redirect()->route('stock.index');
     }
     public function view($id)
     {
         $data2 = StockManagement::findOrFail($id);
-        $data = Inward::with('vendors')->where('stock_id', $id)->get();
+        $data = Inward::with('vendors')
+            ->where('stock_id', $id)
+            ->get();
         $data1 = Balanced::where('stock_id', $id)->get();
-        return view('admin.stock.view', ['title' => "Transaction", 'btn' => "Save", 'data' => $data, 'data1' => $data1, 'data2' => $data2]);
+        return view('admin.stock.view', ['title' => 'Transaction', 'btn' => 'Save', 'data' => $data, 'data1' => $data1, 'data2' => $data2]);
     }
     /**
      * Remove the specified resource from storage.
@@ -382,7 +398,7 @@ class StockManagementController extends Controller
     {
         $data = StockManagement::find($id);
         $data->delete();
-        $response = array('status' => 'success', 'msg' => 'Record Deleted Successfully.');
+        $response = ['status' => 'success', 'msg' => 'Record Deleted Successfully.'];
         return response()->json($response);
     }
     public function addImages($path, $product_id, $data)
@@ -397,14 +413,16 @@ class StockManagementController extends Controller
         }
         return $files;
     }
-    public  function productImageDelete(Request $request)
+    public function productImageDelete(Request $request)
     {
         $request->validate([
             'id' => 'required',
             'type' => 'required|in:product_images,vendor_images,client_and_sales_images',
         ]);
-        DB::table($request->type)->where('id', $request->id)->update(['deleted_at' => now()]);
-        $response = array('status' => '200', 'message' => 'Record Deleted Successfully.');
+        DB::table($request->type)
+            ->where('id', $request->id)
+            ->update(['deleted_at' => now()]);
+        $response = ['status' => '200', 'message' => 'Record Deleted Successfully.'];
         return response()->json($response);
     }
 }

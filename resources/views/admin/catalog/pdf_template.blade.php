@@ -13,12 +13,20 @@
     <link rel="stylesheet" href="{{ asset('css/catalog/style.css') }}" crossorigin>
 
     <title>Document</title>
+    @php
+        if (!empty($catalog_data->logo)) {
+            $logo = $catalog_data->logo;
+        } else {
+            $logo = '';
+        }
+
+    @endphp
     <style>
         .logo_wrapper::after {
             content: '';
             height: 100%;
             width: 100%;
-            background-image: url('{{ asset($catalog_data->logo) }}');
+            background-image: url('{{ asset($logo) }}');
             position: absolute;
             top: 0;
             left: 0;
@@ -34,26 +42,30 @@
     <!-- You can print if you see this pen in debug mode -->
 
     <!-- Page1 Start -->
+
     <div class="grid-container">
-        <div class="logo_wrapper">
-            <img src="{{ asset($catalog_data->logo) }}" alt="Logo">
-        </div>
+        @if (!empty($catalog_data->logo))
+            <div class="logo_wrapper">
+                <img src="{{ asset($catalog_data->logo) }}" alt="Logo">
+            </div>
+        @endif
         <div class="footer">
-            {{ $catalog_data->address }}&nbsp;&nbsp; <b>Mobile :</b>{{ $catalog_data->phonenumber }}
-            &nbsp;&nbsp; <b>Email : </b>{{ $catalog_data->email }}
+
+            {{ $catalog_data->address ?? '' }}&nbsp;&nbsp; <b>Mobile :</b>{{ $catalog_data->phonenumber ?? '' }}
+            &nbsp;&nbsp; <b>Email : </b>{{ $catalog_data->email ?? '' }}
         </div>
     </div>
     <!-- Page1 End -->
     <!-- Page2 Start -->
     <div class="grid-container">
         <div class="header">
-            <div class="logo"><img src="{{ asset($catalog_data->logo) }}" alt=""></div>
+            <div class="logo"><img src="{{ asset($catalog_data->logo ?? '') }}" alt=""></div>
             <div class="add">
-                <p>{{ $catalog_data->address }}</p>
+                <p>{{ $catalog_data->address ?? '' }}</p>
             </div>
         </div>
         <div class="product_title">
-            <h2>Products</h2>
+            <h2> {{ GetCategoryName($product_data[0]->category) ?? '' }}</h2>
         </div>
         <div class="product_wrapper">
             @foreach ($product_data as $product)

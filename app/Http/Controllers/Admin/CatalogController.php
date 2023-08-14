@@ -19,21 +19,24 @@ class CatalogController extends Controller
      */
     public function index()
     {
-        return view('admin.catalog.index', ['title' => "Catalog"]);
+        return view('admin.catalog.index', ['title' => 'Catalog']);
     }
 
     public function GetCatalog($type, Request $request)
     {
         $catalog_data = Customer::where('default', '1')->first();
-        $sql = StockManagement::with(['productImages','category']);
+        $sql = StockManagement::with(['productImages', 'category']);
         if ($type == 'all') {
-            $product_data =  $sql->get();
+            $product_data = $sql->get();
         } elseif ($type == 'selected') {
-            $product_data =  $sql->whereIn('id', $request->product_ids)->get();
+            $product_data = $sql->whereIn('id', $request->product_ids)->get();
         }
+        if (!$catalog_data) {
+            echo 'Please select company';
+        }
+
         view()->share('product_data', $product_data);
         view()->share('catalog_data', $catalog_data);
-
         return view('admin.catalog.pdf_template');
     }
 
@@ -46,10 +49,11 @@ class CatalogController extends Controller
     public function show($id)
     {
         // return DataTables::of(StockManagement::with('productImages')->select('*')->orderBy('id', 'desc')->get())->make(true);
-        return DataTables::of(StockManagement::with('productImages','category')
-        ->select('*')
-        ->orderBy('updated_at', 'desc') // Order by updated_at column in descending order
-        ->get())
-        ->make(true);
+        return DataTables::of(
+            StockManagement::with('productImages', 'category')
+                ->select('*')
+                ->orderBy('updated_at', 'desc') // Order by updated_at column in descending order
+                ->get(),
+        )->make(true);
     }
 }
