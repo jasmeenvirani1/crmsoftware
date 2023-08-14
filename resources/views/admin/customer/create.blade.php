@@ -173,7 +173,7 @@
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="gst" id="gst"
-                                                        class="form-control" placeholder="GST">
+                                                       value="{{ old('gst', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}" class="form-control" placeholder="GST">
                                                     @error('gst')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
