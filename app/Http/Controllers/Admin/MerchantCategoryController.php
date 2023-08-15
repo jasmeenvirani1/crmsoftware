@@ -89,7 +89,7 @@ class MerchantCategoryController extends Controller
             return redirect()->route('category.create');
         }
     }
-
+    
     /**
      * Display the specified resource.
      *

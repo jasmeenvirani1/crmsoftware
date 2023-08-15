@@ -12,6 +12,16 @@ class Customer extends Model
 {
     use HasFactory;
     use Notifiable;
+    public $group_id;
+
+    public function __construct($group_id = null)
+    {
+        if (isset(Auth::user()->group_id)) {
+            $this->group_id = Auth::user()->group_id;
+        } else {
+            $this->group_id = $group_id;
+        }
+    }
     public $table = "customer";
     public $timestamps = true;
     protected $fillable = [
@@ -32,7 +42,7 @@ class Customer extends Model
     protected static function booted()
     {
         static::creating(function ($model) {
-            $model->group_id = Auth::user()->group_id;
+            $model->group_id = $this->group_id;
         });
     }
 
@@ -42,7 +52,7 @@ class Customer extends Model
         $query = parent::newQuery($excludeDeleted);
 
         // Add the default 'role' condition to the query
-        $query->where('group_id', Auth::user()->group_id);
+        $query->where('group_id', $this->group_id);
 
         return $query;
     }
