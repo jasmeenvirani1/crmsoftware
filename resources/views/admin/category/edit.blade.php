@@ -1,5 +1,30 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .invalid-feedback {
+        color: #dc3545; /* Red color for error messages */
+        display: block; /* Display each error message on a new line */
+        font-size: 14px; /* Adjust the font size as needed */
+        margin-top: 5px; /* Add a little spacing above the error message */
+    }
+
+    .text-left {
+        text-align: left; /* Align the error message text to the left */
+    }
+
+    .alert {
+        background-color: #f8d7da; 
+        border: 1px solid #f5c6cb; 
+        color: #721c24; 
+        padding: 8px; 
+        border-radius: 4px; 
+        margin-top: 5px;
+    }
+
+    /* .alert strong {
+        font-weight: bold; 
+    } */
+</style>
 <!-- begin:: Bradcrubs -->
 <div class="kt-subheader   kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
@@ -38,7 +63,7 @@
             <div class="row">
                 <div class="col-xl-12">
 
-                    @include('errormessage')
+                    {{-- @include('errormessage') --}}
 
                     <div class="kt-portlet">
                         <div class="kt-portlet__head">
@@ -68,6 +93,7 @@
                                             </label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" maxlength="20" name="name" value="{{old('name',isset($data->name)?$data->name:'')}}" id="name" class="form-control" placeholder="category name">
+                                                @error('name')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                             </div>
                                         </div>
                                         <!-- <div class="form-group row">
@@ -75,7 +101,6 @@
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="file" name="image" value="{{old('image',isset($data->image)?$data->image:'')}}" id="image" class="form-control" placeholder="category image" >
                                             </div>
-
                                             </div> -->
                                     </div>
                                 </div>
