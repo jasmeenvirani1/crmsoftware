@@ -13,9 +13,9 @@ class MerchantCategory extends Model
     use HasFactory,
         SoftDeletes;
 
-
     public $table = "merchant_categories";
     public $timestamps = true;
+    public $group_id;
     protected $fillable = [
         'name',
         'group_id',
@@ -67,10 +67,10 @@ class MerchantCategory extends Model
     {
         // Call the parent method to get the base query builder
         $query = parent::newQuery($excludeDeleted);
-
-        // Add the default 'role' condition to the query
-        $query->where('group_id', $this->group_id);
-
+        if ($this->group_id != null) {
+            // Add the default 'role' condition to the query
+            $query->where('group_id', $this->group_id);
+        }
         return $query;
     }
 }

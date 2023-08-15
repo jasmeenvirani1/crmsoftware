@@ -31,6 +31,17 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => 'checkH
     Route::group(['prefix' => 'catalogue',], function () {
         Route::get('get-catalogue', [ApiController::class, 'GetCatalogue']);
     });
+    Route::group(['prefix' => 'company',], function () {
+        Route::get('get-company', [ApiController::class, 'GetCompany']);
+        Route::post('set-default-company', [ApiController::class, 'SetDefaultCompany']);
+    });
+    Route::group(['prefix' => 'vendor',], function () {
+        Route::get('/', [ApiController::class, 'GetVendors']);
+        Route::post('store', [ApiController::class, 'StoreVendor']);
+        Route::post('edit', [ApiController::class, 'EditVendor']);
+        Route::post('update', [ApiController::class, 'UpdateVendor']);
+        Route::post('delete', [ApiController::class, 'DeleteVendor']);
+    });
 
 
 

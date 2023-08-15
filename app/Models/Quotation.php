@@ -11,6 +11,15 @@ class Quotation extends Model
 {
     use HasFactory;
     use Notifiable;
+    public $group_id;
+    public function __construct($group_id = null)
+    {
+        if (isset(Auth::user()->group_id)) {
+            $this->group_id = Auth::user()->group_id;
+        } else {
+            $this->group_id = $group_id;
+        }
+    }
 
     public $table = "quotation";
     public $timestamps = true;
@@ -21,8 +30,8 @@ class Quotation extends Model
         'email',
         'address',
         'gst',
-        'notes',
         'group_id',
+        'notes',
         'created_at',
         'updated_at',
     ];
@@ -59,22 +68,22 @@ class Quotation extends Model
     protected static function booted()
     {
         static::creating(function ($model) {
-            $model->group_id = Auth::user()->group_id;
+            prx($this->group_id);
+            $model->group_id = $this->group_id;
         });
     }
-
     public function newQuery($excludeDeleted = true)
     {
         // Call the parent method to get the base query builder
         $query = parent::newQuery($excludeDeleted);
-
-        // Add the default 'role' condition to the query
-        $query->where('group_id', Auth::user()->group_id);
-
+        if ($this->group_id != null) {
+            // Add the default 'role' condition to the query
+            $query->where('group_id', $this->group_id);
+        }
         return $query;
     }
     public function quotationDetails()
     {
-        return $this->hasMany(QuotationDetails::class,'quotation_id','id');
+        return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
     }
 }

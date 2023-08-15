@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Helpers\Helper;
 use App\Models\Customer;
 use App\Models\MerchantCategory;
+use App\Models\Quotation;
+use App\Models\QuotationDetails;
 use App\Models\StockManagement;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -128,19 +130,165 @@ class ApiController extends Controller
         $group_id = $this->user->group_id;
 
         $customer_model = new Customer($group_id);
-        $catalog_data = $customer_model->where('default', '1')->first();
-        $sql = StockManagement::with(['productImages', 'category']);
+        $default_company = $customer_model->where('default', '1')->first();
+        if (!$default_company) {
+            return Helper::fail([], 'Please select default company');
+        }
+        $product_data['default_company'] = $default_company;
 
         $data = $request->json()->all();
+        $sql = new StockManagement($group_id);
+        $product = $sql->with(['category', 'productImages'])->where('group_id', $group_id);
+
         if (isset($data['ids'])) {
             $ids = $data['ids'];
-            $product_data = $sql->whereIn('id', $request->product_ids)->get();
-        } else {
-            $product_data = $sql->get();
+            $product = $product->whereIn('id', $ids);
         }
-        if (!$catalog_data) {
-            return Helper::fail([], 'Please select company');
-        }
+        $product_data['catalogue_data'] = $product->get();
+
+
         return Helper::success($product_data, 'Catalogue Loaded Successfully');
+    }
+    public function GetCompany()
+    {
+        $group_id = $this->user->group_id;
+        $customer_model = new Customer($group_id);
+        return Helper::success($customer_model->get(), 'Company load successfully');
+    }
+    public function SetDefaultCompany(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return Helper::fail([], Helper::error_parse($validator->errors()));
+        }
+        $group_id = $this->user->group_id;
+        $set_all_default = $customer_model = new Customer($group_id);
+        $set_all_default->where('id', '!=', 0)->update(['default' => '0']);
+
+        $customer_model->find($request->id)->update(['default' => '1']);
+        return Helper::success(null, 'Company set default successfully');
+    }
+    public function GetVendors()
+    {
+        $group_id = $this->user->group_id;
+        $data = new Quotation($group_id);
+
+        return Helper::success($data->get(), 'Vendor store successfully');
+    }
+
+    public function EditVendor(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+        $group_id = $this->user->group_id;
+        $quotation = new Quotation($group_id);
+        $vendor = $quotation->find($request->id);
+        return Helper::success($vendor, 'Vendor store successfully');
+    }
+
+    public function StoreVendor(Request $request)
+    {
+        $group_id = $this->user->group_id;
+        $data = $request->json()->all();
+
+        $validator = Validator::make($data, [
+            'companyname' => [
+                'required',
+                Rule::unique('quotation')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })
+            ],
+            'address' => ['required'],
+            'gst' => [
+                'required', 'string', 'size:15',
+                Rule::unique('quotation', 'gst')->where(function ($query) use ($data, $group_id) {
+                    return $query->where('gst', $data['gst'])->where('group_id', $group_id);
+                })
+            ],
+            'notes' => ['required']
+        ]);
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+
+        $insertData = [
+            'companyname' => $data['companyname'],
+            'address' => $data['address'],
+            'notes' => $data['notes'],
+            'gst' => $data['gst'],
+            'group_id' => $group_id
+        ];
+
+        $quotation_id = Quotation::insertGetId($insertData);
+
+        foreach ($data['contact_details'] as $contact_details) {
+            $contact_details['quotation_id'] = $quotation_id;
+            $contact_details['created_at'] = $contact_details['updated_at'] = GetDateTime();
+            QuotationDetails::insert($contact_details);
+        }
+
+        return Helper::success(null, 'Vendor store successfully');
+    }
+
+    public function UpdateVendor(Request $request)
+    {
+        $group_id = $this->user->group_id;
+        $data = $request->json()->all();
+
+        $validator = Validator::make($data, [
+            'id' => ['required'],
+            'companyname' => [
+                'required',
+                Rule::unique('quotation')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })->ignore($data['id'])
+            ],
+            'address' => ['required'],
+            'gst' => [
+                'required', 'string', 'size:15',
+                Rule::unique('quotation', 'gst')->where(function ($query) use ($data, $group_id) {
+                    return $query->where('gst', $data['gst'])->where('group_id', $group_id);
+                })->ignore($data['id'])
+            ],
+            'notes' => ['required']
+        ]);
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+
+        $insertData = [
+            'companyname' => $data['companyname'],
+            'address' => $data['address'],
+            'notes' => $data['notes'],
+            'gst' => $data['gst'],
+            'gst' => $data['gst'],
+            'group_id' => $group_id
+        ];
+
+        $quotation_id = Quotation::find($data['id'])->update($insertData);
+
+        return Helper::success(null, 'Vendor updated successfully');
+    }
+    public function DeleteVendor(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+        $group_id = $this->user->group_id;
+        $quotation = new Quotation($group_id);
+        $vendor = $quotation->find($request->id)->delete();
+        return Helper::success($vendor, 'Vendor delete successfully');
     }
 }

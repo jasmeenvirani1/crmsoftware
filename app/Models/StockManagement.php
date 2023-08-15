@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class StockManagement extends Model
 {
     use HasFactory;
+    public $group_id;
     public function __construct($group_id = null)
     {
         if (isset(Auth::user()->group_id)) {
@@ -19,7 +20,6 @@ class StockManagement extends Model
         }
     }
     public $table = "stock_management";
-    public $group_id;
     public $timestamps = true;
     protected $fillable = [
         'product_name',
@@ -118,12 +118,14 @@ class StockManagement extends Model
 
     public function newQuery($excludeDeleted = true)
     {
+
         // Call the parent method to get the base query builder
         $query = parent::newQuery($excludeDeleted);
 
-        // Add the default 'role' condition to the query
-        $query->where('group_id', $this->group_id);
-
+        if ($this->group_id != null) {
+            // Add the default 'role' condition to the query
+            $query->where('group_id', $this->group_id);
+        }
         return $query;
     }
 }
