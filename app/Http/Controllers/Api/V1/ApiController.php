@@ -11,28 +11,23 @@ use App\Models\Quotation;
 use App\Models\QuotationDetails;
 use App\Models\StockManagement;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class ApiController extends Controller
 {
-    public $user;
-    function __construct()
-    {
-        $this->user = Helper::GetUserData();
-    }
-
     public function GetCategory()
     {
-        $group_id = $this->user->group_id;
-        $stock_management_model = new MerchantCategory($group_id);
-        return Helper::success($stock_management_model->get());
+        $group_id = Auth::user()->group_id;
+        $stock = MerchantCategory::get();
+        return Helper::success($stock);
     }
 
     public function StoreCategory(Request $request)
     {
         try {
-            $group_id = $this->user->group_id;
+            $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
                 'name' => [
                     'required',
@@ -41,16 +36,15 @@ class ApiController extends Controller
                     })->ignore($request->id, 'id')
                 ],
             ]);
+
             if ($validator->fails()) {
                 return Helper::fail([], Helper::error_parse($validator->errors()));
             }
 
-            $model = new MerchantCategory($group_id);
-            $model->name = $request->name;
-            $model->created_at = $model->updated_at = GetDateTime();
-            $recordId  = $model->save();
+            $data = AddDateTime($request);
+            MerchantCategory::create($data);
 
-            return Helper::success($recordId, 'category created Successfully');
+            return Helper::success([], 'Category created Successfully');
         } catch (Exception $e) {
             return Helper::fail([], $e->getMessage());
         }
@@ -65,9 +59,8 @@ class ApiController extends Controller
             return Helper::fail([], Helper::error_parse($validator->errors()));
         }
         try {
-            $group_id = $this->user->group_id;
-            $model = new MerchantCategory($group_id);
-            $model = $model->findOrFail($request->id);
+            $group_id = Auth::user()->group_id;
+            $model = MerchantCategory::findOrFail($request->id);
 
             return Helper::success($model, 'Category Loaded Successfully');
         } catch (Exception $e) {
@@ -77,7 +70,7 @@ class ApiController extends Controller
     public function UpdateCategory(Request $request)
     {
         try {
-            $group_id = $this->user->group_id;
+            $group_id = Auth::user()->group_id;
             $validator = Validator::make($request->all(), [
                 'name' => [
                     'required',
@@ -92,14 +85,10 @@ class ApiController extends Controller
                 return Helper::fail([], Helper::error_parse($validator->errors()));
             }
 
-            $model = new MerchantCategory($group_id);
+            $data = AddDateTime($request);
+            MerchantCategory::find($request->id)->update($data);
 
-            $model = $model->findOrFail($request->id);
-            $model->name = $request->name;
-            $model->updated_at = GetDateTime();
-            $recordId  = $model->save();
-
-            return Helper::success($recordId, 'category updated Successfully');
+            return Helper::success(null, 'category updated Successfully');
         } catch (Exception $e) {
             return Helper::fail([], $e->getMessage());
         }
@@ -114,47 +103,18 @@ class ApiController extends Controller
             return Helper::fail([], Helper::error_parse($validator->errors()));
         }
         try {
-
-            $group_id = $this->user->group_id;
-            $model = new MerchantCategory($group_id);
-            $model = $model->findOrFail($request->id);
-            $model->delete();
-
+            MerchantCategory::findOrFail($request->id)->delete();
             return Helper::success(null, 'Category Deleted Successfully');
         } catch (Exception $e) {
             return Helper::fail([], $e->getMessage());
         }
     }
-    public function GetCatalogue(Request $request)
-    {
-        $group_id = $this->user->group_id;
-
-        $customer_model = new Customer($group_id);
-        $default_company = $customer_model->where('default', '1')->first();
-        if (!$default_company) {
-            return Helper::fail([], 'Please select default company');
-        }
-        $product_data['default_company'] = $default_company;
-
-        $data = $request->json()->all();
-        $sql = new StockManagement($group_id);
-        $product = $sql->with(['category', 'productImages'])->where('group_id', $group_id);
-
-        if (isset($data['ids'])) {
-            $ids = $data['ids'];
-            $product = $product->whereIn('id', $ids);
-        }
-        $product_data['catalogue_data'] = $product->get();
-
-
-        return Helper::success($product_data, 'Catalogue Loaded Successfully');
-    }
     public function GetCompany()
     {
-        $group_id = $this->user->group_id;
-        $customer_model = new Customer($group_id);
-        return Helper::success($customer_model->get(), 'Company load successfully');
+        $customer = Customer::get();
+        return Helper::success($customer, 'Company load successfully');
     }
+
     public function SetDefaultCompany(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -164,19 +124,39 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return Helper::fail([], Helper::error_parse($validator->errors()));
         }
-        $group_id = $this->user->group_id;
-        $set_all_default = $customer_model = new Customer($group_id);
-        $set_all_default->where('id', '!=', 0)->update(['default' => '0']);
 
-        $customer_model->find($request->id)->update(['default' => '1']);
+        Customer::where('id', '!=', 0)->update(['default' => '0']);
+        Customer::find($request->id)->update(['default' => '1']);
+
         return Helper::success(null, 'Company set default successfully');
     }
+    public function GetCatalogue(Request $request)
+    {
+        $group_id = Auth::user()->group_id;
+
+
+        $default_company = Customer::where('default', '1')->first();
+        if (!$default_company) {
+            return Helper::fail([], 'Please select default company');
+        }
+
+        $product_data['default_company'] = $default_company;
+
+        $sql = StockManagement::with(['productImages', 'category']);
+
+        if (isset($data['ids'])) {
+            $ids = $data['ids'];
+            $sql->whereIn('id', $ids);
+        }
+        $product_data['catalogue_data'] = $sql->get();
+
+        return Helper::success($product_data, 'Catalogue Loaded Successfully');
+    }
+
     public function GetVendors()
     {
-        $group_id = $this->user->group_id;
-        $data = new Quotation($group_id);
-
-        return Helper::success($data->get(), 'Vendor store successfully');
+        $data = Quotation::get();
+        return Helper::success($data, 'Vendor store successfully');
     }
 
     public function EditVendor(Request $request)
@@ -188,15 +168,13 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
         }
-        $group_id = $this->user->group_id;
-        $quotation = new Quotation($group_id);
-        $vendor = $quotation->find($request->id);
+        $vendor = Quotation::find($request->id);
         return Helper::success($vendor, 'Vendor store successfully');
     }
 
     public function StoreVendor(Request $request)
     {
-        $group_id = $this->user->group_id;
+        $group_id = Auth::user()->group_id;
         $data = $request->json()->all();
 
         $validator = Validator::make($data, [
@@ -240,7 +218,7 @@ class ApiController extends Controller
 
     public function UpdateVendor(Request $request)
     {
-        $group_id = $this->user->group_id;
+        $group_id = Auth::user()->group_id;
         $data = $request->json()->all();
 
         $validator = Validator::make($data, [
@@ -269,14 +247,13 @@ class ApiController extends Controller
             'address' => $data['address'],
             'notes' => $data['notes'],
             'gst' => $data['gst'],
-            'gst' => $data['gst'],
-            'group_id' => $group_id
         ];
 
         $quotation_id = Quotation::find($data['id'])->update($insertData);
 
         return Helper::success(null, 'Vendor updated successfully');
     }
+
     public function DeleteVendor(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -286,9 +263,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
         }
-        $group_id = $this->user->group_id;
-        $quotation = new Quotation($group_id);
-        $vendor = $quotation->find($request->id)->delete();
-        return Helper::success($vendor, 'Vendor delete successfully');
+        $quotation = Quotation::find($request->id)->delete();
+        return Helper::success(null, 'Vendor delete successfully');
     }
 }

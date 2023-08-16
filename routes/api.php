@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ApiController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\V1\CategoryController;
 
 /*
   |--------------------------------------------------------------------------
@@ -16,12 +15,12 @@ use App\Http\Controllers\API\V1\CategoryController;
   |
  */
 // Auth::routes();
-Route::post('v1/login', [App\Http\Controllers\API\V1\AuthController::class, 'login']);
-Route::post('v1/signup', [App\Http\Controllers\API\V1\AuthController::class, 'signup']);
-Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => 'checkHeader'], function () {
+Route::post('v1/login', [AuthController::class, 'login']);
+Route::post('v1/signup', [AuthController::class, 'signup']);
+Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:api']], function () {
+
     // Route::group(['middleware' => ['guest:api']], function () {
-    Route::post('otp_verification', [App\Http\Controllers\API\V1\AuthController::class, 'verifyOTP']);
-    // Route::post('create-category',[CategoryController::class,'create'])->name('create');
+    Route::post('otp_verification', [AuthController::class, 'verifyOTP']);
     Route::get('get-category', [ApiController::class, 'GetCategory']);
     Route::post('create-category', [ApiController::class, 'StoreCategory']);
     Route::post('edit-category', [ApiController::class, 'EditCategory']);

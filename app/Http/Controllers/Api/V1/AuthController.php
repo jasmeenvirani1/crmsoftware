@@ -21,7 +21,7 @@ class AuthController extends Controller
                 'password' => 'required',
             ]);
             if ($validator->fails()) {
-                return Helper::fail([], Helper::error_parse($validator->errors()));
+                return Helper::fail($validator->errors());
             }
             $user = User::where('email', '=', $request->email)->first();
             if ($user != null) {
