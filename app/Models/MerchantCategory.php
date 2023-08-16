@@ -63,4 +63,8 @@ class MerchantCategory extends Model
 
         return $query;
     }
+    public function product()
+    {
+        return $this->hasMany(StockManagement::class, 'category', 'id');
+    }
 }

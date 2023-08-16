@@ -12,7 +12,6 @@ class StockManagement extends Model
     use HasFactory;
 
     public $table = "stock_management";
-    public $group_id;
     public $timestamps = true;
     protected $fillable = [
         'product_name',

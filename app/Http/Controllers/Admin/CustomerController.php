@@ -73,14 +73,12 @@ class CustomerController extends Controller
                 'email' => 'required',
                 'phonenumber' => 'required|numeric|digits:10',
                 'address' => 'required',
-                'gst' =>  [
-                    'required',
-                    'string',
-                    'size:15',
-                    Rule::unique('customer', 'gst')->where(function ($query) use ($request) {
-                        return $query->where('gst', $request->gst);
-                    })->ignore($request->input('id')),
-                ],
+                'gst' => [
+                    'required', 'string', 'size:15',
+                    Rule::unique('customer', 'gst')->where(function ($query) use ($request, $group_id) {
+                        return $query->where('gst', $request->gst)->where('group_id', $group_id);
+                    })
+                ]
             ]);
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
@@ -261,7 +259,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        $group_id = Auth::user()->group_id;
         $input = [
             'name' => $request->vendor_company_name,
             'email' => $request->email,
@@ -280,9 +278,9 @@ class CustomerController extends Controller
                     'required',
                     'string',
                     'size:15',
-                    Rule::unique('customer', 'gst')->where(function ($query) use ($request) {
-                        return $query->where('gst', $request->gst);
-                    })->ignore($request->input('id')),
+                    Rule::unique('customer', 'gst')->where(function ($query) use ($request, $group_id) {
+                        return $query->where('gst', $request->gst)->where('group_id', $group_id);
+                    })->ignore($id),
                 ],
             ]);
             if ($validator->fails()) {

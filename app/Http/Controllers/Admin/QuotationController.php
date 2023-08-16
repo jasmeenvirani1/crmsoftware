@@ -119,11 +119,14 @@ class QuotationController extends Controller
             if (request()->has('process_type')) {
                 QuotationDetails::where('quotation_id', $recordId)->delete();
             }
+
             if (request()->has('personmame')) {
-                $quotationDetailsArr = [];
+
                 for ($i = 0; $i < count($request->personmame); $i++) {
+                    $arr = [];
                     $date_time = GetDateTime();
                     if ($request->personmame[$i] != null && $request->phonenumber[$i] != null && $request->email[$i] != null) {
+
                         $arr = [
                             'quotation_id' => $recordId,
                             'name' => $request->personmame[$i],
@@ -133,10 +136,18 @@ class QuotationController extends Controller
                             'updated_at' => $date_time
                         ];
 
-                        $quotationDetailsArr[] = $arr;
+                        $count = QuotationDetails::where(function ($query) use ($arr) {
+                            $query->where('name', $arr['name'])
+                                ->orWhere('phone', $arr['phone'])
+                                ->orWhere('email', $arr['email']);
+                        })->count();
+
+                        if ($count > 0) {
+                            continue;
+                        }
                     }
+                    QuotationDetails::create($arr);
                 }
-                QuotationDetails::insert($quotationDetailsArr);
             }
 
             if ($recordId) {

@@ -26,6 +26,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:
     Route::post('edit-category', [ApiController::class, 'EditCategory']);
     Route::post('update-category', [ApiController::class, 'UpdateCategory']);
     Route::post('delete-category', [ApiController::class, 'DeleteCategory']);
+    Route::get('get-group', [ApiController::class, 'GetGroup']);
+    Route::post('change-group', [ApiController::class, 'ChangeGroup']);
 
     Route::group(['prefix' => 'catalogue',], function () {
         Route::get('get-catalogue', [ApiController::class, 'GetCatalogue']);
