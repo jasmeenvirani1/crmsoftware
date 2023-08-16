@@ -40,7 +40,7 @@ class GroupController extends Controller
     public function show($id)
     {
         // return Datatables::of(Group::orderBy('id', 'desc')->get())->make(true);
-        $groupQuery = Group::orderBy('id', 'desc')->orderBy('updated_at', 'desc');
+        $groupQuery = Group::orderBy('updated_at', 'desc')->orderBy('id', 'desc');
         return Datatables::of($groupQuery)->make(true);
     }
 
