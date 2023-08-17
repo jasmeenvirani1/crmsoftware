@@ -37,7 +37,7 @@
             <div class="kt-grid__item kt-grid__item--fluid kt-app__content">
                 <div class="row">
                     <div class="col-xl-12">
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
                                 <div class="kt-portlet__head-label">
@@ -53,7 +53,7 @@
                                         &nbsp;
                                     </div>
                                 </div>
-                            </div>
+                            </div>  
                             @if ($action == 'create')
                                 {!! Form::open([
                                     'route' => 'group.store',

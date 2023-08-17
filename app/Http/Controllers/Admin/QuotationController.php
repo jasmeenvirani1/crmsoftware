@@ -184,9 +184,14 @@ class QuotationController extends Controller
     public function edit($id)
     {
         $data = Quotation::with('quotationDetails')->find($id);
-        $data1 = QuotationItemDetails::with('tech_specification')->select('*')->where('quotation_id', '=', $data->id)->get();
-        $data2 = QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get();
-        return view('admin.quotation.edit', ['title' => "Vendor", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'customer' => Customer::get(), 'terms' => Term::get(), 'tech' => TechSpecification::get(), 'product' => StockManagement::get(), 'data2' => QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get(), 'user' => User::all(), 'organization' => Organization::all()]);
+        if ($data) {
+            $data1 = QuotationItemDetails::with('tech_specification')->select('*')->where('quotation_id', '=', $data->id)->get();
+            $data2 = QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get();
+        } else {
+            session()->flash('error', "There is some thing went, Please try after some time.");
+            return redirect()->back();
+        }
+        return view('admin.quotation.edit', ['title' => "Vendor", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'customer' => Customer::get(), 'terms' => Term::get(), 'tech' => TechSpecification::get(), 'product' => StockManagement::get(), 'data2' => $data2, 'user' => User::all(), 'organization' => Organization::all()]);
     }
 
     /**
