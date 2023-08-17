@@ -295,7 +295,10 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
         }
-        $quotation = Quotation::find($request->id)->delete();
-        return Helper::success(null, 'Vendor delete successfully');
+        $quotation = Quotation::find($request->id);
+        if ($quotation) {
+            $quotation->delete();
+        }
+        return Helper::success(null, 'Vendor deleted successfully');
     }
 }
