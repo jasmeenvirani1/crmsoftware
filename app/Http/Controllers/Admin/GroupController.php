@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 
 class GroupController extends Controller
@@ -171,6 +172,7 @@ class GroupController extends Controller
 
     public function ChangeGroupId(Request $request)
     {
+        $previousUrl = url()->previous();
         $validator = Validator::make($request->all(), [
             'group_id' => 'required',
         ]);
@@ -179,6 +181,10 @@ class GroupController extends Controller
             $user->group_id = $request->group_id;
             $user->save();
         }
-        return redirect()->back();
+        if (Str::contains($previousUrl, 'edit')) {
+            return redirect()->route('dashboard');
+        } else {
+            return redirect()->back();
+        }
     }
 }

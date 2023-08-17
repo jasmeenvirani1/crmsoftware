@@ -545,10 +545,16 @@ class ApiController extends Controller
 
     public  function DeleteProductImage(Request $request)
     {
-        $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'id' => 'required',
             'type' => 'required|in:product_images,vendor_images,client_and_sales_images',
         ]);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+
         DB::table($request->type)->where('id', $request->id)->update(['deleted_at' => now()]);
 
         return Helper::success(null, 'Image deleted successfully');
