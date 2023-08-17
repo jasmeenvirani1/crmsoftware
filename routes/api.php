@@ -49,7 +49,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:
     Route::get('get-state', [App\Http\Controllers\API\V1\CommanList::class, 'getState']);
     Route::post('edit/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'editCategory']);
     Route::post('delete/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'deleteCategory']);
-    Route::post('create-product', [App\Http\Controllers\API\V1\CommanList::class, 'createproduct']);
+    Route::post('create-product', [App\Http\Controllers\Api\V1\CommanList::class, 'createproduct']);
     Route::post('editproduct/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'editproduct']);
     Route::post('deleteproduct/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'deleteproduct']);
     Route::get('get-product', [App\Http\Controllers\API\V1\CommanList::class, 'getproduct']);
