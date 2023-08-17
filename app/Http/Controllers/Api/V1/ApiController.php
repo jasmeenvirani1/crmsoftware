@@ -20,6 +20,7 @@ use App\Models\VendorImage;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -558,5 +559,37 @@ class ApiController extends Controller
         DB::table($request->type)->where('id', $request->id)->update(['deleted_at' => now()]);
 
         return Helper::success(null, 'Image deleted successfully');
+    }
+    public  function GetProfile()
+    {
+        return Helper::success(Auth::user(), 'Profile deleted successfully');
+    }
+    public  function UpdateProfile(Request $request)
+    {
+        $input['name'] = $request->name;
+        $input['mobile_number'] = $request->mobile_number;
+        $rules = [
+            'name' => 'required',
+            'mobile_number' => 'required|regex:/^[0-9]{10}$/',
+        ];
+        if (request()->has('password')) {
+            $rules['password'] = 'required|min:4';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+        $input = [
+            'name' => $request->name,
+            'mobile_number' => $request->mobile_number,
+            'updated_at' => GetDateTime()
+        ];
+        if (request()->has('password')) {
+            $input['password'] = Hash::make($request->password);
+        }
+        $model = User::find(Auth::user()->id)->update($input);
+        return Helper::success([], 'Profile updated successfully');
     }
 }
