@@ -158,25 +158,33 @@ class ApiController extends Controller
     }
     public function GetCatalogue(Request $request)
     {
-        $group_id = Auth::user()->group_id;
-
-
-        $default_company = Customer::where('default', '1')->first();
-        if (!$default_company) {
-            return Helper::fail([], 'Please select default company');
+        $data = $request->json()->all();
+        $catalog_data = Customer::where('default', '1')->first();
+        if (!$catalog_data) {
+            prx('Please select company');
         }
 
-        $product_data['default_company'] = $default_company;
-
-        $sql = StockManagement::with(['productImages', 'category']);
-
+        $return_data['catalog_data'] = $catalog_data;
+        $cat_sql = StockManagement::groupBy('category');
         if (isset($data['ids'])) {
             $ids = $data['ids'];
-            $sql->whereIn('id', $ids);
+            $cat_sql = $cat_sql->whereIn('id', $ids);
         }
-        $product_data['catalogue_data'] = $sql->get();
 
-        return Helper::success($product_data, 'Catalogue Loaded Successfully');
+        $cat_ids = $cat_sql->get('category')->pluck('category')->toArray();
+        $product = MerchantCategory::whereIn('id', $cat_ids);
+
+        if (isset($data['ids'])) {
+            $product = $product->with(['product.productImages', 'product' =>  function ($query) use ($ids) {
+                $query->whereIn('id', $ids);
+            }]);
+        } else {
+            $product = $product->with(['product', 'product.productImages']);
+        }
+        $product = $product->get();
+        $return_data['product'] = $product;
+
+        return Helper::success($return_data, 'Catalogue Loaded Successfully');
     }
 
     public function GetVendors()
