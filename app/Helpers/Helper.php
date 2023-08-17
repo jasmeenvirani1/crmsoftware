@@ -88,12 +88,5 @@ class Helper
         return URL::to('/') . '/storage/profile_pcitures/';
     }
 
-    public static function GetUserData()
-    {
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
 
-        $token = str_replace('Bearer ', '', $authHeader);
-        $users =  User::where('api_token', $token)->first();
-        return $users;
-    }
 }

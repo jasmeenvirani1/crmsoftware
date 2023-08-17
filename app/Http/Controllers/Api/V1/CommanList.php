@@ -25,12 +25,6 @@ use Illuminate\Validation\Rule;
 
 class CommanList extends Controller
 {
-    public $user;
-    function __construct()
-    {
-        $this->user = Helper::GetUserData();
-    }
-
     public function getCategory(Request $request)
     {
         try {
@@ -83,94 +77,100 @@ class CommanList extends Controller
 
     public function createproduct(Request $request)
     {
-        $group_id = $this->user->group_id;
+        try {
+            $group_id = Auth::user()->group_id;
 
-        $stock_management_model = new StockManagement($group_id);
-        $data = $request->json()->all();
+            $data = $request->json()->all();
 
-        // $validator = Validator::make($data, [
-        //     'product_name' =>  [
-        //         'required',
-        //         Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
-        //             return $query->where('group_id', $group_id);
-        //         })->ignore($request->input('id'))
-        //     ],
-        //     'partno' => 'required',
-        //     'category' => 'required',
-        //     'product_company' => 'required',
-        //     'product_size' => 'required|integer',
-        //     'product_price' => 'required|integer',
-        //     'specification' => 'required',
-        //     'notes' => 'required',
-        // ]);
+            $validator = Validator::make($data, [
+                'product_name' =>  [
+                    'required',
+                    Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                        return $query->where('group_id', $group_id);
+                    })->ignore($request->input('id'))
+                ],
+                'partno' => 'required',
+                'category' => 'required',
+                'product_company' => 'required',
+                'product_size' => 'required|integer',
+                'product_price' => 'required|integer',
+                'specification' => 'required',
+                'notes' => 'required',
+            ]);
 
-        // if ($validator->fails()) {
-        //     return Helper::fail($validator->errors(), "Enter all require param.");
-        // }
+            if ($validator->fails()) {
+                return Helper::fail($validator->errors(), "Enter all require param.");
+            }
+            $date_time = GetDateTime();
 
-        $stock_data = (object) $data;
+            $stock_data = (object) $data;
 
-        $product_id = $stock_management_model->insertGetId(
-            [
-                'product_name' => $stock_data->product_name,
-                'partno' => $stock_data->partno,
-                'product_company' => $stock_data->product_company,
-                'product_size' => $stock_data->product_size,
-                'product_price' => $stock_data->product_price,
-                'category' => $stock_data->category,
-                'notes' => $stock_data->notes,
-                'specification' => $stock_data->specification,
-                'group_id' => $group_id,
-            ]
-        );
-
-
-        // $jsonData = json_decode($request->getContent());
-
-        // if (isset($jsonData->product_images)) {
-        //     $decodedImageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $jsonData->product_images));
-        //     prx($decodedImageData);
-        //     $files = $this->addImages('product_images', $product_id, $request->file('product_images'));
-        //     ProductImage::insert($files);
-        // }
-
-        // // if ($request->hasfile('product_images')) {
-        // //     $files = $this->addImages('product_images', $product_id, $request->file('product_images'));
-        // //     ProductImage::insert($files);
-        // // }
-        // if ($request->hasfile('vendor_images')) {
-        //     $files = $this->addImages('vendor_images', $product_id, $request->file('vendor_images'));
-        //     VendorImage::insert($files);
-        // }
-        // if ($request->hasfile('client_images')) {
-        //     $files = $this->addImages('client_images', $product_id, $request->file('client_images'));
-        //     ClientAndSalesImage::insert($files);
-        // }
-        $dimensionDetailsArr = [];
-        if (isset($stock_data->dimensions)) {
-
-            foreach ($stock_data->dimensions as $dimensions) {
-                $date_time = GetDateTime();
-
-                $arr = [
-                    'product_id' => $product_id,
-                    'dimension_name' => $dimensions['dimension_name'],
-                    'dimension_value' => $dimensions['dimension_value'],
-                    'quantities_value' => $dimensions['quantities_value'],
+            $product_id = StockManagement::insertGetId(
+                [
+                    'product_name' => $stock_data->product_name,
+                    'partno' => $stock_data->partno,
+                    'product_company' => $stock_data->product_company,
+                    'product_size' => $stock_data->product_size,
+                    'product_price' => $stock_data->product_price,
+                    'category' => $stock_data->category,
+                    'notes' => $stock_data->notes,
+                    'specification' => $stock_data->specification,
+                    'group_id' => $group_id,
                     'created_at' => $date_time,
                     'updated_at' => $date_time
-                ];
-                ProductDimension::create($arr);
+                ]
+            );
+
+            // $jsonData = json_decode($request->getContent());
+
+            // if (isset($jsonData->product_images)) {
+            //     $decodedImageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $jsonData->product_images));
+            //     prx($decodedImageData);
+            //     $files = $this->addImages('product_images', $product_id, $request->file('product_images'));
+            //     ProductImage::insert($files);
+            // }
+
+            // // if ($request->hasfile('product_images')) {
+            // //     $files = $this->addImages('product_images', $product_id, $request->file('product_images'));
+            // //     ProductImage::insert($files);
+            // // }
+            // if ($request->hasfile('vendor_images')) {
+            //     $files = $this->addImages('vendor_images', $product_id, $request->file('vendor_images'));
+            //     VendorImage::insert($files);
+            // }
+            // if ($request->hasfile('client_images')) {
+            //     $files = $this->addImages('client_images', $product_id, $request->file('client_images'));
+            //     ClientAndSalesImage::insert($files);
+            // }
+
+            if (isset($stock_data->dimensions)) {
+
+                foreach ($stock_data->dimensions as $dimensions) {
+                    $arr = [
+                        'product_id' => $product_id,
+                        'dimension_name' => $dimensions['dimension_name'],
+                        'dimension_value' => $dimensions['dimension_value'],
+                        'quantities_value' => $dimensions['quantities_value'],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    ProductDimension::create($arr);
+                }
             }
-        }
 
-        $vendor_data = [];
-        foreach ($stock_data->vendors as $vendor) {
-            $vendor_data = ['product_id' => $product_id, 'quotation_id' => $vendor['id']];
-            StockVendor::insert($vendor_data);
-        }
+            $vendor_data = [];
+            foreach ($stock_data->vendors as $vendor) {
+                $vendor_data = [
+                    'product_id' => $product_id, 'quotation_id' => $vendor['id'], 'created_at' => $date_time,
+                    'updated_at' => $date_time
+                ];
+                StockVendor::insert($vendor_data);
+            }
 
-        return Helper::success([],'Product store successfully');
+            return Helper::success([], 'Product store successfully');
+        } catch (\Exception $e) {
+            return Helper::fail([], $e->getMessage());
+        }
     }
 
     public function editproduct(Request $request)

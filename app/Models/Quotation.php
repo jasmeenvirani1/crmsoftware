@@ -75,6 +75,6 @@ class Quotation extends Model
     }
     public function quotationDetails()
     {
-        return $this->hasMany(QuotationDetails::class,'quotation_id','id');
+        return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
     }
 }

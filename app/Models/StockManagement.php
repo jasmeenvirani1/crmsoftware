@@ -10,16 +10,8 @@ use Illuminate\Support\Facades\Storage;
 class StockManagement extends Model
 {
     use HasFactory;
-    public function __construct($group_id = null)
-    {
-        if (isset(Auth::user()->group_id)) {
-            $this->group_id = Auth::user()->group_id;
-        } else {
-            $this->group_id = $group_id;
-        }
-    }
+
     public $table = "stock_management";
-    public $group_id;
     public $timestamps = true;
     protected $fillable = [
         'product_name',
@@ -112,7 +104,7 @@ class StockManagement extends Model
     protected static function booted()
     {
         static::creating(function ($model) {
-            $model->group_id = $this->group_id;
+            $model->group_id = Auth::user()->group_id;
         });
     }
 
@@ -122,7 +114,7 @@ class StockManagement extends Model
         $query = parent::newQuery($excludeDeleted);
 
         // Add the default 'role' condition to the query
-        $query->where('group_id', $this->group_id);
+        $query->where('group_id', Auth::user()->group_id);
 
         return $query;
     }

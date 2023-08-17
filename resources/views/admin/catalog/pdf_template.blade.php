@@ -52,27 +52,29 @@
                 <p>{{ $catalog_data->address }}</p>
             </div>
         </div>
-        <div class="product_title">
-            <h2>Products</h2>
-        </div>
-        <div class="product_wrapper">
-            @foreach ($product_data as $product)
-                <div class="product_box">
-                    <div class="pro_img">
-                        @if (isset($product->productImages[0]))
-                            <img src="{{ asset($product->productImages[0]->name) }}" alt="">
-                        @else
-                            <img src="{{ asset('images/product1.jpg') }}" alt="">
-                        @endif
+        @foreach ($product_data as $category)
+            <div class="product_title">
+                <h2>{{ $category->name }}</h2>
+            </div>
+            <div class="product_wrapper">
+                @foreach ($category->product as $product)
+                    <div class="product_box">
+                        <div class="pro_img">
+                            @if (isset($product->productImages[0]))
+                                <img src="{{ asset($product->productImages[0]->name) }}" alt="">
+                            @else
+                                <img src="{{ asset('images/product1.jpg') }}" alt="">
+                            @endif
+                        </div>
+                        <div class="content">
+                            <div class="name">{{ $product->product_name }}</div>
+                            <div class="desc">{{ $product->specification }}</div>
+                            <div class="desc">{{ $product->notes }}</div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="name">{{ $product->product_name }}</div>
-                        <div class="desc">{{ $product->specification }}</div>
-                        <div class="desc">{{ $product->notes }}</div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+                @endforeach
+            </div>
+        @endforeach
     </div>
     <!-- Page2 End -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

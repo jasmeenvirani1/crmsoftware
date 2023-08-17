@@ -119,11 +119,14 @@ class QuotationController extends Controller
             if (request()->has('process_type')) {
                 QuotationDetails::where('quotation_id', $recordId)->delete();
             }
+
             if (request()->has('personmame')) {
-                $quotationDetailsArr = [];
+
                 for ($i = 0; $i < count($request->personmame); $i++) {
+                    $arr = [];
                     $date_time = GetDateTime();
                     if ($request->personmame[$i] != null && $request->phonenumber[$i] != null && $request->email[$i] != null) {
+
                         $arr = [
                             'quotation_id' => $recordId,
                             'name' => $request->personmame[$i],
@@ -133,10 +136,18 @@ class QuotationController extends Controller
                             'updated_at' => $date_time
                         ];
 
-                        $quotationDetailsArr[] = $arr;
+                        $count = QuotationDetails::where(function ($query) use ($arr) {
+                            $query->where('name', $arr['name'])
+                                ->orWhere('phone', $arr['phone'])
+                                ->orWhere('email', $arr['email']);
+                        })->count();
+
+                        if ($count > 0) {
+                            continue;
+                        }
                     }
+                    QuotationDetails::create($arr);
                 }
-                QuotationDetails::insert($quotationDetailsArr);
             }
 
             if ($recordId) {
@@ -173,9 +184,14 @@ class QuotationController extends Controller
     public function edit($id)
     {
         $data = Quotation::with('quotationDetails')->find($id);
-        $data1 = QuotationItemDetails::with('tech_specification')->select('*')->where('quotation_id', '=', $data->id)->get();
-        $data2 = QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get();
-        return view('admin.quotation.edit', ['title' => "Vendor", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'customer' => Customer::get(), 'terms' => Term::get(), 'tech' => TechSpecification::get(), 'product' => StockManagement::get(), 'data2' => QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get(), 'user' => User::all(), 'organization' => Organization::all()]);
+        if ($data) {
+            $data1 = QuotationItemDetails::with('tech_specification')->select('*')->where('quotation_id', '=', $data->id)->get();
+            $data2 = QuotationItemDetails::with('terms')->select('*')->where('quotation_id', '=', $data->id)->get();
+        } else {
+            session()->flash('error', "There is some thing went, Please try after some time.");
+            return redirect()->back();
+        }
+        return view('admin.quotation.edit', ['title' => "Vendor", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'customer' => Customer::get(), 'terms' => Term::get(), 'tech' => TechSpecification::get(), 'product' => StockManagement::get(), 'data2' => $data2, 'user' => User::all(), 'organization' => Organization::all()]);
     }
 
     /**

@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ApiController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\V1\CategoryController;
 
 /*
   |--------------------------------------------------------------------------
@@ -16,20 +15,33 @@ use App\Http\Controllers\API\V1\CategoryController;
   |
  */
 // Auth::routes();
-Route::post('v1/login', [App\Http\Controllers\API\V1\AuthController::class, 'login']);
-Route::post('v1/signup', [App\Http\Controllers\API\V1\AuthController::class, 'signup']);
-Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => 'checkHeader'], function () {
+Route::post('v1/login', [AuthController::class, 'login']);
+Route::post('v1/signup', [AuthController::class, 'signup']);
+Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:api']], function () {
+
     // Route::group(['middleware' => ['guest:api']], function () {
-    Route::post('otp_verification', [App\Http\Controllers\API\V1\AuthController::class, 'verifyOTP']);
-    // Route::post('create-category',[CategoryController::class,'create'])->name('create');
+    Route::post('otp_verification', [AuthController::class, 'verifyOTP']);
     Route::get('get-category', [ApiController::class, 'GetCategory']);
     Route::post('create-category', [ApiController::class, 'StoreCategory']);
     Route::post('edit-category', [ApiController::class, 'EditCategory']);
     Route::post('update-category', [ApiController::class, 'UpdateCategory']);
     Route::post('delete-category', [ApiController::class, 'DeleteCategory']);
+    Route::get('get-group', [ApiController::class, 'GetGroup']);
+    Route::post('change-group', [ApiController::class, 'ChangeGroup']);
 
     Route::group(['prefix' => 'catalogue',], function () {
         Route::get('get-catalogue', [ApiController::class, 'GetCatalogue']);
+    });
+    Route::group(['prefix' => 'company',], function () {
+        Route::get('get-company', [ApiController::class, 'GetCompany']);
+        Route::post('set-default-company', [ApiController::class, 'SetDefaultCompany']);
+    });
+    Route::group(['prefix' => 'vendor',], function () {
+        Route::get('/', [ApiController::class, 'GetVendors']);
+        Route::post('store', [ApiController::class, 'StoreVendor']);
+        Route::post('edit', [ApiController::class, 'EditVendor']);
+        Route::post('update', [ApiController::class, 'UpdateVendor']);
+        Route::post('delete', [ApiController::class, 'DeleteVendor']);
     });
 
 
