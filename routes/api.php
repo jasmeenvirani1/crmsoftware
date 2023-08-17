@@ -50,6 +50,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:
         Route::post('edit', [ApiController::class, 'EditProduct']);
         Route::post('update', [ApiController::class, 'UpdateProduct']);
         Route::post('delete', [ApiController::class, 'DeleteProduct']);
+        Route::post('image-delete', [ApiController::class, 'DeleteProductImage']);
     });
 
 
