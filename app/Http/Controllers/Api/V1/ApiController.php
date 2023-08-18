@@ -5,15 +5,22 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
+use App\Models\ClientAndSalesImage;
 use App\Models\Customer;
 use App\Models\Group;
 use App\Models\MerchantCategory;
+use App\Models\ProductDimension;
+use App\Models\ProductImage;
 use App\Models\Quotation;
 use App\Models\QuotationDetails;
 use App\Models\StockManagement;
+use App\Models\StockVendor;
 use App\Models\User;
+use App\Models\VendorImage;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -295,7 +302,294 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
         }
-        $quotation = Quotation::find($request->id)->delete();
-        return Helper::success(null, 'Vendor delete successfully');
+        $quotation = Quotation::find($request->id);
+        if ($quotation) {
+            $quotation->delete();
+        }
+        return Helper::success(null, 'Vendor deleted successfully');
+    }
+
+    public function GetProducts()
+    {
+        $stock = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation'])->get();
+        return Helper::success($stock);
+    }
+    public function StoreProduct(Request $request)
+    {
+        try {
+            $group_id = Auth::user()->group_id;
+
+            $validator = Validator::make($request->all(), [
+                'product_name' =>  [
+                    'required',
+                    Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                        return $query->where('group_id', $group_id);
+                    })->ignore($request->input('id'))
+                ],
+                'partno' => 'required',
+                'category' => 'required',
+                'product_company' => 'required',
+                'product_size' => 'required|integer',
+                'product_price' => 'required|integer',
+                'specification' => 'required',
+                'notes' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return Helper::fail($validator->errors(), "Enter all require param.");
+            }
+            $date_time = GetDateTime();
+
+            $stock_data =  $request;
+
+            $product_id = StockManagement::insertGetId(
+                [
+                    'product_name' => $stock_data->product_name,
+                    'partno' => $stock_data->partno,
+                    'product_company' => $stock_data->product_company,
+                    'product_size' => $stock_data->product_size,
+                    'product_price' => $stock_data->product_price,
+                    'category' => $stock_data->category,
+                    'notes' => $stock_data->notes,
+                    'specification' => $stock_data->specification,
+                    'group_id' => $group_id,
+                    'created_at' => $date_time,
+                    'updated_at' => $date_time
+                ]
+            );
+
+            if (($request->product_images) != null) {
+                $files = $this->addImages('product_images', $product_id, $request->product_images);
+                ProductImage::insert($files);
+            }
+            if (($request->vendor_images) != null) {
+                $files = $this->addImages('vendor_images', $product_id, $request->vendor_images);
+                VendorImage::insert($files);
+            }
+
+            if (($request->client_images) != null) {
+                $files = $this->addImages('client_images', $product_id, $request->client_images);
+                ClientAndSalesImage::insert($files);
+            }
+
+            if (isset($stock_data->dimensions)) {
+
+                foreach ($stock_data->dimensions as $dimensions) {
+                    $arr = [
+                        'product_id' => $product_id,
+                        'dimension_name' => $dimensions['dimension_name'],
+                        'dimension_value' => $dimensions['dimension_value'],
+                        'quantities_value' => $dimensions['quantities_value'],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    ProductDimension::create($arr);
+                }
+            }
+
+            $vendor_data = [];
+            foreach ($stock_data->vendors as $vendor) {
+                $vendor_data = [
+                    'product_id' => $product_id, 'quotation_id' => $vendor, 'created_at' => $date_time,
+                    'updated_at' => $date_time
+                ];
+                StockVendor::insert($vendor_data);
+            }
+
+            return Helper::success([], 'Product store successfully');
+        } catch (Exception $e) {
+            return Helper::fail([], $e->getMessage());
+        }
+    }
+    public function EditProduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+        $product = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation'])->find($request->id);
+        if (!$product) {
+            return Helper::fail(null, 'Product not found');
+        }
+        return Helper::success($product, 'Product load successfully');
+    }
+
+    public function UpdateProduct(Request $request)
+    {
+        try {
+            $group_id = Auth::user()->group_id;
+
+            $validator = Validator::make($request->all(), [
+                'id' => 'required',
+                'product_name' =>  [
+                    'required',
+                    Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                        return $query->where('group_id', $group_id);
+                    })->ignore($request->input('id'))
+                ],
+                'partno' => 'required',
+                'category' => 'required',
+                'product_company' => 'required',
+                'product_size' => 'required|integer',
+                'product_price' => 'required|integer',
+                'specification' => 'required',
+                'notes' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return Helper::fail($validator->errors(), "Enter all require param.");
+            }
+            $date_time = GetDateTime();
+
+            $stock_data =  $request;
+            $product_id = $request->id;
+            $stock = StockManagement::find($product_id);
+            if (!$stock) {
+                return Helper::fail([], 'Product not found.');
+            }
+
+            $arr = [
+                'product_name' => $stock_data->product_name,
+                'partno' => $stock_data->partno,
+                'product_company' => $stock_data->product_company,
+                'product_size' => $stock_data->product_size,
+                'product_price' => $stock_data->product_price,
+                'category' => $stock_data->category,
+                'notes' => $stock_data->notes,
+                'specification' => $stock_data->specification,
+                'group_id' => $group_id,
+                'created_at' => $date_time,
+                'updated_at' => $date_time
+            ];
+            $stock->update($arr);
+
+            if (($request->product_images) != null) {
+                $files = $this->addImages('product_images', $product_id, $request->product_images);
+                ProductImage::insert($files);
+            }
+            if (($request->vendor_images) != null) {
+                $files = $this->addImages('vendor_images', $product_id, $request->vendor_images);
+                VendorImage::insert($files);
+            }
+
+            if (($request->client_images) != null) {
+                $files = $this->addImages('client_images', $product_id, $request->client_images);
+                ClientAndSalesImage::insert($files);
+            }
+
+            if (isset($stock_data->dimensions)) {
+                ProductDimension::where('product_id', $product_id)->delete();
+
+                foreach ($stock_data->dimensions as $dimensions) {
+                    $arr = [
+                        'product_id' => $product_id,
+                        'dimension_name' => $dimensions['dimension_name'],
+                        'dimension_value' => $dimensions['dimension_value'],
+                        'quantities_value' => $dimensions['quantities_value'],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    ProductDimension::create($arr);
+                }
+            }
+
+            if (isset($stock_data->dimensions)) {
+
+                StockVendor::where('product_id', $product_id)->delete();
+                $vendor_data = [];
+                foreach ($stock_data->vendors as $vendor) {
+                    $vendor_data = [
+                        'product_id' => $product_id, 'quotation_id' => $vendor, 'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    StockVendor::insert($vendor_data);
+                }
+            }
+
+            return Helper::success([], 'Product store successfully');
+        } catch (Exception $e) {
+            return Helper::fail([], $e->getMessage());
+        }
+    }
+
+
+    public function DeleteProduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+        $quotation = StockManagement::find($request->id);
+        if ($quotation) {
+            $quotation->delete();
+        }
+        return Helper::success(null, 'Product deleted successfully');
+    }
+    public function addImages($path, $product_id, $data)
+    {
+        $files = [];
+        foreach ($data as $key => $file) {
+            $arr = [
+                'name' => $path . '/' . uploadImage($file, $path),
+                'product_id' => $product_id,
+            ];
+            $files[] = $arr;
+        }
+        return $files;
+    }
+
+    public  function DeleteProductImage(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'type' => 'required|in:product_images,vendor_images,client_and_sales_images',
+        ]);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+
+        DB::table($request->type)->where('id', $request->id)->update(['deleted_at' => now()]);
+
+        return Helper::success(null, 'Image deleted successfully');
+    }
+    public  function GetProfile()
+    {
+        return Helper::success(Auth::user(), 'Profile deleted successfully');
+    }
+    public  function UpdateProfile(Request $request)
+    {
+        $input['name'] = $request->name;
+        $input['mobile_number'] = $request->mobile_number;
+        $rules = [
+            'name' => 'required',
+            'mobile_number' => 'required|regex:/^[0-9]{10}$/',
+        ];
+        if (request()->has('password')) {
+            $rules['password'] = 'required|min:4';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
+        }
+        $input = [
+            'name' => $request->name,
+            'mobile_number' => $request->mobile_number,
+            'updated_at' => GetDateTime()
+        ];
+        if (request()->has('password')) {
+            $input['password'] = Hash::make($request->password);
+        }
+        $model = User::find(Auth::user()->id)->update($input);
+        return Helper::success([], 'Profile updated successfully');
     }
 }

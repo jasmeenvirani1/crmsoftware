@@ -44,12 +44,23 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:
         Route::post('delete', [ApiController::class, 'DeleteVendor']);
     });
 
+    Route::group(['prefix' => 'product',], function () {
+        Route::get('/', [ApiController::class, 'GetProducts']);
+        Route::post('store', [ApiController::class, 'StoreProduct']);
+        Route::post('edit', [ApiController::class, 'EditProduct']);
+        Route::post('update', [ApiController::class, 'UpdateProduct']);
+        Route::post('delete', [ApiController::class, 'DeleteProduct']);
+        Route::post('image-delete', [ApiController::class, 'DeleteProductImage']);
+    });
+    Route::group(['prefix' => 'profile',], function () {
+        Route::get('/', [ApiController::class, 'GetProfile']);
+        Route::post('update', [ApiController::class, 'UpdateProfile']);
+    });
 
 
     Route::get('get-state', [App\Http\Controllers\API\V1\CommanList::class, 'getState']);
     Route::post('edit/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'editCategory']);
     Route::post('delete/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'deleteCategory']);
-    Route::post('create-product', [App\Http\Controllers\API\V1\CommanList::class, 'createproduct']);
     Route::post('editproduct/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'editproduct']);
     Route::post('deleteproduct/{id}', [App\Http\Controllers\API\V1\CommanList::class, 'deleteproduct']);
     Route::get('get-product', [App\Http\Controllers\API\V1\CommanList::class, 'getproduct']);
