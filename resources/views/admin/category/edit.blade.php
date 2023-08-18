@@ -141,7 +141,7 @@
             rules: {
                 name: {
                     required: true,
-                    alpha: true
+                    alpha: false
                 }
             },
         });
