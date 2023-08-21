@@ -407,4 +407,5 @@ class StockManagementController extends Controller
         $response = array('status' => '200', 'message' => 'Record Deleted Successfully.');
         return response()->json($response);
     }
+   
 }

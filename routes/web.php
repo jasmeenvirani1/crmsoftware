@@ -65,6 +65,9 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::resource('editvendors', EditQuotationController::class);
         Route::resource('company', CustomerController::class);
         Route::post('company/default', [CustomerController::class, 'defaultCustomer']);
+        Route::get('company-detail/{id}', [CustomerController::class, 'Detail'])->name('detail');
+       // Route::get('/generate-company-pdf/{id}', [CustomerController::class, 'generateCompanyPDF'])->name('generate.pdf');
+
 
         Route::resource('stock', StockManagementController::class);
         Route::post('editstore', [StockManagementController::class, 'editstore'])->name('editstore');

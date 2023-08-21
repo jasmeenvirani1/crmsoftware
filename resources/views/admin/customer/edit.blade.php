@@ -33,8 +33,8 @@
         }
 
         /* .alert strong {
-            font-weight: bold;
-        } */
+                font-weight: bold;
+            } */
     </style>
 
     <!-- begin:: Bradcrubs -->
@@ -85,6 +85,9 @@
                                 </div>
                                 <div class="kt-portlet__head-toolbar">
                                     <div class="kt-portlet__head-wrapper">
+                                        {{-- {{ route('detail', ['id' => $data->id]) }} --}}
+                                        <a href="{{route('detail', ['id' => $data->id])}}" target="_blank" class="btn btn-success">Export
+                                            To PDF</a>
                                         <a href="{{ route('company.index') }}" class="btn btn-clean btn-icon-sm">
                                             <i class="la la-long-arrow-left"></i>
                                             Back
@@ -103,7 +106,9 @@
                                             <div class="form-group">
                                                 <label><b>Contact Details</b></label>
                                             </div>
+                                            <div class="col-lg-6 col-xl-4">
 
+                                            </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label required">
                                                     <b>Company Name</b>
@@ -166,8 +171,9 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>GST</b>
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="text" name="gst" id="gst" class="form-control"
-                                                        placeholder="GST" value="{{ $data->gst }}">
+                                                    <input type="text" name="gst" id="gst"
+                                                        class="form-control" placeholder="GST"
+                                                        value="{{ $data->gst }}">
                                                     @error('gst')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -212,6 +218,32 @@
                                                 <img src="{{ asset($data->msme_certificate) }}"
                                                     style="height: 77px;width: 110px;">
 
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra
+                                                        Image(s)</b></label>
+                                                <div class="col-lg-6 col-xl-4">
+                                                    <input type="file" name="extra_image" class="form-control"
+                                                        placeholder="" accept="image/png, image/jpeg" multiple>
+                                                    {{-- @error('msme')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror --}}
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                    <b>Notes</b>
+                                                    {{-- <span class="text-danger">*</span> --}}
+                                                </label>
+                                                <div class="col-lg-6 col-xl-4">
+                                                    <textarea name="notes" value="" id="notes" class="form-control" placeholder="Notes"></textarea>
+                                                    {{-- @error('vendor_company_name')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror --}}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

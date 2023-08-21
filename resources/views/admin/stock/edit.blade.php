@@ -284,6 +284,19 @@
                                                 @error('company_country')<span class="invalid-feedback text-left" role="alert"> <strong>{{ $message }}</strong></span>@enderror
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity
+                                                </b><span class="text-danger">*</span></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="minqty"
+                                                    value=""
+                                                    id="minqty" class="form-control" placeholder="Minimum Order Quantity">
+                                                {{-- @error('minqty')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror --}}
+                                            </div>
+                                        </div>
 
 
 
@@ -372,7 +385,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row" id="productprice">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Price</b></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In INR.)</b></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" pattern="\d*" maxlength="5" name="product_price"
                                                     value="{{ old('product_price', isset($data->product_price) ? $data->product_price : '') }}"
@@ -381,7 +394,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row ">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>product price in usd
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD $.)
                                                 </b></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="total_amount" id="total_amount"
@@ -389,7 +402,33 @@
                                                     class="form-control " readonly />
                                             </div>
                                         </div>
-
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Corporate Price
+                                           </b></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="notes"
+                                                    value=""
+                                                    id="notes" class="form-control" placeholder="Corporate Price">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Retail Price
+                                           </b></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="notes"
+                                                    value=""
+                                                    id="notes" class="form-control" placeholder="Retail Price">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Dealer Price
+                                           </b></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="notes"
+                                                    value=""
+                                                    id="notes" class="form-control" placeholder="Dealer Price">
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Specification
                                                 </b></label>

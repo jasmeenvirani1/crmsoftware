@@ -130,7 +130,7 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="email" name="email"
                                                         value="{{ old('email', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
-                                                        id="vendor_company_name" class="form-control" placeholder="Email">
+                                                        id="email" class="form-control" placeholder="Email">
                                                     @error('email')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -145,7 +145,7 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="phonenumber"
                                                         value="{{ old('phonenumber', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
-                                                        id="vendor_company_name" class="form-control"
+                                                        id="phonenumber" class="form-control"
                                                         placeholder="Phone Number">
                                                     @error('phonenumber')
                                                         <span class="invalid-feedback text-left" role="alert">
@@ -161,7 +161,7 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="address"
                                                         value="{{ old('address', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
-                                                        id="vendor_company_name" class="form-control" placeholder="Address">
+                                                        id="address" class="form-control" placeholder="Address">
                                                     @error('address')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -230,6 +230,34 @@
                                                             <strong>{{ $message }}</strong></span>
                                                     @enderror
 
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra Image(s)</b></label>
+                                                <div class="col-lg-6 col-xl-4">
+                                                    <input type="file" name="extra_image" class="form-control"
+                                                        placeholder="" accept="image/png, image/jpeg" multiple>
+                                                    {{-- @error('msme')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror --}}
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                    <b>Notes</b>
+                                                    {{-- <span class="text-danger">*</span> --}}
+                                                </label>
+                                                <div class="col-lg-6 col-xl-4">
+                                                    <textarea name="notes"
+                                                        value=""
+                                                        id="notes" class="form-control"
+                                                        placeholder="Notes"></textarea>
+                                                    {{-- @error('vendor_company_name')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror --}}
                                                 </div>
                                             </div>
                                         </div>

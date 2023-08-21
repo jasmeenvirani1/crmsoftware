@@ -270,6 +270,19 @@
                                                     @enderror
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity
+                                                    </b><span class="text-danger">*</span></label>
+                                                <div class="col-lg-9 col-xl-4">
+                                                    <input type="text" name="minqty"
+                                                        value=""
+                                                        id="minqty" class="form-control" placeholder="Minimum Order Quantity">
+                                                    {{-- @error('minqty')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror --}}
+                                                </div>
+                                            </div>
 
 
                                             <label class="col-xl-0 col-lg-0 col-form-label"
@@ -381,6 +394,33 @@
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="total_amount" id="total_amount"
                                                         class="form-control " readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Corporate Price
+                                               </b></label>
+                                                <div class="col-lg-9 col-xl-4">
+                                                    <input type="text" name="notes"
+                                                        value=""
+                                                        id="notes" class="form-control" placeholder="Corporate Price">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Retail Price
+                                               </b></label>
+                                                <div class="col-lg-9 col-xl-4">
+                                                    <input type="text" name="notes"
+                                                        value=""
+                                                        id="notes" class="form-control" placeholder="Retail Price">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Dealer Price
+                                               </b></label>
+                                                <div class="col-lg-9 col-xl-4">
+                                                    <input type="text" name="notes"
+                                                        value=""
+                                                        id="notes" class="form-control" placeholder="Dealer Price">
                                                 </div>
                                             </div>
                                             <div class="form-group row">

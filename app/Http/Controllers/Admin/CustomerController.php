@@ -8,12 +8,15 @@ use App\Models\Customer;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
+use PDF;
 
 class CustomerController extends Controller
 {
@@ -350,5 +353,10 @@ class CustomerController extends Controller
 
         $response = ['status' => 'success', 'msg' => 'Record Updated Successfully.'];
         return response()->json($response);
+    }
+    public function Detail($id)
+    {
+        $company = Customer::find($id); // Assuming you have a "Company" model
+        return view('admin.customer.detail',['title' => "Company"],compact('company'));
     }
 }

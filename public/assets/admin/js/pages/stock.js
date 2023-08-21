@@ -50,6 +50,7 @@ jQuery(document).ready(function () {
                     },
                 },
                 { data: 'product_name' },
+                { data: 'partno' },
                 { data: 'product_company' },
                 {
                     data: 'inward_qty',

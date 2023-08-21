@@ -33,8 +33,8 @@
         }
 
         /* .alert strong {
-                                                                                                                                font-weight: bold;
-                                                                                                                            } */
+                                                                                                                                    font-weight: bold;
+                                                                                                                                } */
     </style>
     <!-- begin:: Bradcrubs -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
@@ -118,18 +118,32 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"
-                                                style="font-size: 15px;"><b>Address</b><span
+                                                style="font-size: 15px;"><b>Registered Address</b><span
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <input type="text" maxlength="50" name="address"
-                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}"
-                                                    id="address" class="form-control" placeholder="Address">
+                                                <textarea maxlength="50" name="address" value="{{ old('address', isset($data->address) ? $data->address : '') }}"
+                                                    id="address" class="form-control" placeholder="Registered Address"></textarea>
                                                 @error('address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
                                                 @enderror
                                             </div>
                                         </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Registered Address GPS Location</b><span
+                                                    class="text-danger"></span></label>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="lat" id="lat"
+                                                    class="form-control" placeholder="Lat" value="">
+                                            </div>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="long" id="long"
+                                                    class="form-control" placeholder="Long" value="">
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>GST
                                                     IN</b><span class="text-danger">*</span></label>
@@ -159,6 +173,60 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Plant Address</b><span
+                                                    class="text-danger">*</span></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <textarea maxlength="50" name="address" value="{{ old('address', isset($data->address) ? $data->address : '') }}"
+                                                    id="address" class="form-control" placeholder="Plant Address"></textarea>
+                                                @error('address')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Plant Address GPS Location</b><span
+                                                    class="text-danger"></span></label>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="lat" id="lat"
+                                                    class="form-control" placeholder="Lat" value="">
+                                            </div>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="long" id="long"
+                                                    class="form-control" placeholder="Long" value="">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Billing Address</b><span
+                                                    class="text-danger">*</span></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <textarea maxlength="50" name="address" value="{{ old('address', isset($data->address) ? $data->address : '') }}"
+                                                    id="address" class="form-control" placeholder="Billing Address"></textarea>
+                                                @error('address')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Billing Address GPS Location</b><span
+                                                    class="text-danger"></span></label>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="lat" id="lat"
+                                                    class="form-control" placeholder="Lat" value="">
+                                            </div>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="long" id="long"
+                                                    class="form-control" placeholder="Long" value="">
+                                            </div>
+                                        </div>
+
                                         <div>
                                             <label class="col-xl-0 col-lg-0 col-form-label"
                                                 style="font-size: 15px;margin-left: -10px;"><b>Contact
@@ -170,21 +238,27 @@
                                             @foreach ($data->quotationDetails as $quotationDetails)
                                                 <div class="form-group row">
                                                     <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
-                                                    <div class="col-lg-3 col-xl-3">
+                                                    <div class="col-lg-2 col-xl-2">
                                                         <input type="text" maxlength="12" name="personmame[]"
                                                             class="form-control" value="{{ $quotationDetails->name }}">
                                                     </div>
 
                                                     <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
-                                                    <div class="col-lg-3 col-xl-3">
+                                                    <div class="col-lg-2 col-xl-2">
                                                         <input type="text" maxlength="12" name="phonenumber[]"
                                                             class="form-control allownumericwithoutdecimal"
                                                             value="{{ $quotationDetails->phone }}">
                                                     </div>
                                                     <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
-                                                    <div class="col-lg-3 col-xl-3">
+                                                    <div class="col-lg-2 col-xl-2">
                                                         <input type="text" name="email[]" class="form-control"
                                                             value="{{ $quotationDetails->email }}">
+                                                    </div>
+                                                    <label
+                                                        class="col-xl-0 col-lg-0 col-form-label"><b>Designation</b></label>
+                                                    <div class="col-lg-2 col-xl-2">
+                                                        <input type="text" name="designation" class="form-control"
+                                                            value="">
                                                     </div>
                                                     <button class="btn btn-danger  remove-row" id="btn_product_remove"
                                                         type="button">Remove</button>
@@ -195,19 +269,19 @@
                                         </div>
                                     </div>
                                     <!-- <div class="form-group row">
-                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                </div> -->
                                     <!-- <div class="col-lg-5 col-xl-2">
-                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                </div> -->
                                     <!-- </div> -->
                                     <!-- <div class="form-group row" id="add_button">
-                                                                                                                                                                                                                                                <select class="form-control selectpicker" id="customer_name" name="customer_name" data-live-search="true">
-                                                                                                                                                                                                                                                    <option value="">---SELECT---</option>
-                                                                                                                                                                                                                                                    @foreach ($customer as $customers)
+                                                                                                                                                                                                                                                    <select class="form-control selectpicker" id="customer_name" name="customer_name" data-live-search="true">
+                                                                                                                                                                                                                                                        <option value="">---SELECT---</option>
+                                                                                                                                                                                                                                                        @foreach ($customer as $customers)
     <option value="{{ $customers->id }}" {{ $data->customer_name == $customers->id ? 'selected' : '' }}>{{ $customers->company_name }}</option>
     @endforeach
-                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                            </div> -->
                                     <!-- <div class="form-group row">
-                                                                                                                                                                                                                                    </div>   -->
+                                                                                                                                                                                                                                        </div>   -->
                                     {{-- </div>
                         </div> --}}
                                 </div>
@@ -229,18 +303,23 @@
                                 <div class="form-group">
                                     <div class="form-group row">
                                         <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
-                                        <div class="col-lg-3 col-xl-3">
+                                        <div class="col-lg-2 col-xl-2">
                                             <input type="text" maxlength="12" name="personmame[]"
                                                 class="form-control">
                                         </div>
                                         <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
-                                        <div class="col-lg-3 col-xl-3">
+                                        <div class="col-lg-2 col-xl-2">
                                             <input type="text" maxlength="12" name="phonenumber[]"
                                                 class="form-control allownumericwithoutdecimal">
                                         </div>
                                         <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
-                                        <div class="col-lg-3 col-xl-3">
+                                        <div class="col-lg-2 col-xl-2">
                                             <input type="text" name="email[]" class="form-control">
+                                        </div>
+                                        <label class="col-xl-0 col-lg-0 col-form-label"><b>Designation</b></label>
+                                        <div class="col-lg-2 col-xl-2">
+                                            <input type="text" name="designation" class="form-control"
+                                                value="">
                                         </div>
                                         <div class="input-group-btn">
                                             <button class="btn btn-danger remove-row" type="button">Remove</button>

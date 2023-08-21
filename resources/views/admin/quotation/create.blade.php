@@ -119,18 +119,35 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"
-                                                style="font-size: 15px;"><b>Address</b><span
+                                                style="font-size: 15px;"><b>Registered Address</b><span
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <input type="text" maxlength="50" name="address" id="address"
-                                                    class="form-control" placeholder="Address"
-                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                                <textarea  maxlength="50" name="address" id="address"
+                                                    class="form-control" placeholder="Registered Address"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}"></textarea>
                                                 @error('address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
                                                 @enderror
                                             </div>
                                         </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Registered Address GPS Location</b><span
+                                                    class="text-danger"></span></label>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="lat" id="lat"
+                                                    class="form-control" placeholder="Lat"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                            </div>
+                                            <div class="col-lg-4 col-xl-3">
+                                                <input type="text" maxlength="50" name="long" id="long"
+                                                    class="form-control" placeholder="Long"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>GST
                                                     IN</b><span class="text-danger">*</span></label>
@@ -159,25 +176,93 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Plant Address</b><span
+                                                    class="text-danger">*</span></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <textarea maxlength="50" name="plant_address" id="plant_address"
+                                                    class="form-control" placeholder="Plant Address"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}"></textarea>
+                                                {{-- @error('address')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror --}}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Plant Address GPS Location</b><span
+                                                    class="text-danger"></span></label>
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="lat" id="lat"
+                                                    class="form-control" placeholder="Lat"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                            </div>
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="long" id="long"
+                                                    class="form-control" placeholder="Long"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Billing Address</b><span
+                                                    class="text-danger">*</span></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <textarea maxlength="50" name="billing_address" id="billing_address"
+                                                    class="form-control" placeholder="Billing Address"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}"></textarea>
+                                                {{-- @error('billing_address')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror --}}
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Billing Address GPS Location</b><span
+                                                    class="text-danger"></span></label>
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="lat" id="lat"
+                                                    class="form-control" placeholder="Lat"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                            </div>
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="long" id="long"
+                                                    class="form-control" placeholder="Long"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                            </div>
+                                        </div>
+
+
+
                                         <label class="col-xl-3 col-lg-3 col-form-label"
                                             style="font-size: 15px;margin-left: -10px;"><b>Contact
                                                 Details</b></label>
                                         <div class="row">
                                             <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
-                                            <div class="col-lg-3 col-xl-3">
+                                            <div class="col-lg-2 col-xl-2">
                                                 <input type="text" maxlength="12" name="personmame[]"
                                                     class="form-control">
                                             </div>
                                             <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
-                                            <div class="col-lg-3 ol-xl-3">
+                                            <div class="col-lg-2 ol-xl-2">
                                                 <input type="text" maxlength="12" name="phonenumber[]"
                                                     class="form-control allownumericwithoutdecimal">
                                             </div>
                                             <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
-                                            <div class="col-lg-3 col-xl-3">
+                                            <div class="col-lg-2 col-xl-2">
                                                 <input type="text" name="email[]" class="form-control">
                                             </div>
-                                            <button class="btn btn-success col-lg-1 add-contact " id="btn_product_add"
+                                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Designation</b></label>
+                                            <div class="col-lg-2 col-xl-2">
+                                                <input type="text" name="designation" class="form-control">
+                                            </div>
+                                            <button class="btn btn-success col-lg-0 add-contact " id="btn_product_add"
                                                 type="button">Add</button>
                                         </div>
                                     </div>
@@ -240,17 +325,21 @@
                     <div class="clone hidden d-none">
                         <div class="row mt-2">
                             <label class="col-xl-0 col-lg-0 col-form-label"><b>Name</b></label>
-                            <div class="col-lg-3 col-xl-3">
+                            <div class="col-lg-2 col-xl-2">
                                 <input type="text" maxlength="12" name="personmame[]" class="form-control">
                             </div>
                             <label class="col-xl-0 col-lg-0 col-form-label"><b>Phone</b></label>
-                            <div class="col-lg-3 ol-xl-3">
+                            <div class="col-lg-2 ol-xl-2">
                                 <input type="text" maxlength="12" name="phonenumber[]"
                                     class="form-control allownumericwithoutdecimal">
                             </div>
                             <label class="col-xl-0 col-lg-0 col-form-label"><b>Email</b></label>
-                            <div class="col-lg-3 col-xl-3">
+                            <div class="col-lg-2 col-xl-2">
                                 <input type="text" name="email[]" class="form-control">
+                            </div>
+                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Designation</b></label>
+                            <div class="col-lg-2 col-xl-2">
+                                <input type="text" name="designation" class="form-control">
                             </div>
                             <button class="btn btn-danger  remove-row" id="btn_product_remove"
                                 type="button">Remove</button>

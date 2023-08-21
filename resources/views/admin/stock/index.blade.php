@@ -75,6 +75,7 @@
                                     <th>Created At</th>
                                     <th>Image</th>
                                     <th>Product Name</th>
+                                    <th>Part No.</th>
                                     <th>Product Company</th>
                                     <th>Current Balance</th>
                                     <th>Add Inward</th>
