@@ -11,6 +11,7 @@ use App\Models\OutWard;
 use App\Models\Balanced;
 use App\Models\ClientAndSalesImage;
 use App\Models\product_images;
+use App\Models\ProductCategory;
 use App\Models\ProductDimension;
 use App\Models\ProductImage;
 use App\Models\Quotation;
@@ -70,7 +71,8 @@ class StockManagementController extends Controller
                 })->ignore($request->input('id'))
             ],
             'partno' => 'required',
-            'company_country' => 'required',
+            'category' => 'required',
+            'minimum_order_quantity' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -86,9 +88,12 @@ class StockManagementController extends Controller
                 'product_size' => $request->product_size,
                 'product_price' => $request->product_price,
                 'usd_price' => $request->total_amount,
-                'category' => $request->company_country,
                 'product_dimension' => json_encode($request->product_dimension),
                 'notes' => $request->notes,
+                'minimum_order_quantity' => $request->minimum_order_quantity,
+                'retail_price' => $request->retail_price,
+                'dealer_price' => $request->dealer_price,
+                'corporate_price' => $request->corporate_price,
                 'specification' => $request->specification,
                 'status' => $request->status
             ]
@@ -108,7 +113,6 @@ class StockManagementController extends Controller
         }
         $dimensionDetailsArr = [];
         if (request()->has('dimension_name')) {
-
             for ($i = 0; $i < count($request->dimension_name); $i++) {
                 $date_time = GetDateTime();
                 if ($request->dimension_name[$i] != null && $request->dimension_value[$i] != null && $request->quantities_value[$i] != null) {
@@ -152,11 +156,21 @@ class StockManagementController extends Controller
                 'status' => $request->status
             ]
         );
-        $vendor_data = [];
-        foreach ($request->vendors as $vendor) {
-            $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+        if (request()->has('category')) {
+            $category_data = [];
+            foreach ($request->category as $category) {
+                $category_data[] = ['product_id' => $product_id, 'categories_id' => $category];
+            }
+            ProductCategory::insert($category_data);
         }
-        StockVendor::insert($vendor_data);
+
+        if (request()->has('vendors')) {
+            $vendor_data = [];
+            foreach ($request->vendors as $vendor) {
+                $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+            }
+            StockVendor::insert($vendor_data);
+        }
 
         if ($product_id) {
             session()->flash('success', 'Product created successfully');
@@ -176,7 +190,8 @@ class StockManagementController extends Controller
     {
         $sql = StockManagement::with('balanced', 'productImages')->select('*')->orderBy('updated_at', 'desc');
         if (request()->has('category_id')) {
-            $sql = $sql->where('category', $request->category_id);
+            $product_ids = ProductCategory::where('categories_id', $request->category_id)->groupBy('product_id')->get()->pluck('product_id')->toArray();
+            $sql->whereIn('id', $product_ids);
         }
         return Datatables::of($sql->get())->make(true);
     }
@@ -194,7 +209,10 @@ class StockManagementController extends Controller
         $category = MerchantCategory::get();
         $vendors = Quotation::all();
         $selected_vendors = StockVendor::where('product_id', $id)->pluck('quotation_id')->toArray();
-        return view('admin.stock.edit', ['title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category, 'vendors' => $vendors, 'selected_vendors' => $selected_vendors]);
+        $selected_category = ProductCategory::where('product_id', $id)->pluck('categories_id')->toArray();
+        return view('admin.stock.edit', [
+            'title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category, 'vendors' => $vendors, 'selected_vendors' => $selected_vendors, 'selected_category' => $selected_category
+        ]);
     }
     // public function inward($id) {
     //     return view('admin.stock.inward', ['title' => "Inward", 'btn' => "Save", 'data' => []]);
@@ -225,8 +243,10 @@ class StockManagementController extends Controller
                 'product_size' => $request->product_size,
                 'product_price' => $request->product_price,
                 'usd_price' => $request->total_amount,
-                'category' => $request->company_country,
-                'product_dimension' => json_encode($request->product_dimension),
+                'minimum_order_quantity' => $request->minimum_order_quantity,
+                'retail_price' => $request->retail_price,
+                'dealer_price' => $request->dealer_price,
+                'corporate_price' => $request->corporate_price,
                 'notes' => $request->notes,
                 'specification' => $request->specification,
                 'status' => $request->status
@@ -266,12 +286,24 @@ class StockManagementController extends Controller
             }
             ProductDimension::insert($dimensionDetailsArr);
         }
-        StockVendor::where('product_id', $product_id)->delete();
-        $vendor_data = [];
-        foreach ($request->vendors as $vendor) {
-            $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+        if (request()->has('category')) {
+            ProductCategory::where('product_id', $product_id)->delete();
+            $category_data = [];
+            foreach ($request->category as $category) {
+                $category_data[] = ['product_id' => $product_id, 'categories_id' => $category];
+            }
+            ProductCategory::insert($category_data);
         }
-        StockVendor::insert($vendor_data);
+
+        if (request()->has('vendors')) {
+            StockVendor::where('product_id', $product_id)->delete();
+            $vendor_data = [];
+            foreach ($request->vendors as $vendor) {
+                $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+            }
+            StockVendor::insert($vendor_data);
+        }
+
         if ($product_id) {
             session()->flash('success', 'Product updated successfully');
         } else {
@@ -407,5 +439,4 @@ class StockManagementController extends Controller
         $response = array('status' => '200', 'message' => 'Record Deleted Successfully.');
         return response()->json($response);
     }
-   
 }

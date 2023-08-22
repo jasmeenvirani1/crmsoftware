@@ -33,8 +33,8 @@
         }
 
         /* .alert strong {
-                                                                                                                                    font-weight: bold;
-                                                                                                                                } */
+                                                                                                                                                                                font-weight: bold;
+                                                                                                                                                                            } */
     </style>
     <!-- begin:: Bradcrubs -->
     <div class="kt-subheader   kt-grid__item" id="kt_subheader">
@@ -114,16 +114,16 @@
                                                     @enderror
                                                 </div>
                                             </div>
-
                                         </div>
+
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"
                                                 style="font-size: 15px;"><b>Registered Address</b><span
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <textarea maxlength="50" name="address" value="{{ old('address', isset($data->address) ? $data->address : '') }}"
-                                                    id="address" class="form-control" placeholder="Registered Address"></textarea>
-                                                @error('address')
+                                                <textarea maxlength="50" name="registered_address" id="registered_address" class="form-control"
+                                                    placeholder="Registered Address">{{ old('registered_address', isset($data->registered_address) ? $data->registered_address : '') }}</textarea>
+                                                @error('registered_address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
                                                 @enderror
@@ -135,17 +135,30 @@
                                                 style="font-size: 15px;"><b>Registered Address GPS Location</b><span
                                                     class="text-danger"></span></label>
                                             <div class="col-lg-4 col-xl-3">
-                                                <input type="text" maxlength="50" name="lat" id="lat"
-                                                    class="form-control" placeholder="Lat" value="">
+                                                <input type="text" maxlength="50" name="registered_address_latitude"
+                                                    id="registered_address_latitude" class="form-control"
+                                                    placeholder="Latitude"
+                                                    value="{{ old('registered_address_latitude', isset($data->registered_address_latitude) ? $data->registered_address_latitude : '') }}">
+                                                @error('registered_address_latitude')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                             <div class="col-lg-4 col-xl-3">
-                                                <input type="text" maxlength="50" name="long" id="long"
-                                                    class="form-control" placeholder="Long" value="">
+                                                <input type="text" maxlength="50" name="registered_address_longitude"
+                                                    id="registered_address_longitude" class="form-control"
+                                                    placeholder="Longitude"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                                @error('registered_address_longitude')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label" style="font-size: 15px;"><b>GST
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>GST
                                                     IN</b><span class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="gstin"
@@ -178,52 +191,72 @@
                                                 style="font-size: 15px;"><b>Plant Address</b><span
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <textarea maxlength="50" name="address" value="{{ old('address', isset($data->address) ? $data->address : '') }}"
-                                                    id="address" class="form-control" placeholder="Plant Address"></textarea>
-                                                @error('address')
+                                                <textarea maxlength="50" name="plant_address" id="plant_address" class="form-control" placeholder="Plant Address">{{ old('plant_address', isset($data->plant_address) ? $data->plant_address : '') }}</textarea>
+                                                @error('plant_address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
                                                 @enderror
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"
                                                 style="font-size: 15px;"><b>Plant Address GPS Location</b><span
                                                     class="text-danger"></span></label>
-                                            <div class="col-lg-4 col-xl-3">
-                                                <input type="text" maxlength="50" name="lat" id="lat"
-                                                    class="form-control" placeholder="Lat" value="">
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="plant_address_latitude"
+                                                    id="plant_address_latitude" class="form-control"
+                                                    placeholder="Latitude"
+                                                    value="{{ old('plant_address_latitude', isset($data->plant_address_latitude) ? $data->plant_address_latitude : '') }}">
                                             </div>
-                                            <div class="col-lg-4 col-xl-3">
-                                                <input type="text" maxlength="50" name="long" id="long"
-                                                    class="form-control" placeholder="Long" value="">
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="plant_address_longitude"
+                                                    id="plant_address_longitude" class="form-control"
+                                                    placeholder="Longitude"
+                                                    value="{{ old('plant_address_longitude', isset($data->plant_address_longitude) ? $data->plant_address_longitude : '') }}">
                                             </div>
                                         </div>
+
 
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"
                                                 style="font-size: 15px;"><b>Billing Address</b><span
                                                     class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <textarea maxlength="50" name="address" value="{{ old('address', isset($data->address) ? $data->address : '') }}"
-                                                    id="address" class="form-control" placeholder="Billing Address"></textarea>
-                                                @error('address')
+
+                                                <textarea maxlength="50" name="billing_address" id="billing_address" class="form-control"
+                                                    placeholder="Plant Address">{{ old('billing_address', isset($data->billing_address) ? $data->billing_address : '') }}</textarea>
+
+                                                @error('billing_address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
                                                 @enderror
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"
                                                 style="font-size: 15px;"><b>Billing Address GPS Location</b><span
                                                     class="text-danger"></span></label>
-                                            <div class="col-lg-4 col-xl-3">
-                                                <input type="text" maxlength="50" name="lat" id="lat"
-                                                    class="form-control" placeholder="Lat" value="">
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="billing_address_latitude"
+                                                    id="billing_address_latitude" class="form-control"
+                                                    placeholder="Latitude"
+                                                    value="{{ old('billing_address_latitude', isset($data->billing_address_latitude) ? $data->billing_address_latitude : '') }}">
+                                                @error('billing_address_latitude')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
-                                            <div class="col-lg-4 col-xl-3">
-                                                <input type="text" maxlength="50" name="long" id="long"
-                                                    class="form-control" placeholder="Long" value="">
+                                            <div class="col-lg-4 col-xl-2">
+                                                <input type="text" maxlength="50" name="billing_address_longitude"
+                                                    id="billing_address_longitude" class="form-control"
+                                                    placeholder="Longitude"
+                                                    value="{{ old('billing_address_longitude', isset($data->billing_address_longitude) ? $data->billing_address_longitude : '') }}">
+                                                @error('billing_address_longitude')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -257,8 +290,8 @@
                                                     <label
                                                         class="col-xl-0 col-lg-0 col-form-label"><b>Designation</b></label>
                                                     <div class="col-lg-2 col-xl-2">
-                                                        <input type="text" name="designation" class="form-control"
-                                                            value="">
+                                                        <input type="text" name="designation[]" class="form-control"
+                                                            value="{{ $quotationDetails->designation }}">
                                                     </div>
                                                     <button class="btn btn-danger  remove-row" id="btn_product_remove"
                                                         type="button">Remove</button>
@@ -269,19 +302,19 @@
                                         </div>
                                     </div>
                                     <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                </div> -->
+                                                                                                                                                                                                                                                                                            </div> -->
                                     <!-- <div class="col-lg-5 col-xl-2">
-                                                                                                                                                                                                                                                </div> -->
+                                                                                                                                                                                                                                                                                            </div> -->
                                     <!-- </div> -->
                                     <!-- <div class="form-group row" id="add_button">
-                                                                                                                                                                                                                                                    <select class="form-control selectpicker" id="customer_name" name="customer_name" data-live-search="true">
-                                                                                                                                                                                                                                                        <option value="">---SELECT---</option>
-                                                                                                                                                                                                                                                        @foreach ($customer as $customers)
+                                                                                                                                                                                                                                                                                                <select class="form-control selectpicker" id="customer_name" name="customer_name" data-live-search="true">
+                                                                                                                                                                                                                                                                                                    <option value="">---SELECT---</option>
+                                                                                                                                                                                                                                                                                                    @foreach ($customer as $customers)
     <option value="{{ $customers->id }}" {{ $data->customer_name == $customers->id ? 'selected' : '' }}>{{ $customers->company_name }}</option>
     @endforeach
-                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                        </div> -->
                                     <!-- <div class="form-group row">
-                                                                                                                                                                                                                                        </div>   -->
+                                                                                                                                                                                                                                                                                    </div>   -->
                                     {{-- </div>
                         </div> --}}
                                 </div>
@@ -318,7 +351,7 @@
                                         </div>
                                         <label class="col-xl-0 col-lg-0 col-form-label"><b>Designation</b></label>
                                         <div class="col-lg-2 col-xl-2">
-                                            <input type="text" name="designation" class="form-control"
+                                            <input type="text" name="designation[]" class="form-control"
                                                 value="">
                                         </div>
                                         <div class="input-group-btn">

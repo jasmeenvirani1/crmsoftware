@@ -86,6 +86,8 @@ class QuotationController extends Controller
     {
         try {
             $group_id = Auth::user()->group_id;
+            $rules_latitude = '/^[-]?((([0-8]?[0-9])\.(\d+))|(90(\.0+)?))$/';
+            $rules_longitude = '/^[-]?((([0]?[0-9]?[0-9])\.(\d+))|([1][0-7][0-9])\.(\d+)|([1][0-8][0])\.(\d+)|([1][0-8])\.(\d+)|([1][0-7])\.(\d+)|180(\.0+)?)$/';
             $validator = Validator::make($request->all(), [
                 'company_name' => [
                     'required',
@@ -93,7 +95,6 @@ class QuotationController extends Controller
                         return $query->where('group_id', $group_id);
                     })->ignore($request->input('id')),
                 ],
-                'address' => 'required',
                 'notes' => 'required',
                 'gstin' => [
                     'required', 'string', 'size:15',
@@ -101,6 +102,17 @@ class QuotationController extends Controller
                         return $query->where('gst', $request->gstin)->where('group_id', $group_id);
                     })->ignore($request->input('id'))
                 ],
+                'registered_address' => 'required',
+                'registered_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+                'registered_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
+
+                'plant_address' => 'required',
+                'plant_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+                'plant_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
+
+                'billing_address' => 'required',
+                'billing_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+                'billing_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
             ]);
 
             if ($validator->fails()) {
@@ -108,20 +120,32 @@ class QuotationController extends Controller
             }
 
             $records = Quotation::orderBy('created_at', 'desc')->get();
-
-            $recordId = Quotation::updateOrCreate(['id' => $request->id],  [
+            $arr =  [
                 'companyname' => $request->company_name,
-                'address' => $request->address,
                 'gst' => $request->gstin,
-                'notes' => $request->notes
-            ])->id;
+                'notes' => $request->notes,
+
+                'registered_address' => $request->registered_address,
+                'registered_address_latitude' => $request->registered_address_latitude,
+                'registered_address_longitude' => $request->registered_address_longitude,
+
+                'plant_address' => $request->plant_address,
+                'plant_address_latitude' => $request->plant_address_latitude,
+                'plant_address_longitude' => $request->plant_address_longitude,
+
+                'billing_address' => $request->billing_address,
+                'billing_address_latitude' => $request->billing_address_latitude,
+                'billing_address_longitude' => $request->billing_address_longitude
+            ];
+
+            $recordId = Quotation::updateOrCreate(['id' => $request->id], $arr)->id;
 
             if (request()->has('process_type')) {
                 QuotationDetails::where('quotation_id', $recordId)->delete();
             }
 
             if (request()->has('personmame')) {
-
+                $quotation_details = [];
                 for ($i = 0; $i < count($request->personmame); $i++) {
                     $arr = [];
                     $date_time = GetDateTime();
@@ -132,6 +156,7 @@ class QuotationController extends Controller
                             'name' => $request->personmame[$i],
                             'phone' => $request->phonenumber[$i],
                             'email' => $request->email[$i],
+                            'designation' => $request->designation[$i],
                             'created_at' => $date_time,
                             'updated_at' => $date_time
                         ];
@@ -142,11 +167,10 @@ class QuotationController extends Controller
                                 ->orWhere('email', $arr['email']);
                         })->count();
 
-                        if ($count > 0) {
-                            continue;
+                        if ($count <= 0) {
+                            QuotationDetails::create($arr);
                         }
                     }
-                    QuotationDetails::create($arr);
                 }
             }
 

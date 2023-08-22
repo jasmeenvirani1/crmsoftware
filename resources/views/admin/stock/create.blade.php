@@ -39,8 +39,8 @@
         }
 
         /* .alert strong {
-            font-weight: bold;
-        } */
+                                                                    font-weight: bold;
+                                                                } */
     </style>
     <?php
     $usdprice = DB::table('gst_percentage')
@@ -256,15 +256,16 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
                                                         Category</b><span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <select class="form-control" id="company_country"
-                                                        name="company_country">
-                                                        <option value="">SELECT</option>
+
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                        id="company_country" name="category[]" multiple>
                                                         @foreach ($category as $cat)
                                                             <option value="{{ $cat->id }}">{{ $cat->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    @error('company_country')
+
+                                                    @error('category')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
                                                     @enderror
@@ -274,13 +275,13 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity
                                                     </b><span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="minqty"
-                                                        value=""
-                                                        id="minqty" class="form-control" placeholder="Minimum Order Quantity">
-                                                    {{-- @error('minqty')
+                                                    <input type="text" name="minimum_order_quantity" value=""
+                                                        id="minqty" class="form-control"
+                                                        placeholder="Minimum Order Quantity">
+                                                    @error('minimum_order_quantity')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
-                                                    @enderror --}}
+                                                    @enderror
                                                 </div>
                                             </div>
 
@@ -366,7 +367,6 @@
 
                                                     <select class="form-control selectpicker" data-live-search="true"
                                                         id="vendor_name" name="vendors[]" multiple>
-                                                        <option value="">---SELECT---</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->id }}">
                                                                 {{ $vendor->companyname }}
@@ -398,62 +398,79 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Corporate Price
-                                               </b></label>
+                                                    </b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="notes"
-                                                        value=""
-                                                        id="notes" class="form-control" placeholder="Corporate Price">
+                                                    <input type="text" name="corporate_price" value=""
+                                                        id="corporate_price" class="form-control"
+                                                        placeholder="Corporate Price">
+                                                    @error('corporate_price')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Retail Price
-                                               </b></label>
+                                                    </b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="notes"
-                                                        value=""
-                                                        id="notes" class="form-control" placeholder="Retail Price">
+                                                    <input type="text" name="retail_price" value=""
+                                                        id="retail_price" class="form-control"
+                                                        placeholder="Retail Price">
+                                                    @error('retail_price')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Dealer Price
-                                               </b></label>
+                                                    </b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="notes"
-                                                        value=""
-                                                        id="notes" class="form-control" placeholder="Dealer Price">
+                                                    <input type="text" name="dealer_price" value=""
+                                                        id="dealer_price" class="form-control"
+                                                        placeholder="Dealer Price">
+                                                    @error('dealer_price')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Specification
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="specification"
-                                                        value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}"
-                                                        id="specification" class="form-control "
-                                                        placeholder="Product Specification">
+                                                    <input type="text" name="specification" id="specification"
+                                                        class="form-control " placeholder="Product Specification">
+                                                    @error('specification')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product
                                                         Notes</b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="notes"
-                                                        value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}"
-                                                        id="notes" class="form-control" placeholder="Product Notes">
+                                                    <input type="text" name="notes" id="notes"
+                                                        class="form-control" placeholder="Product Notes">
+                                                    @error('notes')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
-                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
                                             <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
-                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="col-lg-9 col-xl-4">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
