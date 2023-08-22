@@ -92,6 +92,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::get('stock/{id}/balanced', [StockManagementController::class, 'balanced']);
         Route::get('stock/{id}/outward', [StockManagementController::class, 'outward']);
         Route::post('product-image-delete', [StockManagementController::class, 'productImageDelete'])->name('product.image.delete');
+        Route::post('customer-image-delete', [CustomerController::class, 'imageDelete'])->name('customer.image.delete');
         Route::get('purchase/invoice/{id}', [PurchaseOrderController::class, 'invoice']);
         Route::get('vendors/invoice/{id}', [QuotationController::class, 'invoice']);
         Route::resource('catalog', CatalogController::class);

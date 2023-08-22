@@ -24,3 +24,10 @@ ADD COLUMN `billing_address_longitude` VARCHAR(255) COLLATE utf8mb4_unicode_ci D
 ALTER TABLE quotation_details ADD COLUMN `designation` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `phone`;
 
 ====================================================================================================================================================================================================================================================================================================================================================
+22-8-2023
+
+CREATE TABLE `crmsoftware`.`customer_extra_images` ( `id` INT(11) NULL AUTO_INCREMENT , `customer_id` VARCHAR(255) NULL , `image` TEXT NULL , `deleted_at` TIMESTAMP NULL , `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE customer ADD COLUMN `notes` TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `email`;
+
+====================================================================================================================================================================================================================================================================================================================================================

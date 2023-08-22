@@ -40,12 +40,12 @@ class ManyChangesInManyTable extends Migration
         });
 
         Schema::table('customer', function (Blueprint $table) {
-            $table->string('notes')->nullable();
+            $table->text('notes')->nullable();
         });
 
-        Schema::create('company_extra_images', function (Blueprint $table) {
+        Schema::create('customer_extra_images', function (Blueprint $table) {
             $table->id();
-            $table->string('company_id')->nullable();
+            $table->string('customer_id')->nullable();
             $table->string('image')->nullable();
             $table->softDeletes();
             $table->timestamps();

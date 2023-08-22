@@ -189,7 +189,7 @@ class StockManagementController extends Controller
     public function show($id, Request $request)
     {
         $sql = StockManagement::with('balanced', 'productImages')->select('*')->orderBy('updated_at', 'desc');
-        if (request()->has('category_id')) {
+        if (request()->has('category_id') && strlen($request->category_id) > 0) {
             $product_ids = ProductCategory::where('categories_id', $request->category_id)->groupBy('product_id')->get()->pluck('product_id')->toArray();
             $sql->whereIn('id', $product_ids);
         }
