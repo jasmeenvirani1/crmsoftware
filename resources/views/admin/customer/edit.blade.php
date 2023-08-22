@@ -250,11 +250,7 @@
                                                         {{-- <span class="text-danger">*</span> --}}
                                                     </label>
                                                     <div class="col-lg-6 col-xl-4">
-                                                        <textarea name="notes" value="" id="notes" class="form-control" placeholder="Notes"></textarea>
-                                                        {{-- @error('vendor_company_name')
-                                                        <span class="invalid-feedback text-left" role="alert">
-                                                            <strong>{{ $message }}</strong></span>
-                                                    @enderror --}}
+                                                        <textarea name="notes" value="{{ old('notes', $data->notes) }}" id="notes" class="form-control" placeholder="Notes"></textarea>
                                                     </div>
                                                 </div>
                                         </div>

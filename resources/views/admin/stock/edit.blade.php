@@ -127,7 +127,7 @@
                                     <div class="kt-section kt-section--first">
                                         <div class="kt-section__body">
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Name</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Name</b><span class="text-danger">*</span></label></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="product_name"
                                                         value="{{ old('product_name', isset($data->product_name) ? $data->product_name : '') }}"
@@ -141,7 +141,7 @@
 
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                        Image</b></label>
+                                                        Image</b><span class="text-danger">*</span></label></label>
                                                 <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
@@ -181,7 +181,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Image</b></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Image</b><span class="text-danger">*</span></label></label>
                                             <div class="input-group demo1 control-group lst increment1 parth"
                                                 id="vendor_img_div">
                                                 <input type="file" name="vendor_images[]"
@@ -222,7 +222,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Client/Sales
-                                                    Images</b></label>
+                                                    Images</b><span class="text-danger">*</span></label></label>
                                             <div class="input-group demo2 control-group lst increment2"
                                                 id="client_img_div">
                                                 <input type="file" name="client_images[]"
@@ -263,7 +263,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products PartNo</b></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products PartNo</b><span class="text-danger">*</span></label></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="partno"
                                                     value="{{ old('partno', isset($data->partno) ? $data->partno : '') }}"
@@ -276,7 +276,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                    Category</b></label>
+                                                    Category</b><span class="text-danger">*</span></label></label>
                                             <div class="col-lg-9 col-xl-4">
 
                                                 <select class="form-control selectpicker" data-live-search="true"
@@ -596,6 +596,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.image.delete') }}",
