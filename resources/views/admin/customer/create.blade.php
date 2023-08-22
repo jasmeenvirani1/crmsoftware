@@ -33,8 +33,8 @@
         }
 
         /* .alert strong {
-            font-weight: bold;
-        } */
+                        font-weight: bold;
+                    } */
     </style>
 
     <!-- begin:: Bradcrubs -->
@@ -145,8 +145,7 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="phonenumber"
                                                         value="{{ old('phonenumber', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
-                                                        id="phonenumber" class="form-control"
-                                                        placeholder="Phone Number">
+                                                        id="phonenumber" class="form-control" placeholder="Phone Number">
                                                     @error('phonenumber')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -173,7 +172,8 @@
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="gst" id="gst"
-                                                       value="{{ old('gst', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}" class="form-control" placeholder="GST">
+                                                        value="{{ old('gst', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        class="form-control" placeholder="GST">
                                                     @error('gst')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -233,31 +233,28 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra Image(s)</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra
+                                                        Image(s)</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="extra_image" class="form-control"
+                                                    <input type="file" name="extra_images[]" class="form-control"
                                                         placeholder="" accept="image/png, image/jpeg" multiple>
-                                                    {{-- @error('msme')
+                                                    @error('extra_images')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
-                                                    @enderror --}}
+                                                    @enderror
 
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label required">
                                                     <b>Notes</b>
-                                                    {{-- <span class="text-danger">*</span> --}}
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <textarea name="notes"
-                                                        value=""
-                                                        id="notes" class="form-control"
-                                                        placeholder="Notes"></textarea>
-                                                    {{-- @error('vendor_company_name')
+                                                    <textarea name="notes" value="" id="notes" class="form-control" placeholder="Notes"></textarea>
+                                                    @error('notes')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
-                                                    @enderror --}}
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>

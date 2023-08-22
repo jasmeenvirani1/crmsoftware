@@ -22,6 +22,7 @@ class Customer extends Model
         'gst',
         'cheque',
         'pancard',
+        'notes',
         'created_at',
         'default',
         'logo',
@@ -45,5 +46,9 @@ class Customer extends Model
         $query->where('group_id', Auth::user()->group_id);
 
         return $query;
+    }
+    public function extraImage()
+    {
+        return $this->hasMany(CustomerExtraImage::class, 'customer_id', 'id');
     }
 }

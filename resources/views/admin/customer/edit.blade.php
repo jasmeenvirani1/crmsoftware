@@ -33,8 +33,61 @@
         }
 
         /* .alert strong {
-                font-weight: bold;
-            } */
+                                                                                                font-weight: bold;
+                                                                                            } */
+
+        .image-update-admin {
+            position: relative;
+            margin: 8px 1rem;
+            width: 100%;
+        }
+
+        .img-wrap {
+            position: relative;
+            ...
+        }
+
+        .image-delete-button {
+            display: inline-block;
+            height: 20px;
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .remove-image {
+            cursor: pointer;
+            display: none;
+            position: absolute;
+            top: -10px;
+            /* right: -10px; */
+            border-radius: 10em;
+            padding: 3px 6px 3px;
+            text-decoration: none;
+            font: 700 21px/20px sans-serif;
+            background: #555;
+            border: 3px solid #fff;
+            color: #FFF;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            -webkit-transition: background 0.5s;
+            transition: background 0.5s;
+        }
+
+        .remove-image:hover {
+            background: #E54E4E;
+            padding: 4px 7px 5px;
+            top: -11px;
+            /* right: -11px; */
+        }
+
+        /* .remove-image:active {
+                                background: #E54E4E;
+                                top: -10px;
+                                right: -11px;
+                            } */
     </style>
 
     <!-- begin:: Bradcrubs -->
@@ -86,7 +139,8 @@
                                 <div class="kt-portlet__head-toolbar">
                                     <div class="kt-portlet__head-wrapper">
                                         {{-- {{ route('detail', ['id' => $data->id]) }} --}}
-                                        <a href="{{route('detail', ['id' => $data->id])}}" target="_blank" class="btn btn-success">Export
+                                        <a href="{{ route('detail', ['id' => $data->id]) }}" target="_blank"
+                                            class="btn btn-success">Export
                                             To PDF</a>
                                         <a href="{{ route('company.index') }}" class="btn btn-clean btn-icon-sm">
                                             <i class="la la-long-arrow-left"></i>
@@ -223,26 +277,41 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra
                                                         Image(s)</b></label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="extra_image" class="form-control"
+                                                    <input type="file" name="extra_images[]" class="form-control"
                                                         placeholder="" accept="image/png, image/jpeg" multiple>
-                                                    {{-- @error('msme')
-                                                        <span class="invalid-feedback text-left" role="alert">
-                                                            <strong>{{ $message }}</strong></span>
-                                                    @enderror --}}
-
                                                 </div>
                                             </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-lg-9 col-xl-4 d-flex">
+
+                                                    @foreach ($data->extraImage as $extra_image)
+                                                        <div
+                                                            class="position-relative image-customer_extra_images-{{ $extra_image->id }}">
+
+                                                            <div class="img-wrap">
+                                                                <span class="remove-image"
+                                                                    data-id="{{ $extra_image->id }}" title="Delete"
+                                                                    data-type="customer_extra_images"
+                                                                    style="display: inline;">×</span>
+                                                                <img style="height: 100px; width:100px;"
+                                                                    src="{{ asset($extra_image->image) }}">
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label required">
                                                     <b>Notes</b>
-                                                    {{-- <span class="text-danger">*</span> --}}
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <textarea name="notes" value="" id="notes" class="form-control" placeholder="Notes"></textarea>
-                                                    {{-- @error('vendor_company_name')
+                                                    <textarea name="notes" value="" id="notes" class="form-control" placeholder="Notes">{{ $data->notes }}</textarea>
+                                                    @error('notes')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
-                                                    @enderror --}}
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -276,9 +345,42 @@
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
+
             $.validator.addMethod("alpha", function(value, element) {
                 return this.optional(element) || value == value.match(/^[a-zA-Z\s]+$/);
             }, "Letters only please");
+
+
+            $(".remove-image").click(function() {
+                var id = $(this).data('id');
+                var type = $(this).data('type');
+                var formData = new FormData();
+                formData.append('id', id);
+                formData.append('type', type);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('customer.image.delete') }}",
+                    data: formData,
+                    dataType: "json",
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.status == 200) {
+                            var selector = '.image-' + type + '-' + id;
+                            $(selector).remove()
+                        }
+                    },
+                    error: function(request, status, error) {
+                        alert('Something went wrong');
+                    }
+                });
+            });
         });
     </script>
 @endsection

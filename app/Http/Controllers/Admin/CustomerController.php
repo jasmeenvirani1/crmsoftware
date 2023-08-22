@@ -8,12 +8,14 @@ use App\Models\Customer;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use App\Models\CustomerExtraImage;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
 use PDF;
@@ -83,6 +85,7 @@ class CustomerController extends Controller
                     })
                 ]
             ]);
+
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
@@ -95,7 +98,7 @@ class CustomerController extends Controller
 
             $pancard_path = "";
             if ($request->hasfile('pancard')) {
-                $pancard_path =  uploadImage($request->file('logo'), 'company/pancard');
+                $pancard_path =  uploadImage($request->file('pancard'), 'company/pancard');
                 $pancard_path = 'company/pancard/' . $pancard_path;
             }
 
@@ -105,11 +108,10 @@ class CustomerController extends Controller
                 $cheque_path = 'company/cheque/' . $cheque_path;
             }
             $msme_path = "";
-            if ($request->hasfile('certificate')) {
-                $msme_path =  uploadImage($request->file('cheque'), 'company/msme');
+            if ($request->hasfile('msme')) {
+                $msme_path =  uploadImage($request->file('msme'), 'company/msme');
                 $msme_path = 'company/msme/' . $msme_path;
             }
-
 
             $recordId = Customer::Create(
                 [
@@ -119,11 +121,17 @@ class CustomerController extends Controller
                     'address' => $request->address,
                     'gst' => $request->gst,
                     'logo' => $logo_path,
+                    'notes' => $request->notes,
                     'pancard' => $pancard_path,
                     'cheque' => $cheque_path,
                     'msme_certificate' => $msme_path,
                 ]
             );
+
+            if ($request->hasfile('extra_images')) {
+                $extra_images = $this->addImages('company/extra_images', $recordId->id, $request->file('extra_images'));
+                CustomerExtraImage::insert($extra_images);
+            }
             if ($recordId) {
                 session()->flash('success', 'Company created successfully');
             } else {
@@ -250,7 +258,7 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.customer.edit', ['title' => "Company", 'btn' => "Update", 'data' => Customer::find($id)]);
+        return view('admin.customer.edit', ['title' => "Company", 'btn' => "Update", 'data' => Customer::with(['extraImage'])->find($id)]);
     }
 
     /**
@@ -269,6 +277,7 @@ class CustomerController extends Controller
             'phonenumber' => $request->phonenumber,
             'address' => $request->address,
             'gst' => $request->gst,
+            'notes' => $request->notes,
         ];
         try {
 
@@ -314,6 +323,10 @@ class CustomerController extends Controller
             }
 
             $recordId = Customer::find($id)->update($input);
+            if ($request->hasfile('extra_images')) {
+                $extra_images = $this->addImages('company/extra_images', $id, $request->file('extra_images'));
+                CustomerExtraImage::insert($extra_images);
+            }
             if ($recordId) {
                 session()->flash('success', 'Company created successfully');
             } else {
@@ -357,6 +370,30 @@ class CustomerController extends Controller
     public function Detail($id)
     {
         $company = Customer::find($id); // Assuming you have a "Company" model
-        return view('admin.customer.detail',['title' => "Company"],compact('company'));
+        return view('admin.customer.detail', ['title' => "Company"], compact('company'));
+    }
+    function addImages($path, $id, $data)
+    {
+        $files = [];
+        foreach ($data as $key => $file) {
+            $arr = [
+                'image' => $path . '/' . uploadImage($file, $path),
+                'customer_id' => $id,
+                'created_at' => GetDateTime(),
+                'updated_at' => GetDateTime(),
+            ];
+            $files[] = $arr;
+        }
+        return $files;
+    }
+    public function imageDelete(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'type' => 'required|in:customer_extra_images',
+        ]);
+        DB::table($request->type)->where('id', $request->id)->update(['deleted_at' => now()]);
+        $response = array('status' => '200', 'message' => 'Record Deleted Successfully.');
+        return response()->json($response);
     }
 }
