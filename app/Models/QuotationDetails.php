@@ -17,6 +17,7 @@ class QuotationDetails extends Model
         'name',
         'email',
         'phone',
+        'designation',
         'group_id',
         'created_at',
         'updated_at',
