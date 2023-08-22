@@ -129,7 +129,7 @@
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="email" name="email"
-                                                        value="{{ old('email', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        value="{{ old('email', isset($data->email) ? $data->email : '') }}"
                                                         id="email" class="form-control" placeholder="Email">
                                                     @error('email')
                                                         <span class="invalid-feedback text-left" role="alert">
@@ -144,7 +144,7 @@
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="phonenumber"
-                                                        value="{{ old('phonenumber', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        value="{{ old('phonenumber', isset($data->phonenumber) ? $data->phonenumber : '') }}"
                                                         id="phonenumber" class="form-control"
                                                         placeholder="Phone Number">
                                                     @error('phonenumber')
@@ -160,7 +160,7 @@
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="address"
-                                                        value="{{ old('address', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}"
+                                                        value="{{ old('address', isset($data->address) ? $data->address : '') }}"
                                                         id="address" class="form-control" placeholder="Address">
                                                     @error('address')
                                                         <span class="invalid-feedback text-left" role="alert">
@@ -173,7 +173,7 @@
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="gst" id="gst"
-                                                       value="{{ old('gst', isset($data->vendor_company_name) ? $data->vendor_company_name : '') }}" class="form-control" placeholder="GST">
+                                                       value="{{ old('gst', isset($data->gst) ? $data->gst : '') }}" class="form-control" placeholder="GST">
                                                     @error('gst')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -192,7 +192,6 @@
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
                                                     @enderror
-
                                                 </div>
                                             </div>
                                             <div class="form-group row">

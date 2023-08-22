@@ -33,8 +33,8 @@
         }
 
         /* .alert strong {
-                font-weight: bold;
-            } */
+                                    font-weight: bold;
+                                } */
     </style>
 
     <!-- begin:: Bradcrubs -->
@@ -86,7 +86,8 @@
                                 <div class="kt-portlet__head-toolbar">
                                     <div class="kt-portlet__head-wrapper">
                                         {{-- {{ route('detail', ['id' => $data->id]) }} --}}
-                                        <a href="{{route('detail', ['id' => $data->id])}}" target="_blank" class="btn btn-success">Export
+                                        <a href="{{ route('generate.pdf', ['id' => $data->id]) }}" target="_blank"
+                                            class="btn btn-success">Export
                                             To PDF</a>
                                         <a href="{{ route('company.index') }}" class="btn btn-clean btn-icon-sm">
                                             <i class="la la-long-arrow-left"></i>
@@ -116,7 +117,7 @@
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="vendor_company_name"
-                                                        value="{{ $data->name }}" id="vendor_company_name"
+                                                        value="{{ old('name', $data->name) }}" id="vendor_company_name"
                                                         class="form-control" placeholder="Company Name">
                                                     @error('vendor_company_name')
                                                         <span class="invalid-feedback text-left" role="alert">
@@ -130,8 +131,9 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="email" name="email" value="{{ $data->email }}"
-                                                        id="email" class="form-control" placeholder="Email">
+                                                    <input type="email" name="email"
+                                                        value="{{ old('name', $data->email) }}" id="email"
+                                                        class="form-control" placeholder="Email">
                                                     @error('email')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -145,7 +147,7 @@
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="phonenumber"
-                                                        value="{{ $data->phonenumber }}" id="phonenumber"
+                                                        value="{{ old('name', $data->phonenumber) }}" id="phonenumber"
                                                         class="form-control" placeholder="Phone Number">
                                                     @error('phonenumber')
                                                         <span class="invalid-feedback text-left" role="alert">
@@ -159,8 +161,9 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-6 col-xl-4">
-                                                    <input type="text" name="address" value="{{ $data->address }}"
-                                                        id="address" class="form-control" placeholder="Address">
+                                                    <input type="text" name="address"
+                                                        value="{{ old('name', $data->address) }}" id="address"
+                                                        class="form-control" placeholder="Address">
                                                     @error('address')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -173,32 +176,37 @@
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="text" name="gst" id="gst"
                                                         class="form-control" placeholder="GST"
-                                                        value="{{ $data->gst }}">
+                                                        value="{{ old('name', $data->gst) }}">
                                                     @error('gst')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label required">
-                                                    <b>Logo</b>
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="logo" class="form-control"
-                                                        placeholder="Logo" accept="image/png, image/jpeg">
+                                           
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                        <b>Logo</b>
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6 col-xl-4">
+                                                        <input type="file" name="logo" class="form-control"
+                                                            placeholder="Logo" accept="image/png, image/jpeg">
+                                                    </div>
+                                                    @if ($data->logo != '')
+                                                    <img src="{{ asset($data->logo) }}"
+                                                        style="height: 77px;width: 110px;">@endif
                                                 </div>
-                                                <img src="{{ asset($data->logo) }}" style="height: 77px;width: 110px;">
-                                            </div>
+
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Pan Card</b></label>
                                                 <div class="col-lg-6 col-xl-4">
                                                     <input type="file" name="pancard" class="form-control"
                                                         placeholder="GST" accept="image/png, image/jpeg">
                                                 </div>
+                                                @if ($data->pancard != '')
                                                 <img src="{{ asset($data->pancard) }}"
-                                                    style="height: 77px;width: 110px;">
+                                                    style="height: 77px;width: 110px;">@endif
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Cheque</b></label>
@@ -206,45 +214,49 @@
                                                     <input type="file" name="cheque" class="form-control"
                                                         placeholder="Cheque" accept="image/png, image/jpeg">
                                                 </div>
+                                                @if ($data->cheque != '')
                                                 <img src="{{ asset($data->cheque) }}" style="height: 77px;width: 110px;">
+                                                @endif
                                             </div>
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>MSME
-                                                        Certificate</b></label>
-                                                <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="msme" class="form-control"
-                                                        placeholder="MSME Certificate" accept="image/png, image/jpeg">
+                                           
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label"><b>MSME
+                                                            Certificate</b></label>
+                                                    <div class="col-lg-6 col-xl-4">
+                                                        <input type="file" name="msme" class="form-control"
+                                                            placeholder="MSME Certificate" accept="image/png, image/jpeg">
+                                                    </div>
+                                                    @if ($data->msme_certificate != '')
+                                                    <img src="{{ asset($data->msme_certificate) }}"
+                                                        style="height: 77px;width: 110px;">@endif
                                                 </div>
-                                                <img src="{{ asset($data->msme_certificate) }}"
-                                                    style="height: 77px;width: 110px;">
-
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra
-                                                        Image(s)</b></label>
-                                                <div class="col-lg-6 col-xl-4">
-                                                    <input type="file" name="extra_image" class="form-control"
-                                                        placeholder="" accept="image/png, image/jpeg" multiple>
-                                                    {{-- @error('msme')
+                                            
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra
+                                                            Image(s)</b></label>
+                                                    <div class="col-lg-6 col-xl-4">
+                                                        <input type="file" name="extra_image" class="form-control"
+                                                            placeholder="" accept="image/png, image/jpeg" multiple>
+                                                        {{-- @error('msme')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
                                                     @enderror --}}
 
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label required">
-                                                    <b>Notes</b>
-                                                    {{-- <span class="text-danger">*</span> --}}
-                                                </label>
-                                                <div class="col-lg-6 col-xl-4">
-                                                    <textarea name="notes" value="" id="notes" class="form-control" placeholder="Notes"></textarea>
-                                                    {{-- @error('vendor_company_name')
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label required">
+                                                        <b>Notes</b>
+                                                        {{-- <span class="text-danger">*</span> --}}
+                                                    </label>
+                                                    <div class="col-lg-6 col-xl-4">
+                                                        <textarea name="notes" value="" id="notes" class="form-control" placeholder="Notes"></textarea>
+                                                        {{-- @error('vendor_company_name')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
                                                     @enderror --}}
+                                                    </div>
                                                 </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

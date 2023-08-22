@@ -407,7 +407,7 @@
                                            </b></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="notes"
-                                                    value=""
+                                                    value="{{ old('total_amount', isset($data->usd_price) ? $data->usd_price : '') }}"
                                                     id="notes" class="form-control" placeholder="Corporate Price">
                                             </div>
                                         </div>
@@ -416,7 +416,7 @@
                                            </b></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="notes"
-                                                    value=""
+                                                    value="{{ old('total_amount', isset($data->usd_price) ? $data->usd_price : '') }}"
                                                     id="notes" class="form-control" placeholder="Retail Price">
                                             </div>
                                         </div>
@@ -425,7 +425,7 @@
                                            </b></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="notes"
-                                                    value=""
+                                                    value="{{ old('total_amount', isset($data->usd_price) ? $data->usd_price : '') }}"
                                                     id="notes" class="form-control" placeholder="Dealer Price">
                                             </div>
                                         </div>

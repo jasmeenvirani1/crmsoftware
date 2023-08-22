@@ -8,15 +8,17 @@ use App\Models\Customer;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
-use Barryvdh\DomPDF\PDF as DomPDFPDF;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
-use PDF;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 class CustomerController extends Controller
 {
@@ -357,6 +359,27 @@ class CustomerController extends Controller
     public function Detail($id)
     {
         $company = Customer::find($id); // Assuming you have a "Company" model
-        return view('admin.customer.detail',['title' => "Company"],compact('company'));
+        return view('admin.customer.detail', ['title' => "Company"], compact('company'));
+    }
+    public function generatePdf(Request $request, $id)
+    {
+
+        $company = Customer::find($id);
+
+         //prx($company->name);
+        // Use output buffering to capture PDF content
+       
+
+        //  return view('admin.customer.detail', ['company' => $company]);
+        // $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.customer.detail', ['company' => $company])->setOptions(['defaultFont' => 'Poppins, Helvetica, sans-serif']);
+        // $download = $pdf->download('pdf_file.pdf');
+        // return $download;
+
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.customer.detail', ['company' => $company]);
+        $download = $pdf->download($company->name.'.pdf');
+        return $download;
+
+
+        return response()->json(['message' => 'PDF generated and saved successfully']);
     }
 }

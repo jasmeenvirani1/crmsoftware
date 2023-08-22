@@ -395,7 +395,8 @@
                                                     <input type="text" name="total_amount" id="total_amount"
                                                         class="form-control " readonly />
                                                 </div>
-                                            </div>
+                                            </div> 
+        
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Corporate Price
                                                </b></label>
