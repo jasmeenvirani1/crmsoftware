@@ -117,6 +117,22 @@
                                             </div>
 
                                         </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"
+                                                style="font-size: 15px;"><b>Address</b><span
+                                                    class="text-danger">*</span></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <textarea maxlength="50" name="address" id="address" class="form-control"
+                                                    placeholder="Address"
+                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}"></textarea>
+                                                @error('address')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"
                                                 style="font-size: 15px;"><b>Registered Address</b><span
