@@ -144,7 +144,7 @@ class ApiController extends Controller
     }
     public function GetCompany()
     {
-        $customer = Customer::get();
+        $customer = Customer::with(['extraImage'])->get();
         return Helper::success($customer, 'Company load successfully');
     }
 
