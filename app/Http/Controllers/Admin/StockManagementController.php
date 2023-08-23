@@ -206,7 +206,7 @@ class StockManagementController extends Controller
      */
     public function edit($id)
     {
-        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData'])->find($id);
+        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData','vendor'])->find($id);
         $data1 = Inward::where('stock_id', '=', $id)->get();
         $category = MerchantCategory::get();
         $vendors = Quotation::all();
