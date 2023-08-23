@@ -165,9 +165,11 @@ class StockManagementController extends Controller
         }
 
         if (request()->has('vendors')) {
-            $vendor_data = [];
-            foreach ($request->vendors as $vendor) {
-                $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+            for ($i = 0; $i < count($request->vendors); $i++) {
+                $date_time = GetDateTime();
+                if ($request->vendors[$i] != null && $request->price[$i] != null) {
+                    $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $request->vendors[$i], 'price' => $request->price[$i]];
+                }
             }
             StockVendor::insert($vendor_data);
         }

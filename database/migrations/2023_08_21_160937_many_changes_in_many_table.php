@@ -50,6 +50,9 @@ class ManyChangesInManyTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+        Schema::table('stock_vendors', function (Blueprint $table) {
+            $table->string('price')->nullable()->after('quotation_id');
+        });
     }
 
     /**

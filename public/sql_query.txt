@@ -30,4 +30,5 @@ CREATE TABLE `crmsoftware`.`customer_extra_images` ( `id` INT(11) NULL AUTO_INCR
 
 ALTER TABLE customer ADD COLUMN `notes` TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `email`;
 
+ALTER TABLE stock_vendors ADD COLUMN `price` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `quotation_id`;
 ====================================================================================================================================================================================================================================================================================================================================================
