@@ -206,7 +206,7 @@ class StockManagementController extends Controller
      */
     public function edit($id)
     {
-        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData','vendor'])->find($id);
+        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor'])->find($id);
         $data1 = Inward::where('stock_id', '=', $id)->get();
         $category = MerchantCategory::get();
         $vendors = Quotation::all();
@@ -235,7 +235,6 @@ class StockManagementController extends Controller
      */
     public function update($id, Request $request)
     {
-
         StockManagement::updateOrCreate(
             ['id' => $request->id],
             [
@@ -297,11 +296,13 @@ class StockManagementController extends Controller
             ProductCategory::insert($category_data);
         }
 
+        StockVendor::where('product_id', $product_id)->delete();
         if (request()->has('vendors')) {
-            StockVendor::where('product_id', $product_id)->delete();
-            $vendor_data = [];
-            foreach ($request->vendors as $vendor) {
-                $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $vendor];
+            for ($i = 0; $i < count($request->vendors); $i++) {
+                $date_time = GetDateTime();
+                if ($request->vendors[$i] != null && $request->price[$i] != null) {
+                    $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $request->vendors[$i], 'price' => $request->price[$i]];
+                }
             }
             StockVendor::insert($vendor_data);
         }

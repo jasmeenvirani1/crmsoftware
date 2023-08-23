@@ -387,21 +387,7 @@
                                                     placeholder="Product Company">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor</b></label>
-                                            <div class="col-lg-9 col-xl-4">
-                                                <select class="form-control selectpicker" data-live-search="true"
-                                                    id="vendor_name" name="vendors[]" multiple>
-                                                    <option value="">---SELECT---</option>
-                                                    @foreach ($vendors as $vendor)
-                                                        <option value="{{ $vendor->id }}"
-                                                            @if (in_array($vendor->id, $selected_vendors)) selected @endif>
-                                                            {{ $vendor->companyname }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
+
                                         <div class="form-group row" id="productprice">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In
                                                     INR.)</b></label>
@@ -412,6 +398,7 @@
                                                     placeholder="Product Price(INR)">
                                             </div>
                                         </div>
+
                                         <div class="form-group row ">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD $.)
                                                 </b></label>
@@ -468,77 +455,54 @@
                                                     id="notes" class="form-control" placeholder="Product Notes">
                                             </div>
                                         </div>
-                                        {{-- @php
-                                            prx(count($vendors));
-                                        @endphp --}}
-                                        
+
                                         <label class="col-xl-3 col-lg-3 col-form-label"
                                             style="font-size: 15px;margin-left: -10px;"><b>Vendor
                                                 Details</b></label>
-                                           
+                                        <button class="btn btn-success col-lg-0 add-vendor-btn" id="addVendorBtn"
+                                            type="button" style="float: right;">Add Vendor</button>
                                         @foreach ($data->vendor as $selected_vendor)
-                                        <div class="row mt-3">
-                                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Vendor</b></label>
-                                            {{-- <div class="col-lg-4 col-xl-4">
-                                                <select class="form-control" name="vendors[]">
-                                                    @foreach ($vendors as $vendor)
-                                                        <option value="{{ $vendor->id }}">
-                                                            {{ $vendor->companyname }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div> --}}
-                                            <div class="col-lg-4 col-xl-4">
-                                                <select class="form-control" name="vendors[]">
-                                                    @foreach ($vendors as $vendor)
-                                                        <option value="{{ $vendor->id }}" @if(in_array($vendor->id, $selected_vendors)) selected @endif>
-                                                            {{ $vendor->companyname }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            
+                                            <div class="row mt-3">
+                                                <label class="col-xl-0 col-lg-0 col-form-label"><b>Vendor</b></label>
 
-                                            <label class="col-xl-0 col-lg-0 col-form-label"><b>Price</b></label>
-                                            <div class="col-lg-4 col-xl-4">
-                                                <input type="text" name="price[]" class="form-control" value="{{$selected_vendor->price}}">
+                                                <div class="col-lg-4 col-xl-4">
+                                                    <select class="form-control" name="vendors[]">
+                                                        @foreach ($vendors as $vendor)
+                                                            <option value="{{ $vendor->id }}"
+                                                                @if ($vendor->id == $selected_vendor->quotation_id) selected @endif>
+                                                                {{ $vendor->companyname }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <label class="col-xl-0 col-lg-0 col-form-label"><b>Price</b></label>
+                                                <div class="col-lg-4 col-xl-4">
+                                                    <input type="number" name="price[]" class="form-control"
+                                                        value="{{ $selected_vendor->price }}">
+                                                </div>
+                                                <button class="btn btn-danger remove-vendor-add"
+                                                    type="button">Remove</button>
+
                                             </div>
-                                            <button class="btn btn-success col-lg-0 add-vendor-btn" id="addVendorBtn"
-                                                type="button">Add</button>
-                                        </div>
                                         @endforeach
                                         <div class="vendor-increment"></div>
                                     </div>
-                            
-                                        <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
-                                                                                                                                                                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                                                                                                                <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
-                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                        </div> -->
-                                        <!-- <div class="form-group row">
-                                                                                                                                                                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
-                                                                                                                                                                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                                                                                                                                                                <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
-                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                        </div> -->
-                                        {{-- </div>
-                                </div> --}}
-                                    </div>
-                                    <div class="kt-portlet__foot">
-                                        <div class="kt-form__actions">
-                                            <div class="row">
-                                                <div class="col-lg-3 col-xl-3">
-                                                </div>
-                                                <div class="col-lg-9 col-xl-9">
-                                                    <button type="submit"
-                                                        class="btn btn-success">{{ $btn }}</button>&nbsp;
-                                                    <a href="{{ route('stock.index') }}" id="cancel_btn"
-                                                        class="btn btn-secondary">Cancel</a>
-                                                </div>
+                                </div>
+                                <div class="kt-portlet__foot">
+                                    <div class="kt-form__actions">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-xl-3">
+                                            </div>
+                                            <div class="col-lg-9 col-xl-9">
+                                                <button type="submit"
+                                                    class="btn btn-success">{{ $btn }}</button>&nbsp;
+                                                <a href="{{ route('stock.index') }}" id="cancel_btn"
+                                                    class="btn btn-secondary">Cancel</a>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -556,7 +520,7 @@
                 <tr>
                     <td>
                         <input type="text" maxlength="12" name="dimension_name[]" id="product_dimension"
-                            class="col-xl-6 col-lg-6  form-control"  placeholder="Dimension Name">
+                            class="col-xl-6 col-lg-6  form-control" placeholder="Dimension Name">
                     </td>
                     <td>
                         <input type="text" maxlength="12" name="dimension_value[]" id="product_dimension"
@@ -577,7 +541,7 @@
         </table>
     </div>
     <div class="clone-vendor-add hidden d-none">
-       
+
         <div class="row mt-3">
             <label class="col-xl-0 col-lg-0 col-form-label"><b>Vendor</b></label>
             <div class="col-lg-4 col-xl-4">
