@@ -5,9 +5,9 @@ namespace App\Helpers;
 use Request;
 use Exception;
 use URL;
-use DB;
 use App\Models\User;
 use App\Model\Notification;
+use Illuminate\Support\Facades\DB;
 
 class Helper
 {
@@ -88,5 +88,13 @@ class Helper
         return URL::to('/') . '/storage/profile_pcitures/';
     }
 
-
+    public static function ConvertInrToUsd($inr)
+    {
+        $usdprice = DB::table('gst_percentage')
+            ->select(DB::raw('cgst'))
+            ->first();
+        $productPriceConverted =  $inr / $usdprice->cgst;
+        $roundedPrice = number_format($productPriceConverted, 2);
+        return  $roundedPrice;
+    }
 }

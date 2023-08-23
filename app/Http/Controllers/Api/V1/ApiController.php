@@ -218,6 +218,9 @@ class ApiController extends Controller
         $group_id = Auth::user()->group_id;
         $data = $request->json()->all();
 
+        $rules_latitude = '/^[-]?((([0-8]?[0-9])\.(\d+))|(90(\.0+)?))$/';
+        $rules_longitude = '/^[-]?((([0]?[0-9]?[0-9])\.(\d+))|([1][0-7][0-9])\.(\d+)|([1][0-8][0])\.(\d+)|([1][0-8])\.(\d+)|([1][0-7])\.(\d+)|180(\.0+)?)$/';
+
         $validator = Validator::make($data, [
             'companyname' => [
                 'required',
@@ -225,14 +228,24 @@ class ApiController extends Controller
                     return $query->where('group_id', $group_id);
                 })
             ],
-            'address' => ['required'],
             'gst' => [
                 'required', 'string', 'size:15',
                 Rule::unique('quotation', 'gst')->where(function ($query) use ($data, $group_id) {
                     return $query->where('gst', $data['gst'])->where('group_id', $group_id);
                 })
             ],
-            'notes' => ['required']
+            'notes' => ['required'],
+            'registered_address' => 'required',
+            'registered_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+            'registered_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
+
+            'plant_address' => 'required',
+            'plant_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+            'plant_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
+
+            'billing_address' => 'required',
+            'billing_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+            'billing_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
         ]);
         if ($validator->fails()) {
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
@@ -240,18 +253,41 @@ class ApiController extends Controller
 
         $insertData = [
             'companyname' => $data['companyname'],
-            'address' => $data['address'],
             'notes' => $data['notes'],
             'gst' => $data['gst'],
+
+            'registered_address' => $data['registered_address'],
+            'registered_address_latitude' => $data['registered_address_latitude'],
+            'registered_address_longitude' => $data['registered_address_longitude'],
+
+            'plant_address' => $data['plant_address'],
+            'plant_address_latitude' => $data['plant_address_latitude'],
+            'plant_address_longitude' => $data['plant_address_longitude'],
+
+            'billing_address' => $data['billing_address'],
+            'billing_address_latitude' => $data['billing_address_latitude'],
+            'billing_address_longitude' => $data['billing_address_longitude'],
+
             'group_id' => $group_id
         ];
 
         $quotation_id = Quotation::insertGetId($insertData);
-
-        foreach ($data['contact_details'] as $contact_details) {
-            $contact_details['quotation_id'] = $quotation_id;
-            $contact_details['created_at'] = $contact_details['updated_at'] = GetDateTime();
-            QuotationDetails::insert($contact_details);
+        if (isset($data['contact_details'])) {
+            $final_contact_data = [];
+            foreach ($data['contact_details'] as $contact_details) {
+                $count = QuotationDetails::where(function ($query) use ($contact_details) {
+                    $query->where('name', $contact_details['name'])
+                        ->orWhere('phone', $contact_details['phone'])
+                        ->orWhere('email', $contact_details['email']);
+                })->count();
+                if ($count <= 0) {
+                    $contact_details['quotation_id'] = $quotation_id;
+                    $contact_details['group_id'] = $group_id;
+                    $contact_details['created_at'] = $contact_details['updated_at'] = GetDateTime();
+                    $final_contact_data[] = $contact_details;
+                }
+            }
+            QuotationDetails::insert($final_contact_data);
         }
 
         return Helper::success(null, 'Vendor store successfully');
@@ -263,6 +299,9 @@ class ApiController extends Controller
             $group_id = Auth::user()->group_id;
             $data = $request->json()->all();
 
+            $rules_latitude = '/^[-]?((([0-8]?[0-9])\.(\d+))|(90(\.0+)?))$/';
+            $rules_longitude = '/^[-]?((([0]?[0-9]?[0-9])\.(\d+))|([1][0-7][0-9])\.(\d+)|([1][0-8][0])\.(\d+)|([1][0-8])\.(\d+)|([1][0-7])\.(\d+)|180(\.0+)?)$/';
+
             $validator = Validator::make($data, [
                 'id' => ['required'],
                 'companyname' => [
@@ -271,24 +310,79 @@ class ApiController extends Controller
                         return $query->where('group_id', $group_id);
                     })->ignore($data['id'])
                 ],
-                'address' => ['required'],
                 'gst' => [
                     'required', 'string', 'size:15',
                     Rule::unique('quotation', 'gst')->where(function ($query) use ($data, $group_id) {
                         return $query->where('gst', $data['gst'])->where('group_id', $group_id);
                     })->ignore($data['id'])
                 ],
-                'notes' => ['required']
+                'notes' => ['required'],
+                'registered_address' => 'required',
+                'registered_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+                'registered_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
+
+                'plant_address' => 'required',
+                'plant_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+                'plant_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
+
+                'billing_address' => 'required',
+                'billing_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
+                'billing_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
             ]);
             if ($validator->fails()) {
                 return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
             }
 
-            $quotation = Quotation::findOrFail($data['id']);
-            $quotation->update(['companyname' => $data['companyname'], 'address' => $data['address'], 'notes' => $data['notes'], 'gst' => $data['gst'],]);
+            $update_data = [
+                'companyname' => $data['companyname'],
+                'notes' => $data['notes'],
+                'gst' => $data['gst'],
+
+                'registered_address' => $data['registered_address'],
+                'registered_address_latitude' => $data['registered_address_latitude'],
+                'registered_address_longitude' => $data['registered_address_longitude'],
+
+                'plant_address' => $data['plant_address'],
+                'plant_address_latitude' => $data['plant_address_latitude'],
+                'plant_address_longitude' => $data['plant_address_longitude'],
+
+                'billing_address' => $data['billing_address'],
+                'billing_address_latitude' => $data['billing_address_latitude'],
+                'billing_address_longitude' => $data['billing_address_longitude'],
+            ];
+
+            $quotation_id = $data['id'];
+
+            $quotation = Quotation::findOrFail($quotation_id);
+            $quotation->update($update_data);
+
+            if (isset($data['contact_details'])) {
+
+                QuotationDetails::where('quotation_id', $quotation_id)->delete();
+
+                $final_contact_data = [];
+
+                foreach ($data['contact_details'] as $contact_details) {
+                    $count = QuotationDetails::where(function ($query) use ($contact_details) {
+                        $query->where('name', $contact_details['name'])
+                            ->orWhere('phone', $contact_details['phone'])
+                            ->orWhere('email', $contact_details['email']);
+                    })->count();
+
+                    if ($count <= 0) {
+                        $contact_details['quotation_id'] = $quotation_id;
+                        $contact_details['group_id'] = $group_id;
+                        $contact_details['created_at'] = $contact_details['updated_at'] = GetDateTime();
+                        $final_contact_data[] = $contact_details;
+                    }
+                }
+
+                QuotationDetails::insert($final_contact_data);
+            }
 
             return Helper::success(null, 'Vendor updated successfully');
         } catch (Exception $e) {
+
             return Helper::fail([], $e->getMessage());
         }
     }
@@ -331,6 +425,10 @@ class ApiController extends Controller
                 'product_company' => 'required',
                 'specification' => 'required',
                 'notes' => 'required',
+                'minimum_order_quantity' => 'required',
+                'corporate_price' => 'integer',
+                'retail_price' => 'integer',
+                'dealer_price' => 'integer',
             ]);
 
             if ($validator->fails()) {
@@ -346,12 +444,17 @@ class ApiController extends Controller
                     'partno' => $stock_data->partno,
                     'product_company' => $stock_data->product_company,
                     'product_price' => $stock_data->product_price,
+                    'usd_price' => Helper::ConvertInrToUsd($stock_data->product_price),
                     'category' => $stock_data->category,
                     'notes' => $stock_data->notes,
                     'specification' => $stock_data->specification,
                     'group_id' => $group_id,
+                    'minimum_order_quantity' => $stock_data->minimum_order_quantity,
+                    'corporate_price' => $stock_data->corporate_price,
+                    'retail_price' => $stock_data->retail_price,
+                    'dealer_price' => $stock_data->dealer_price,
                     'created_at' => $date_time,
-                    'updated_at' => $date_time
+                    'updated_at' => $date_time,
                 ]
             );
 
@@ -383,13 +486,14 @@ class ApiController extends Controller
                     ProductDimension::create($arr);
                 }
             }
-
-            $vendor_data = [];
-            foreach ($stock_data->vendors as $vendor) {
-                $vendor_data = [
-                    'product_id' => $product_id, 'quotation_id' => $vendor, 'created_at' => $date_time,
-                    'updated_at' => $date_time
-                ];
+            if (request()->has('vendors')) {
+                $vendor_data = [];
+                foreach ($stock_data->vendors as $vendor) {
+                    $vendor_data[] = [
+                        'product_id' => $product_id, 'quotation_id' => $vendor['quotation_id'], 'price' => $vendor['price'], 'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                }
                 StockVendor::insert($vendor_data);
             }
 
@@ -430,9 +534,12 @@ class ApiController extends Controller
                 'partno' => 'required',
                 'category' => 'required',
                 'product_company' => 'required',
-                'product_price' => 'required|integer',
                 'specification' => 'required',
                 'notes' => 'required',
+                'minimum_order_quantity' => 'required',
+                'corporate_price' => 'integer',
+                'retail_price' => 'integer',
+                'dealer_price' => 'integer',
             ]);
 
             if ($validator->fails()) {
@@ -452,12 +559,16 @@ class ApiController extends Controller
                 'partno' => $stock_data->partno,
                 'product_company' => $stock_data->product_company,
                 'product_price' => $stock_data->product_price,
+                'usd_price' => Helper::ConvertInrToUsd($stock_data->product_price),
                 'category' => $stock_data->category,
                 'notes' => $stock_data->notes,
                 'specification' => $stock_data->specification,
-                'group_id' => $group_id,
+                'minimum_order_quantity' => $stock_data->minimum_order_quantity,
+                'corporate_price' => $stock_data->corporate_price,
+                'retail_price' => $stock_data->retail_price,
+                'dealer_price' => $stock_data->dealer_price,
                 'created_at' => $date_time,
-                'updated_at' => $date_time
+                'updated_at' => $date_time,
             ];
             $stock->update($arr);
 
@@ -491,17 +602,17 @@ class ApiController extends Controller
                 }
             }
 
-            if (isset($stock_data->dimensions)) {
-
+            if (request()->has('vendors')) {
                 StockVendor::where('product_id', $product_id)->delete();
+
                 $vendor_data = [];
                 foreach ($stock_data->vendors as $vendor) {
-                    $vendor_data = [
-                        'product_id' => $product_id, 'quotation_id' => $vendor, 'created_at' => $date_time,
+                    $vendor_data[] = [
+                        'product_id' => $product_id, 'quotation_id' => $vendor['quotation_id'], 'price' => $vendor['price'], 'created_at' => $date_time,
                         'updated_at' => $date_time
                     ];
-                    StockVendor::insert($vendor_data);
                 }
+                StockVendor::insert($vendor_data);
             }
 
             return Helper::success([], 'Product store successfully');

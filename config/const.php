@@ -27,5 +27,6 @@ return [
         ]
 
     ],
+    'dollar_price' => 0.014,
 
 ];
