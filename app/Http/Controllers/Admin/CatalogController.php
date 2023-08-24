@@ -43,9 +43,12 @@ class CatalogController extends Controller
         $product = MerchantCategory::whereIn('id', $cat_ids);
 
         if ($type == 'selected') {
-            $product = $product->with(['product.productImages', 'product' =>  function ($query) use ($request) {
-                $query->whereIn('id', $request->product_ids);
-            }]);
+            $product = $product->with([
+                'productIds.product.productImages' => function ($query) use ($request) {
+                    $query->whereIn('product_id', $request->product_ids);
+                },
+                'productIds.product'
+            ]);
         } else {
             $product = $product->with(['productIds.product.productImages']);
         }
