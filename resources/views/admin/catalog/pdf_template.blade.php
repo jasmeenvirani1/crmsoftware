@@ -57,7 +57,10 @@
                 <h2>{{ $category->name }}</h2>
             </div>
             <div class="product_wrapper">
-                @foreach ($category->product as $product)
+                @foreach ($category->productIds as $product)
+                    @if (!isset($product->product))
+                        @continue
+                    @endif
                     <div class="product_box">
                         <div class="pro_img">
                             @if (isset($product->productImages[0]))
@@ -67,9 +70,9 @@
                             @endif
                         </div>
                         <div class="content">
-                            <div class="name">{{ $product->product_name }}</div>
-                            <div class="desc">{{ $product->specification }}</div>
-                            <div class="desc">{{ $product->notes }}</div>
+                            <div class="name">{{ $product->product->product_name }}</div>
+                            <div class="desc">{{ $product->product->specification }}</div>
+                            <div class="desc">{{ $product->product->notes }}</div>
                         </div>
                     </div>
                 @endforeach

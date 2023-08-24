@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\MerchantCategory;
+use App\Models\ProductCategory;
 use App\Models\StockManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,12 +32,14 @@ class CatalogController extends Controller
             prx('Please select company');
         }
 
-        $cat_sql = StockManagement::groupBy('category');
+        $cat_sql = ProductCategory::groupBy('categories_id');
         if ($type == 'selected') {
-            $cat_sql = $cat_sql->whereIn('id', $request->product_ids);
+            $product_ids_arr = $request->product_ids;
+        } else {
+            $product_ids_arr = StockManagement::pluck('id')->toArray();
         }
+        $cat_ids = $cat_sql->whereIn('product_id', $product_ids_arr)->get('categories_id')->pluck('categories_id')->toArray();
 
-        $cat_ids = $cat_sql->get('category')->pluck('category')->toArray();
         $product = MerchantCategory::whereIn('id', $cat_ids);
 
         if ($type == 'selected') {
@@ -44,7 +47,7 @@ class CatalogController extends Controller
                 $query->whereIn('id', $request->product_ids);
             }]);
         } else {
-            $product = $product->with(['product', 'product.productImages']);
+            $product = $product->with(['productIds.product.productImages']);
         }
         $product = $product->get();
         // prx($product);

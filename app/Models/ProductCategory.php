@@ -17,4 +17,8 @@ class ProductCategory extends Model
         'created_at',
         'updated_at',
     ];
+    public function product()
+    {
+        return $this->hasOne(StockManagement::class, 'id', 'product_id');
+    }
 }
