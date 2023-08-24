@@ -165,7 +165,7 @@
                                                 <input type="text" maxlength="50" name="registered_address_longitude"
                                                     id="registered_address_longitude" class="form-control"
                                                     placeholder="Longitude"
-                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}">
+                                                    value="{{ old('registered_address_longitude', isset($data->registered_address_longitude) ? $data->registered_address_longitude : '') }}">
                                                 @error('registered_address_longitude')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
