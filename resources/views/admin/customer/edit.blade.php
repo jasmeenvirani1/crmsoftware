@@ -279,14 +279,11 @@
                                                         <input type="file" name="msme" class="form-control"
                                                             placeholder="MSME Certificate" accept="image/png, image/jpeg">
                                                     </div>
-                                                    @if ($data->msme_certificate != '')
+                                                    @if ($data->msme != '')
                                                     <img src="{{ asset($data->msme_certificate) }}"
                                                         style="height: 77px;width: 110px;">@endif
                                                 </div>
-                                                <img src="{{ asset($data->msme_certificate) }}"
-                                                    style="height: 77px;width: 110px;">
-
-                                            </div>
+    
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra
                                                         Image(s)</b></label>
