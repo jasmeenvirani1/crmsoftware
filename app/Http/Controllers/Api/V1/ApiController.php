@@ -210,7 +210,7 @@ class ApiController extends Controller
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
         }
         $vendor = Quotation::find($request->id);
-        return Helper::success($vendor, 'Vendor store successfully');
+        return Helper::success($vendor, 'Vendor load successfully');
     }
 
     public function StoreVendor(Request $request)
