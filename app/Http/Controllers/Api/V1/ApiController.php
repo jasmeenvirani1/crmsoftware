@@ -620,7 +620,7 @@ class ApiController extends Controller
                 StockVendor::insert($vendor_data);
             }
 
-            return Helper::success([], 'Product store successfully');
+            return Helper::success([], 'Product updated successfully');
         } catch (Exception $e) {
             return Helper::fail([], $e->getMessage());
         }
