@@ -96,6 +96,7 @@ class QuotationController extends Controller
                     })->ignore($request->input('id')),
                 ],
                 'notes' => 'required',
+                'address' => 'required',
                 'gstin' => [
                     'required', 'string', 'size:15',
                     Rule::unique('quotation', 'gst')->where(function ($query) use ($request, $group_id) {
@@ -124,6 +125,7 @@ class QuotationController extends Controller
                 'companyname' => $request->company_name,
                 'gst' => $request->gstin,
                 'notes' => $request->notes,
+                'address' => $request->address,
 
                 'registered_address' => $request->registered_address,
                 'registered_address_latitude' => $request->registered_address_latitude,

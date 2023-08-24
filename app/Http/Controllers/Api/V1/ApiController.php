@@ -235,6 +235,8 @@ class ApiController extends Controller
                 })
             ],
             'notes' => ['required'],
+            'address' => ['required'],
+
             'registered_address' => 'required',
             'registered_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
             'registered_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
@@ -255,6 +257,7 @@ class ApiController extends Controller
             'companyname' => $data['companyname'],
             'notes' => $data['notes'],
             'gst' => $data['gst'],
+            'address' => $data['address'],
 
             'registered_address' => $data['registered_address'],
             'registered_address_latitude' => $data['registered_address_latitude'],
@@ -317,6 +320,7 @@ class ApiController extends Controller
                     })->ignore($data['id'])
                 ],
                 'notes' => ['required'],
+                'address' => ['required'],
                 'registered_address' => 'required',
                 'registered_address_latitude' => ['nullable', 'regex:' . $rules_latitude],
                 'registered_address_longitude' => ['nullable', 'regex:' . $rules_longitude],
@@ -337,6 +341,7 @@ class ApiController extends Controller
                 'companyname' => $data['companyname'],
                 'notes' => $data['notes'],
                 'gst' => $data['gst'],
+                'address' => $data['address'],
 
                 'registered_address' => $data['registered_address'],
                 'registered_address_latitude' => $data['registered_address_latitude'],
