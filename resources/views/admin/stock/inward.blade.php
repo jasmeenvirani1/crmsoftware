@@ -108,7 +108,7 @@
                                                 </label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="number" step="1" name="inward_qty" id="inward_qty"
-                                                        class="form-control" placeholder="Inward Qty.">
+                                                        class="form-control" placeholder="Inward Qty." value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}">
                                                     @error('inward_qty')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -139,7 +139,7 @@
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="number" step="1" name="product_price"
-                                                        id="product_price" class="form-control" placeholder="Product Price">
+                                                        id="product_price" class="form-control" placeholder="Product Price" value="{{ old('product_price', isset($data->product_price) ? $data->product_price : '') }}">
                                                     @error('product_price')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -151,7 +151,7 @@
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="po_no" id="po_no" class="form-control"
-                                                        placeholder="PO No.">
+                                                        placeholder="PO No." value="{{ old('po_no', isset($data->po_no) ? $data->po_no : '') }}">
                                                     @error('po_no')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>

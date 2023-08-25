@@ -64,6 +64,7 @@
         .header {
             text-align: center;
             margin-bottom: 10px;
+            font-family:Arial, Helvetica, sans-serif;
         }
 
         .details {

@@ -156,7 +156,7 @@ class StockManagementController extends Controller
                 'status' => $request->status
             ]
         );
-        if (request()->has('category')) {
+        if (request()->has('category') && count($request->category) > 0) {
             $category_data = [];
             foreach ($request->category as $category) {
                 $category_data[] = ['product_id' => $product_id, 'categories_id' => $category];
@@ -164,7 +164,7 @@ class StockManagementController extends Controller
             ProductCategory::insert($category_data);
         }
 
-        if (request()->has('vendors')) {
+        if (request()->has('vendors') && count($request->vendors) > 0) {
             for ($i = 0; $i < count($request->vendors); $i++) {
                 $date_time = GetDateTime();
                 if ($request->vendors[$i] != null && $request->price[$i] != null) {

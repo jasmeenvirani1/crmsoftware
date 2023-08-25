@@ -125,7 +125,7 @@
                                             <div class="col-lg-9 col-xl-4">
                                                 <textarea maxlength="50" name="address" id="address" class="form-control"
                                                     placeholder="Address"
-                                                    value="{{ old('address', isset($data->address) ? $data->address : '') }}"></textarea>
+                                                    value="">{{ old('address', isset($data->address) ? $data->address : '') }}</textarea>
                                                 @error('address')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>

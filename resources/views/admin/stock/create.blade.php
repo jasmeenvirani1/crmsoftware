@@ -117,7 +117,7 @@
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="product_name" id="product_name"
-                                                        class="form-control" placeholder="Product Name">
+                                                        class="form-control" placeholder="Product Name" value="{{ old('product_name', isset($data->product_name) ? $data->product_name : '') }}">
                                                     @error('product_name')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -401,7 +401,7 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Corporate Price
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="corporate_price" value=""
+                                                    <input type="text" name="corporate_price" value="{{ old('corporate_price', isset($data->corporate_price) ? $data->corporate_price : '') }}"
                                                         id="corporate_price" class="form-control"
                                                         placeholder="Corporate Price">
                                                     @error('corporate_price')
@@ -414,7 +414,7 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Retail Price
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="retail_price" value=""
+                                                    <input type="text" name="retail_price" value="{{ old('retail_price', isset($data->retail_price) ? $data->retail_price : '') }}"
                                                         id="retail_price" class="form-control"
                                                         placeholder="Retail Price">
                                                     @error('retail_price')
@@ -427,7 +427,7 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Dealer Price
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="dealer_price" value=""
+                                                    <input type="text" name="dealer_price" value="{{ old('dealer_price', isset($data->dealer_price) ? $data->dealer_price : '') }}"
                                                         id="dealer_price" class="form-control"
                                                         placeholder="Dealer Price">
                                                     @error('dealer_price')
@@ -441,7 +441,7 @@
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="specification" id="specification"
-                                                        class="form-control " placeholder="Product Specification">
+                                                        class="form-control " placeholder="Product Specification" value="{{ old('specification', isset($data->specification) ? $data->specification : '') }}">
                                                     @error('specification')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
@@ -452,7 +452,7 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product
                                                         Notes</b></label>
                                                 <div class="col-lg-9 col-xl-4"> <input type="text" name="notes"
-                                                        id="notes" class="form-control" placeholder="Product Notes">
+                                                        id="notes" class="form-control" placeholder="Product Notes" value="{{ old('notes', isset($data->notes) ? $data->notes : '') }}">
                                                     @error('notes')
                                                         <span class="invalid-feedback text-left" role="alert">
                                                             <strong>{{ $message }}</strong></span>
