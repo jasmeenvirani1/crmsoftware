@@ -9,6 +9,7 @@ use App\Models\ProductCategory;
 use App\Models\StockManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Spipu\Html2Pdf\Html2Pdf;
 use PDF;
 use Yajra\DataTables\Facades\DataTables;
@@ -66,10 +67,19 @@ class CatalogController extends Controller
         view()->share('product_data', $product);
         view()->share('catalog_data', $catalog_data);
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.invoice', ['product_data' => $product, 'catalog_data' => $catalog_data]);
-        $download = $pdf->download('sadsa.pdf');
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.pdf_template', ['product_data' => $product, 'catalog_data' => $catalog_data]);
+
+        $temporaryPath = public_path('catalog/');
+        $filename = rand(0, 999999) . time() . '.pdf';
+        if (!is_dir($temporaryPath)) {
+            File::makeDirectory($temporaryPath, 0777, true, true);
+        }
+        $pdf->save($temporaryPath . '/' . $filename);
+        $final_path = url('/') . '/catalog/' . $filename;
+        return $final_path;
+
+        // return $download;
         // return view('admin.catalog.pdf_template');
-        return $download;
 
         // return response()->json(['message' => 'PDF generated and saved successfully']);
         // prx($product);
@@ -83,9 +93,8 @@ class CatalogController extends Controller
      */
     public function show($id)
     {
-        // return DataTables::of(StockManagement::with('productImages')->select('*')->orderBy('id', 'desc')->get())->make(true);
         return DataTables::of(
-            StockManagement::with('productImages', 'category')
+            StockManagement::with(['productImages', 'categories.GetCategoriesName'])
                 ->select('*')
                 ->orderBy('updated_at', 'desc') // Order by updated_at column in descending order
                 ->get(),

@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use PDF;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 
 class ApiController extends Controller
@@ -173,26 +175,66 @@ class ApiController extends Controller
         }
 
         $return_data['catalog_data'] = $catalog_data;
-        $cat_sql = StockManagement::groupBy('category');
+        $cat_sql = ProductCategory::groupBy('categories_id');
         if (isset($data['ids'])) {
-            $ids = $data['ids'];
-            $cat_sql = $cat_sql->whereIn('id', $ids);
+            $product_ids_arr = $data['ids'];
+        } else {
+            $product_ids_arr = StockManagement::pluck('id')->toArray();
         }
+        $un_cat_data = StockManagement::join('product_categories', 'product_categories.product_id', '!=', 'stock_management.id')
+            ->whereIn('product_categories.product_id', $product_ids_arr)
+            ->get()
+            ->toArray();
 
-        $cat_ids = $cat_sql->get('category')->pluck('category')->toArray();
+        $cat_ids = $cat_sql
+            ->whereIn('product_id', $product_ids_arr)
+            ->get('categories_id')
+            ->pluck('categories_id')
+            ->toArray();
+
+
         $product = MerchantCategory::whereIn('id', $cat_ids);
 
         if (isset($data['ids'])) {
-            $product = $product->with(['product.productImages', 'product' =>  function ($query) use ($ids) {
-                $query->whereIn('id', $ids);
-            }]);
+            $product = $product->with([
+                'productIds.product.productImages' => function ($query) use ($request) {
+                    $query->whereIn('product_id', $request->product_ids);
+                },
+                'productIds.product',
+            ]);
         } else {
-            $product = $product->with(['product', 'product.productImages']);
+            $product = $product->with(['productIds.product.productImages']);
         }
         $product = $product->get();
-        $return_data['product'] = $product;
+        view()->share('product_data', $product);
+        view()->share('catalog_data', $catalog_data);
 
-        return Helper::success($return_data, 'Catalogue Loaded Successfully');
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.pdf_template', ['product_data' => $product, 'catalog_data' => $catalog_data]);
+
+        $temporaryPath = public_path('catalog/');
+        $filename = rand(0, 999999) . time() . '.pdf';
+        if (!is_dir($temporaryPath)) {
+            File::makeDirectory($temporaryPath, 0777, true, true);
+        }
+        $pdf->save($temporaryPath . '/' . $filename);
+        $final_path = url('/') . '/catalog/' . $filename;
+        $final_return_data['url'] = $final_path;
+        return Helper::success($final_return_data, 'Catalogue Loaded Successfully');
+
+        // $cat_ids = $cat_sql->get('category')->pluck('category')->toArray();
+        // $product = MerchantCategory::whereIn('id', $cat_ids);
+
+        // if (isset($data['ids'])) {
+        //     $product = $product->with(['product.productImages', 'product' =>  function ($query) use ($ids) {
+        //         $query->whereIn('id', $ids);
+        //     }]);
+        // } else {
+        //     $product = $product->with(['product', 'product.productImages']);
+        // }
+        // $product = $product->get();
+        // $return_data['product'] = $product;
+
+        // return Helper::success($return_data, 'Catalogue Loaded Successfully');
     }
 
     public function GetVendors()
@@ -411,7 +453,7 @@ class ApiController extends Controller
 
     public function GetProducts()
     {
-        $stock = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation'])->get();
+        $stock = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation', 'categories.GetCategoriesName'])->get();
         return Helper::success($stock);
     }
     public function StoreProduct(Request $request)
@@ -522,7 +564,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
         }
-        $product = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation','categories'])->find($request->id);
+        $product = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation', 'categories.GetCategoriesName'])->find($request->id);
         if (!$product) {
             return Helper::fail(null, 'Product not found');
         }
@@ -720,7 +762,7 @@ class ApiController extends Controller
 
     public function GetCategoryProduct($category_id)
     {
-        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation'])
+        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation', 'categories.GetCategoriesName'])
             ->join('product_categories', 'product_categories.product_id', 'stock_management.id')
             ->where('product_categories.categories_id', $category_id)->get('stock_management.*');
         return Helper::success($data, 'Products load successfully');

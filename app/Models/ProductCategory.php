@@ -21,4 +21,8 @@ class ProductCategory extends Model
     {
         return $this->hasOne(StockManagement::class, 'id', 'product_id');
     }
+    public function GetCategoriesName()
+    {
+        return $this->hasOne(MerchantCategory::class, 'id', 'categories_id');
+    }
 }

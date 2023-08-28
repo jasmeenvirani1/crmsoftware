@@ -5059,7 +5059,7 @@
                                                 Test ,
                                                 Rajkot ,
                                                 <br>
-                                               Rajkot
+                                                Rajkot
                                                 <strong>360001</strong>,
                                                 Gujrat
                                             </p>
@@ -5079,9 +5079,9 @@
                                         </div>
                                         <div class="order">
 
-                                                <p>Date of Payment:
-                                                    <b>31-06-2023</b>
-                                                </p>
+                                            <p>Date of Payment:
+                                                <b>31-06-2023</b>
+                                            </p>
 
                                         </div>
                                     </div>
@@ -5106,99 +5106,99 @@
                                                     $i = 1;
                                                 @endphp
 
-                                                    <tr>
-                                                        <td>{{ $i }}</td>
-                                                        <td>
-                                                            <span>Product Name:
-                                                                <b>Testing</span></b> <br>
-                                                            <span>SKU:
-                                                                <b>RED</b></span><br>
-                                                            <span>Size: <b>ML</b></span>
-                                                            <br>
-                                                            <span>Color: <b>RED</b></span>
-                                                            <br>
-                                                        </td>
+                                                <tr>
+                                                    <td>{{ $i }}</td>
+                                                    <td>
+                                                        <span>Product Name:
+                                                            <b>Testing</span></b> <br>
+                                                        <span>SKU:
+                                                            <b>RED</b></span><br>
+                                                        <span>Size: <b>ML</b></span>
+                                                        <br>
+                                                        <span>Color: <b>RED</b></span>
+                                                        <br>
+                                                    </td>
 
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹ 500</span>
-                                                        </td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                          50 </td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span>
-                                                        </td>
-                                                        <td>CGST: 6% <br> SGST: 6%</td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span> <br>
-                                                            <span>₹500</span>
-                                                        </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹ 500</span>
+                                                    </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        50 </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span>
+                                                    </td>
+                                                    <td>CGST: 6% <br> SGST: 6%</td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span> <br>
+                                                        <span>₹500</span>
+                                                    </td>
 
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>{{ $i }}</td>
-                                                        <td>
-                                                            <span>Product Name:
-                                                                <b>Testing</span></b> <br>
-                                                            <span>SKU:
-                                                                <b>RED</b></span><br>
-                                                            <span>Size: <b>ML</b></span>
-                                                            <br>
-                                                            <span>Color: <b>RED</b></span>
-                                                            <br>
-                                                        </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span>
+                                                    </td>
+                                                </tr>
+                                                <tr class="mt-4">
+                                                    <td>{{ $i }}</td>
+                                                    <td>
+                                                        <span>Product Name:
+                                                            <b>Testing</span></b> <br>
+                                                        <span>SKU:
+                                                            <b>RED</b></span><br>
+                                                        <span>Size: <b>ML</b></span>
+                                                        <br>
+                                                        <span>Color: <b>RED</b></span>
+                                                        <br>
+                                                    </td>
 
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹ 500</span>
-                                                        </td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            20 </td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span>
-                                                        </td>
-                                                        <td>CGST: 6% <br> SGST: 6%</td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span> <br>
-                                                            <span>₹500</span>
-                                                        </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹ 500</span>
+                                                    </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        20 </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span>
+                                                    </td>
+                                                    <td>CGST: 6% <br> SGST: 6%</td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span> <br>
+                                                        <span>₹500</span>
+                                                    </td>
 
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>{{ $i }}</td>
-                                                        <td>
-                                                            <span>Product Name:
-                                                                <b>Testing</span></b> <br>
-                                                            <span>SKU:
-                                                                <b>RED</b></span><br>
-                                                            <span>Size: <b>ML</b></span>
-                                                            <br>
-                                                            <span>Color: <b>RED</b></span>
-                                                            <br>
-                                                        </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span>
+                                                    </td>
+                                                </tr>
+                                                <tr class="mt-4">
+                                                    <td>{{ $i }}</td>
+                                                    <td>
+                                                        <span>Product Name:
+                                                            <b>Testing</span></b> <br>
+                                                        <span>SKU:
+                                                            <b>RED</b></span><br>
+                                                        <span>Size: <b>ML</b></span>
+                                                        <br>
+                                                        <span>Color: <b>RED</b></span>
+                                                        <br>
+                                                    </td>
 
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹ 500</span>
-                                                        </td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            50 </td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span>
-                                                        </td>
-                                                        <td>CGST: 6% <br> SGST: 6%</td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span> <br>
-                                                            <span>₹500</span>
-                                                        </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹ 500</span>
+                                                    </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        50 </td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span>
+                                                    </td>
+                                                    <td>CGST: 6% <br> SGST: 6%</td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span> <br>
+                                                        <span>₹500</span>
+                                                    </td>
 
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>₹500</span>
-                                                        </td>
-                                                    </tr>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>₹500</span>
+                                                    </td>
+                                                </tr>
 
                                             </tbody>
                                             <tfoot>
@@ -5210,24 +5210,24 @@
                                                     </td>
                                                 </tr>
 
-                                                    <tr>
-                                                        <td colspan="5"></td>
-                                                        <td colspan="2">Coupon Discount</td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">-
-                                                            <span>
-                                                                ₹500
-                                                            </span>
-                                                        </td>
-                                                    </tr>
+                                                <tr>
+                                                    <td colspan="5"></td>
+                                                    <td colspan="2">Coupon Discount</td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">-
+                                                        <span>
+                                                            ₹500
+                                                        </span>
+                                                    </td>
+                                                </tr>
 
 
-                                                    <tr>
-                                                        <td colspan="5"></td>
-                                                        <td colspan="2">Wallet Used</td>
-                                                        <td style="font-family: DejaVu Sans, sans-serif;">
-                                                            <span>- ₹500</span>
-                                                        </td>
-                                                    </tr>
+                                                <tr>
+                                                    <td colspan="5"></td>
+                                                    <td colspan="2">Wallet Used</td>
+                                                    <td style="font-family: DejaVu Sans, sans-serif;">
+                                                        <span>- ₹500</span>
+                                                    </td>
+                                                </tr>
 
                                                 <tr>
                                                     <td colspan="5"></td>

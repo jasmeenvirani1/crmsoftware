@@ -45,9 +45,21 @@ jQuery(document).ready(function () {
             { data: 'product_name' },
             {
                 render: function (data, type, full, meta) {
-                    if(full.category != null){
-                         return full.category.name
-                        }else{
+                    var categories_str = "";
+                    if (full.categories != null) {
+
+                        if (full.categories.length != 0) {
+                            full.categories.forEach(function (data, element) {
+                                if (data.get_categories_name != null) {
+                                    categories_str += data.get_categories_name.name + ' ,';
+                                }
+                            });
+                            return categories_str.slice(0, -1);
+                        }
+                        else {
+                            return null;
+                        }
+                    } else {
                         return null;
                     }
 

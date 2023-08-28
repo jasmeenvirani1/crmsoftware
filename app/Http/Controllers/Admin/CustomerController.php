@@ -74,7 +74,6 @@ class CustomerController extends Controller
                         return $query->where('group_id', $group_id);
                     })->ignore($request->input('id'))
                 ],
-
                 'email' => 'required',
                 'phonenumber' => 'required|numeric|digits:10',
                 'address' => 'required',

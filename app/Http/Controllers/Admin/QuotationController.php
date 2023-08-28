@@ -151,28 +151,27 @@ class QuotationController extends Controller
                 for ($i = 0; $i < count($request->personmame); $i++) {
                     $arr = [];
                     $date_time = GetDateTime();
-                    if ($request->personmame[$i] != null && $request->phonenumber[$i] != null && $request->email[$i] != null) {
+                    // if ($request->personmame[$i] != null && $request->phonenumber[$i] != null && $request->email[$i] != null) {
 
-                        $arr = [
-                            'quotation_id' => $recordId,
-                            'name' => $request->personmame[$i],
-                            'phone' => $request->phonenumber[$i],
-                            'email' => $request->email[$i],
-                            'designation' => $request->designation[$i],
-                            'created_at' => $date_time,
-                            'updated_at' => $date_time
-                        ];
+                    $arr = [
+                        'quotation_id' => $recordId,
+                        'name' => $request->personmame[$i],
+                        'phone' => $request->phonenumber[$i],
+                        'email' => $request->email[$i],
+                        'designation' => $request->designation[$i],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
 
-                        $count = QuotationDetails::where(function ($query) use ($arr) {
-                            $query->where('name', $arr['name'])
-                                ->orWhere('phone', $arr['phone'])
-                                ->orWhere('email', $arr['email']);
-                        })->count();
-
-                        if ($count <= 0) {
-                            QuotationDetails::create($arr);
-                        }
+                    $count = QuotationDetails::where(function ($query) use ($arr) {
+                        $query->where('name', $arr['name'])
+                            ->orWhere('phone', $arr['phone'])
+                            ->orWhere('email', $arr['email']);
+                    })->count();
+                    if ($count <= 0) {
+                        QuotationDetails::create($arr);
                     }
+                    // }
                 }
             }
 
