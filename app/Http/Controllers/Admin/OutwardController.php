@@ -41,6 +41,7 @@ class OutwardController extends Controller
             $recordId = new Inward;
             $recordId->stock_id = $request->stock_id;
             $recordId->outward_qty = $request->outward_qty;
+            $recordId->outward_qty = 15;
             $recordId->balanced_qty = $balanced_qty;
             $recordId->save();
 
@@ -57,10 +58,11 @@ class OutwardController extends Controller
             } else {
                 session()->flash('error', "There is some thing went, Please try after some time.");
             }
-            return redirect()->route('stock.index');
+            return redirect()->back();
         } catch (\Exception $e) {
+
             session()->flash('error', $e->getMessage());
-            return redirect()->route('stock.outward');
+            return redirect()->route('stock.index');
         }
     }
 
