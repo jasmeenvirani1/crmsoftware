@@ -7,51 +7,35 @@
             width: 100%;
         }
 
-        .img-wrap {
-            position: relative;
-            ...
+        .invalid-feedback {
+            color: #dc3545;
+            /* Red color for error messages */
+            display: block;
+            /* Display each error message on a new line */
+            font-size: 14px;
+            /* Adjust the font size as needed */
+            margin-top: 5px;
+            /* Add a little spacing above the error message */
         }
 
-        .image-delete-button {
-            display: inline-block;
-            height: 20px;
-            background-color: red;
-            color: white;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
+        .text-left {
+            text-align: left;
+            /* Align the error message text to the left */
         }
 
-        .remove-image {
-            cursor: pointer;
-            display: none;
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            border-radius: 10em;
-            padding: 3px 6px 3px;
-            text-decoration: none;
-            font: 700 21px/20px sans-serif;
-            background: #555;
-            border: 3px solid #fff;
-            color: #FFF;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-            -webkit-transition: background 0.5s;
-            transition: background 0.5s;
-        }
-
-        .remove-image:hover {
-            background: #E54E4E;
-            padding: 4px 7px 5px;
-            top: -11px;
-            right: -11px;
-        }
-
-        .remove-image:active {
-            background: #E54E4E;
-            top: -10px;
-            right: -11px;
+        .alert {
+            background-color: #f8d7da;
+            /* Light red background for alert */
+            border: 1px solid #f5c6cb;
+            /* Border color for alert */
+            color: #721c24;
+            /* Text color for alert */
+            padding: 8px;
+            /* Padding for alert */
+            border-radius: 4px;
+            /* Rounded corners for alert */
+            margin-top: 5px;
+            /* Add spacing above the alert */
         }
     </style>
     <?php
@@ -281,12 +265,21 @@
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
                                                     Category</b><span class="text-danger">*</span></label></label>
                                             <div class="col-lg-9 col-xl-4">
-
-                                                <select class="form-control selectpicker" data-live-search="true"
+                                                <input type="hidden" id="old_selected_values"
+                                                    value="{{ json_encode(old('category', $selected_category)) }}">
+                                                {{-- <select class="form-control selectpicker" data-live-search="true"
                                                     id="category" name="category[]" multiple>
                                                     @foreach ($category as $cat)
                                                         <option value="{{ $cat->id }}"
                                                             @if (in_array($cat->id, $selected_category)) selected @endif>
+                                                            {{ $cat->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select> --}}
+                                                <select class="form-control selectpicker" data-live-search="true" id="category" name="category[]" multiple>
+                                                    @foreach ($category as $cat)
+                                                        <option value="{{ $cat->id }}"
+                                                            @if (in_array($cat->id, old('category', $selected_category))) selected @endif>
                                                             {{ $cat->name }}
                                                         </option>
                                                     @endforeach
@@ -298,6 +291,7 @@
                                                 @enderror
                                             </div>
                                         </div>
+
 
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity

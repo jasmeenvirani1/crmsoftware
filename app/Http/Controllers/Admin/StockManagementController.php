@@ -38,6 +38,7 @@ class StockManagementController extends Controller
     public function index()
     {
         $category = MerchantCategory::all();
+
         return view('admin.stock.index', ['title' => "Product", 'categories' => $category]);
     }
 
@@ -235,6 +236,23 @@ class StockManagementController extends Controller
      */
     public function update($id, Request $request)
     {
+        $group_id = Auth::user()->group_id;
+        $validator = Validator::make($request->all(), [
+            'product_name' =>  [
+                'required',
+                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })->ignore($request->input('id'))
+            ],
+            'partno' => 'required',
+            'category' => 'required',
+            'minimum_order_quantity' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withInput()->withErrors($validator->errors());
+        }
+        
         StockManagement::updateOrCreate(
             ['id' => $request->id],
             [
