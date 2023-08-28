@@ -51,6 +51,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:
         Route::post('update', [ApiController::class, 'UpdateProduct']);
         Route::post('delete', [ApiController::class, 'DeleteProduct']);
         Route::post('image-delete', [ApiController::class, 'DeleteProductImage']);
+        Route::get('get-category-product/{category_id}', [ApiController::class, 'GetCategoryProduct']);
     });
     Route::group(['prefix' => 'profile',], function () {
         Route::get('/', [ApiController::class, 'GetProfile']);

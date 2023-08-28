@@ -39,10 +39,16 @@ class CatalogController extends Controller
             $product_ids_arr = StockManagement::pluck('id')->toArray();
         }
 
-        $un_cat_data = StockManagement::join('product_categories', 'product_categories.product_id', '!=', 'stock_management.id')->whereIn('product_categories.product_id', $product_ids_arr)->get()->toArray();
+        $un_cat_data = StockManagement::join('product_categories', 'product_categories.product_id', '!=', 'stock_management.id')
+            ->whereIn('product_categories.product_id', $product_ids_arr)
+            ->get()
+            ->toArray();
 
-
-        $cat_ids = $cat_sql->whereIn('product_id', $product_ids_arr)->get('categories_id')->pluck('categories_id')->toArray();
+        $cat_ids = $cat_sql
+            ->whereIn('product_id', $product_ids_arr)
+            ->get('categories_id')
+            ->pluck('categories_id')
+            ->toArray();
 
         $product = MerchantCategory::whereIn('id', $cat_ids);
 
@@ -51,7 +57,7 @@ class CatalogController extends Controller
                 'productIds.product.productImages' => function ($query) use ($request) {
                     $query->whereIn('product_id', $request->product_ids);
                 },
-                'productIds.product'
+                'productIds.product',
             ]);
         } else {
             $product = $product->with(['productIds.product.productImages']);
@@ -60,12 +66,10 @@ class CatalogController extends Controller
         view()->share('product_data', $product);
         view()->share('catalog_data', $catalog_data);
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-            ->loadView('admin.catalog.pdf_template', ['product_data' => $product, 'catalog_data' => $catalog_data]);
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.invoice', ['product_data' => $product, 'catalog_data' => $catalog_data]);
         $download = $pdf->download('sadsa.pdf');
-        return view('admin.catalog.pdf_template');
+        // return view('admin.catalog.pdf_template');
         return $download;
-
 
         // return response()->json(['message' => 'PDF generated and saved successfully']);
         // prx($product);

@@ -97,9 +97,9 @@ class StockManagement extends Model
     {
         return $this->hasMany(ProductDimension::class, 'product_id', 'id');
     }
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(MerchantCategory::class, 'category', 'id');
+        return $this->hasMany(ProductCategory::class, 'product_id', 'id');
     }
     public function vendor()
     {

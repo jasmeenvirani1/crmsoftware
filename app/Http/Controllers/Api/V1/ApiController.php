@@ -9,6 +9,7 @@ use App\Models\ClientAndSalesImage;
 use App\Models\Customer;
 use App\Models\Group;
 use App\Models\MerchantCategory;
+use App\Models\ProductCategory;
 use App\Models\ProductDimension;
 use App\Models\ProductImage;
 use App\Models\Quotation;
@@ -442,26 +443,23 @@ class ApiController extends Controller
             $date_time = GetDateTime();
 
             $stock_data =  $request;
-
-            $product_id = StockManagement::insertGetId(
-                [
-                    'product_name' => $stock_data->product_name,
-                    'partno' => $stock_data->partno,
-                    'product_company' => $stock_data->product_company,
-                    'product_price' => $stock_data->product_price,
-                    'usd_price' => Helper::ConvertInrToUsd($stock_data->product_price),
-                    'category' => $stock_data->category,
-                    'notes' => $stock_data->notes,
-                    'specification' => $stock_data->specification,
-                    'group_id' => $group_id,
-                    'minimum_order_quantity' => $stock_data->minimum_order_quantity,
-                    'corporate_price' => $stock_data->corporate_price,
-                    'retail_price' => $stock_data->retail_price,
-                    'dealer_price' => $stock_data->dealer_price,
-                    'created_at' => $date_time,
-                    'updated_at' => $date_time,
-                ]
-            );
+            $arr =    [
+                'product_name' => $stock_data->product_name,
+                'partno' => $stock_data->partno,
+                'product_company' => $stock_data->product_company,
+                'product_price' => $stock_data->product_price,
+                'usd_price' => Helper::ConvertInrToUsd($stock_data->product_price),
+                'notes' => $stock_data->notes,
+                'specification' => $stock_data->specification,
+                'group_id' => $group_id,
+                'minimum_order_quantity' => $stock_data->minimum_order_quantity,
+                'corporate_price' => $stock_data->corporate_price,
+                'retail_price' => $stock_data->retail_price,
+                'dealer_price' => $stock_data->dealer_price,
+                'created_at' => $date_time,
+                'updated_at' => $date_time,
+            ];
+            $product_id = StockManagement::insertGetId($arr);
 
             if (($request->product_images) != null) {
                 $files = $this->addImages('product_images', $product_id, $request->product_images);
@@ -502,6 +500,14 @@ class ApiController extends Controller
                 StockVendor::insert($vendor_data);
             }
 
+            if (request()->has('category') && count($request->category) > 0) {
+                $category_data = [];
+                foreach ($request->category as $category) {
+                    $category_data[] = ['product_id' => $product_id, 'categories_id' => $category];
+                }
+                ProductCategory::insert($category_data);
+            }
+
             return Helper::success([], 'Product store successfully');
         } catch (Exception $e) {
             return Helper::fail([], $e->getMessage());
@@ -516,7 +522,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return Helper::fail($validator->errors(), Helper::error_parse($validator->errors()));
         }
-        $product = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation'])->find($request->id);
+        $product = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation','categories'])->find($request->id);
         if (!$product) {
             return Helper::fail(null, 'Product not found');
         }
@@ -619,7 +625,15 @@ class ApiController extends Controller
                 }
                 StockVendor::insert($vendor_data);
             }
+            if (request()->has('category') && count($request->category) > 0) {
+                ProductCategory::where('product_id', $product_id)->delete();
 
+                $category_data = [];
+                foreach ($request->category as $category) {
+                    $category_data[] = ['product_id' => $product_id, 'categories_id' => $category];
+                }
+                ProductCategory::insert($category_data);
+            }
             return Helper::success([], 'Product updated successfully');
         } catch (Exception $e) {
             return Helper::fail([], $e->getMessage());
@@ -702,5 +716,13 @@ class ApiController extends Controller
         }
         $model = User::find(Auth::user()->id)->update($input);
         return Helper::success([], 'Profile updated successfully');
+    }
+
+    public function GetCategoryProduct($category_id)
+    {
+        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor.quotation'])
+            ->join('product_categories', 'product_categories.product_id', 'stock_management.id')
+            ->where('product_categories.categories_id', $category_id)->get('stock_management.*');
+        return Helper::success($data, 'Products load successfully');
     }
 }
