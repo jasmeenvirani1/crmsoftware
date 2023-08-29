@@ -192,20 +192,21 @@ class ApiController extends Controller
             ->pluck('categories_id')
             ->toArray();
 
-
         $product = MerchantCategory::whereIn('id', $cat_ids);
 
         if (isset($data['ids'])) {
             $product = $product->with([
-                'productIds.product.productImages' => function ($query) use ($request) {
-                    $query->whereIn('product_id', $request->product_ids);
+                'productIds.product.productImages' => function ($query) use ($data) {
+                    $query->whereIn('product_id', $data['ids']);
                 },
                 'productIds.product',
             ]);
         } else {
             $product = $product->with(['productIds.product.productImages']);
         }
+
         $product = $product->get();
+
         view()->share('product_data', $product);
         view()->share('catalog_data', $catalog_data);
 
