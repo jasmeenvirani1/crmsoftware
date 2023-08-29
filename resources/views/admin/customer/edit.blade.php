@@ -281,7 +281,8 @@
                                                     </div>
                                                     @if ($data->msme_certificate != '')
                                                     <img src="{{ asset($data->msme_certificate) }}"
-                                                        style="height: 77px;width: 110px;">@endif
+                                                        style="height: 77px;width: 110px;">
+                                                    @endif
                                                 </div>
     
                                             <div class="form-group row">
@@ -305,7 +306,7 @@
                                                                     data-id="{{ $extra_image->id }}" title="Delete"
                                                                     data-type="customer_extra_images"
                                                                     style="display: inline;">×</span>
-                                                                <img style="height: 100px; width:100px;"
+                                                                <img style="height: 100px; width:100px; margin-right: 11px;"
                                                                     src="{{ asset($extra_image->image) }}">
                                                             </div>
                                                         </div>

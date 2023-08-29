@@ -120,11 +120,19 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                    {{-- <select class="form-control selectpicker" data-live-search="true"
                                                         id="vendor_name" name="vendor_name">
                                                         <option value="">---SELECT---</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->id }}">{{ $vendor->companyname }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select> --}}
+                                                    <select class="form-control selectpicker" data-live-search="true" id="vendor_name" name="vendor_name">
+                                                        <option value="">---SELECT---</option>
+                                                        @foreach ($vendors as $vendor)
+                                                            <option value="{{ $vendor->id }}" {{ old('vendor_name') == $vendor->id ? 'selected' : '' }}>
+                                                                {{ $vendor->companyname }}
                                                             </option>
                                                         @endforeach
                                                     </select>

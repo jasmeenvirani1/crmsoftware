@@ -36,7 +36,7 @@ class InwardController extends Controller
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
-
+         
             $balance = Balanced::where('stock_id', '=', $request->stock_id)->first();
             if ($balance) {
                 $balanced_qty = ($balance->balanced_qty) + ($request->inward_qty);

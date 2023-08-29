@@ -275,7 +275,7 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity
                                                     </b><span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
-                                                    <input type="text" name="minimum_order_quantity" value=""
+                                                    <input type="text" name="minimum_order_quantity" value="{{ old('minimum_order_quantity', isset($data->minimum_order_quantity) ? $data->minimum_order_quantity : '') }}"
                                                         id="minqty" class="form-control"
                                                         placeholder="Minimum Order Quantity">
                                                     @error('minimum_order_quantity')
@@ -393,7 +393,7 @@
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="total_amount" id="total_amount"
-                                                        class="form-control " readonly />
+                                                        class="form-control " value="{{ old('total_amount', isset($data->total_amount) ? $data->total_amount : '') }}"     readonly />
                                                 </div>
                                             </div>
 
@@ -476,7 +476,7 @@
 
                                                 <label class="col-xl-0 col-lg-0 col-form-label"><b>Price</b></label>
                                                 <div class="col-lg-4 col-xl-4">
-                                                    <input type="number" name="price[]" class="form-control">
+                                                    <input type="number" name="price[]" class="form-control" required>
                                                 </div>
                                                 <button class="btn btn-success col-lg-0 add-vendor-btn" id="addVendorBtn"
                                                     type="button">Add</button>
