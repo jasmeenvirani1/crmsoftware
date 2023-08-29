@@ -131,32 +131,15 @@ class StockManagementController extends Controller
             }
         }
 
-        $recordId1 = Inward::updateOrCreate(
+        Balanced::updateOrCreate(
             ['id' => $request->id],
             [
                 'stock_id' => $product_id,
-                'inward_qty' => $request->inward_qty,
-                'outward_qty' => $request->outward_qty,
-                'balanced_qty' => $request->inward_qty,
+                'balanced_qty' => 0,
                 'status' => $request->status
             ]
         );
-        $recordId2 = OutWard::updateOrCreate(
-            ['id' => $request->id],
-            [
-                'stock_id' => $product_id,
-                'outward_qty' => $request->outward_qty,
-                'status' => $request->status
-            ]
-        );
-        $recordId3 = Balanced::updateOrCreate(
-            ['id' => $request->id],
-            [
-                'stock_id' => $product_id,
-                'balanced_qty' => $request->inward_qty,
-                'status' => $request->status
-            ]
-        );
+
         if (request()->has('category') && count($request->category) > 0) {
             $category_data = [];
             foreach ($request->category as $category) {
@@ -254,7 +237,7 @@ class StockManagementController extends Controller
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
         }
-        
+
         StockManagement::updateOrCreate(
             ['id' => $request->id],
             [

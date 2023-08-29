@@ -41,7 +41,6 @@ class OutwardController extends Controller
             $recordId = new Inward;
             $recordId->stock_id = $request->stock_id;
             $recordId->outward_qty = $request->outward_qty;
-            $recordId->outward_qty = 15;
             $recordId->balanced_qty = $balanced_qty;
             $recordId->save();
 

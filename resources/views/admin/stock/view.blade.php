@@ -71,6 +71,7 @@
                                         $i = 1;
                                         $total_outward_qty = $total_inward_qty = 0;
                                         $total_outward_balance = $total_inward_balance = 0;
+                                        $last_amount = 0;
                                     @endphp
                                     @foreach ($data as $demo)
                                         <tr>
@@ -85,24 +86,23 @@
                                             <td>{{ $demo->outward_qty }}</td>
                                             <td>{{ $demo->product_price }}</td>
                                             <td>{{ $demo->po_no }}</td>
-                                            <td>{{ $demo->balanced_qty }}</td>
+                                            @if ($demo->inward_qty == null)
+                                                @php
+                                                    $last_amount = $last_amount - $demo->outward_qty;
+                                                @endphp
+                                                <td>{{ $last_amount }}</td>
+                                            @else
+                                                @php
+                                                    $last_amount = $last_amount + $demo->inward_qty;
+                                                @endphp
+                                                <td>{{ $last_amount }}</td>
+                                            @endif
                                         </tr>
-                                        @php
-                                            $i++;
-                                            $total_inward_qty = $total_inward_qty + $demo->inward_qty;
-                                            $total_outward_qty = $total_outward_qty + $demo->outward_qty;
-
-                                            if ($demo->inward_qty == null) {
-                                                $total_outward_balance = $total_outward_balance + $demo->balanced_qty;
-                                            } else {
-                                                $total_inward_balance = $total_inward_balance + $demo->balanced_qty;
-                                            }
-                                        @endphp
                                     @endforeach
 
                                     <tr>
                                         <td colspan="7"><b>Total Current Balance</b></td>
-                                        <td><b>{{ $total_inward_balance - $total_outward_balance }}</b></td>
+                                        <td><b>{{ $last_amount }}</b></td>
                                     </tr>
                                 </table>
                             </div>
