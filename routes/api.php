@@ -30,7 +30,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API\V1', 'middleware' => ['auth:
     Route::post('change-group', [ApiController::class, 'ChangeGroup']);
 
     Route::group(['prefix' => 'catalogue',], function () {
-        Route::get('get-catalogue', [ApiController::class, 'GetCatalogue']);
+        Route::post('get-catalogue', [ApiController::class, 'GetCatalogue']);
         Route::get('get-catalogue-download-url', [ApiController::class, 'GetCatalogueDownloadUrl']);
     });
     Route::group(['prefix' => 'company',], function () {

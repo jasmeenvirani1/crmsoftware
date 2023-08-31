@@ -196,21 +196,25 @@ class ApiController extends Controller
 
         if (isset($data['ids'])) {
             $product = $product->with([
-                'productIds.product.productImages' => function ($query) use ($data) {
-                    $query->whereIn('product_id', $data['ids']);
+                'productIds' => function ($query) use ($product_ids_arr) {
+                    $query->whereIn('product_id', $product_ids_arr)->with('product.productImages');
                 },
-                'productIds.product',
             ]);
+            // $product = $product->with([
+            //     'productIds.product.productImages' => function ($query) use ($data) {
+            //         $query->whereIn('product_id', $data['ids']);
+            //     },
+            //     'productIds.product',
+            // ]);
         } else {
             $product = $product->with(['productIds.product.productImages']);
         }
 
         $product = $product->get();
-
         view()->share('product_data', $product);
         view()->share('catalog_data', $catalog_data);
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.pdf_template', ['product_data' => $product, 'catalog_data' => $catalog_data]);
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.pdf_template_api', ['product_data' => $product, 'catalog_data' => $catalog_data]);
 
         $temporaryPath = public_path('catalog/');
         $filename = rand(0, 999999) . time() . '.pdf';

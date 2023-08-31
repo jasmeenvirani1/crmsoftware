@@ -51,7 +51,7 @@ class CatalogController extends Controller
         if ($type == 'selected') {
             $product = $product->with([
                 'productIds' => function ($query) use ($product_ids_arr) {
-                    $query->whereIn('product_id', $product_ids_arr)->with('product');
+                    $query->whereIn('product_id', $product_ids_arr)->with('product.productImages');
                 },
             ]);
         } else {
