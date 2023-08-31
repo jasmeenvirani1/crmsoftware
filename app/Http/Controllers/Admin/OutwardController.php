@@ -68,6 +68,6 @@ class OutwardController extends Controller
     public function edit($id)
     {
         $data = OutWard::where('stock_id', '=', $id)->get();
-        return view('admin.stock.outward', ['title' => "Outward", 'btn' => "Save", 'data' => OutWard::where('stock_id', '=', $id)->get()]);
+        return view('admin.stock.outward', ['title' => "Outward", 'btn' => "Save", 'data' => $data, 'stock_id' => $id]);
     }
 }
