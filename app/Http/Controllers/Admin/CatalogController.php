@@ -40,11 +40,6 @@ class CatalogController extends Controller
             $product_ids_arr = StockManagement::pluck('id')->toArray();
         }
 
-        $un_cat_data = StockManagement::join('product_categories', 'product_categories.product_id', '!=', 'stock_management.id')
-            ->whereIn('product_categories.product_id', $product_ids_arr)
-            ->get()
-            ->toArray();
-
         $cat_ids = $cat_sql
             ->whereIn('product_id', $product_ids_arr)
             ->get('categories_id')
@@ -55,10 +50,9 @@ class CatalogController extends Controller
 
         if ($type == 'selected') {
             $product = $product->with([
-                'productIds.product.productImages' => function ($query) use ($request) {
-                    $query->whereIn('product_id', $request->product_ids);
+                'productIds' => function ($query) use ($product_ids_arr) {
+                    $query->whereIn('product_id', $product_ids_arr)->with('product');
                 },
-                'productIds.product',
             ]);
         } else {
             $product = $product->with(['productIds.product.productImages']);
@@ -67,19 +61,20 @@ class CatalogController extends Controller
         view()->share('product_data', $product);
         view()->share('catalog_data', $catalog_data);
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.pdf_template', ['product_data' => $product, 'catalog_data' => $catalog_data]);
+        return view('admin.catalog.pdf_template')
+        ;
+        // $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.pdf_template', ['product_data' => $product, 'catalog_data' => $catalog_data]);
 
-        $temporaryPath = public_path('catalog/');
-        $filename = rand(0, 999999) . time() . '.pdf';
-        if (!is_dir($temporaryPath)) {
-            File::makeDirectory($temporaryPath, 0777, true, true);
-        }
-        $pdf->save($temporaryPath . '/' . $filename);
-        $final_path = url('/') . '/catalog/' . $filename;
-        return $final_path;
+        // $temporaryPath = public_path('catalog/');
+        // $filename = rand(0, 999999) . time() . '.pdf';
+        // if (!is_dir($temporaryPath)) {
+        //     File::makeDirectory($temporaryPath, 0777, true, true);
+        // }
+        // $pdf->save($temporaryPath . '/' . $filename);
+        // $final_path = url('/') . '/catalog/' . $filename;
+        // return $final_path;
 
         // return $download;
-        // return view('admin.catalog.pdf_template');
 
         // return response()->json(['message' => 'PDF generated and saved successfully']);
         // prx($product);
