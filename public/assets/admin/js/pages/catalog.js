@@ -3,6 +3,7 @@
 jQuery(document).ready(function () {
     // begin first table
     StockDatatable = $('#stock_datatable').DataTable({
+        stateSave: true,
         responsive: true,
         searchDelay: 500,
         processing: true,
@@ -95,4 +96,14 @@ jQuery(document).on("click", "#GetCatalogBtn", function () {
 
 
 });
-
+$('#stock_datatable').on('change', 'input[type="checkbox"]', function() {
+    const rowData = []// extract the row data associated with the checkbox
+    if ($(this).prop('checked')) {
+        selectedRows.push(rowData);
+    } else {
+        const index = selectedRows.findIndex(item => item === rowData);
+        if (index !== -1) {
+            selectedRows.splice(index, 1);
+        }
+    }
+});

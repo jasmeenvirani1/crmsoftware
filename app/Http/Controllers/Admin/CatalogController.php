@@ -61,23 +61,7 @@ class CatalogController extends Controller
         view()->share('product_data', $product);
         view()->share('catalog_data', $catalog_data);
 
-        return view('admin.catalog.pdf_template')
-        ;
-        // $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('admin.catalog.pdf_template', ['product_data' => $product, 'catalog_data' => $catalog_data]);
-
-        // $temporaryPath = public_path('catalog/');
-        // $filename = rand(0, 999999) . time() . '.pdf';
-        // if (!is_dir($temporaryPath)) {
-        //     File::makeDirectory($temporaryPath, 0777, true, true);
-        // }
-        // $pdf->save($temporaryPath . '/' . $filename);
-        // $final_path = url('/') . '/catalog/' . $filename;
-        // return $final_path;
-
-        // return $download;
-
-        // return response()->json(['message' => 'PDF generated and saved successfully']);
-        // prx($product);
+        return view('admin.catalog.pdf_template');
     }
 
     /**

@@ -101,7 +101,7 @@
                     <a href="{{ route('dashboard') }}" class="kt-subheader__breadcrumbs-link">
                         Dashboard </a>
                     <span class="kt-subheader__breadcrumbs-separator"></span>
-                    <a href="{{ url('admin/customer') }}" class="kt-subheader__breadcrumbs-link">
+                    <a href="{{ route('company.index') }}" class="kt-subheader__breadcrumbs-link">
                         Company </a>
                     <span class="kt-subheader__breadcrumbs-separator"></span>
                     <a href="javascript:void(0);" class="kt-subheader__breadcrumbs-link">
@@ -236,7 +236,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                           
+
                                                 <div class="form-group row">
                                                     <label class="col-xl-3 col-lg-3 col-form-label required">
                                                         <b>Logo</b>
@@ -271,7 +271,7 @@
                                                 <img src="{{ asset($data->cheque) }}" style="height: 77px;width: 110px;">
                                                 @endif
                                             </div>
-                                           
+
                                                 <div class="form-group row">
                                                     <label class="col-xl-3 col-lg-3 col-form-label"><b>MSME
                                                             Certificate</b></label>
@@ -284,7 +284,7 @@
                                                         style="height: 77px;width: 110px;">
                                                     @endif
                                                 </div>
-    
+
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Extra
                                                         Image(s)</b></label>
