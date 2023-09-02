@@ -77,12 +77,6 @@
         </div>
         <!-- end:: Content -->
     </div>
-    <form action="{{ route('catalog.get-catalog', ['type' => 'selected']) }}" method="get" id="ProductCatalogForm">
-        @csrf
-        <div id="productIdInputs">
-
-        </div>
-    </form>
 @endsection
 @section('script')
     <script src="{{ url('assets/admin/js/pages/catalog.js') }}" type="text/javascript"></script>
