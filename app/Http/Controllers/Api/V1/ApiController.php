@@ -200,12 +200,6 @@ class ApiController extends Controller
                     $query->whereIn('product_id', $product_ids_arr)->with('product.productImages');
                 },
             ]);
-            // $product = $product->with([
-            //     'productIds.product.productImages' => function ($query) use ($data) {
-            //         $query->whereIn('product_id', $data['ids']);
-            //     },
-            //     'productIds.product',
-            // ]);
         } else {
             $product = $product->with(['productIds.product.productImages']);
         }
@@ -225,21 +219,6 @@ class ApiController extends Controller
         $final_path = url('/') . '/catalog/' . $filename;
         $final_return_data['url'] = $final_path;
         return Helper::success($final_return_data, 'Catalogue Loaded Successfully');
-
-        // $cat_ids = $cat_sql->get('category')->pluck('category')->toArray();
-        // $product = MerchantCategory::whereIn('id', $cat_ids);
-
-        // if (isset($data['ids'])) {
-        //     $product = $product->with(['product.productImages', 'product' =>  function ($query) use ($ids) {
-        //         $query->whereIn('id', $ids);
-        //     }]);
-        // } else {
-        //     $product = $product->with(['product', 'product.productImages']);
-        // }
-        // $product = $product->get();
-        // $return_data['product'] = $product;
-
-        // return Helper::success($return_data, 'Catalogue Loaded Successfully');
     }
 
     public function GetVendors()
