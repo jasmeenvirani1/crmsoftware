@@ -169,13 +169,11 @@
 
         .header {
             width: 100%;
-            /* display: flex; */
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #e7e7e7;
             margin-bottom: 30px;
             padding-bottom: 99px;
-            /* position: absolute; */
         }
 
         .header .logo {
@@ -207,78 +205,62 @@
 </head>
 
 <body>
-    <!-- You can print if you see this pen in debug mode -->
-
-    <!-- Page1 Start -->
-    <div
-        class="" style="page-break-after: always;margin: auto;width: 195mm;height: 280mm;overflow: hidden;/* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); */border: 1px solid #ebebeb;padding: 30px;position: relative;">
+    <div style="margin: auto;width: 195mm;height: 280mm;overflow: hidden;border: 1px solid #ebebeb;position: relative;">
         <div
-            class=""style="width: 100%;/* display: flex; */justify-content: center;align-items: center;position: relative;/* display: inline-block; */position: absolute;justify-content: center;align-items: center;position: relative;);position: absolute;top: 35%;left: 16%; ">
+            style="width: 100%;position: relative;position: absolute;justify-content: center;align-items: center;position: relative;position: absolute;top: 35%;left: 16%; ">
             <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($catalog_data->logo))) }}"
                 alt="Logo">
         </div>
-        <div class=""
-            style=" position: absolute; bottom: 66px;left: 30px;right: 30px; background-color: transparent;text-align: center;padding: 5px; margin-right: 18px;">
+        <div
+            style="position: absolute; bottom: 66px;left: 30px;right: 30px; background-color: transparent;text-align: center;padding: 5px; margin-right: 18px;">
             {{ $catalog_data->address }}&nbsp;&nbsp; <b>Mobile :</b>{{ $catalog_data->phonenumber }}
             &nbsp;&nbsp; <b>Email : </b>{{ $catalog_data->email }}
         </div>
     </div>
-    <!-- Page1 End -->
-    <!-- Page2 Start -->
-    <div
-        class="" style="margin: auto;width: 195mm;height: 280mm; border: 1px solid #ebebeb;padding: 30px;position: relative; page-break-after: always;">
-        <div
-            class=""style="width: 100%;/* display: flex; */justify-content: space-between;align-items: center;border-bottom: 1px solid #e7e7e7;margin-bottom: 30px;padding-bottom: 100px;/* position: absolute; */">
-            <div class=""style="width: 200px;">
-                <img style=" width: 208px;float: right;}"
-                    src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($catalog_data->logo))) }}"
-                    alt="Logo">
+    <div style="margin: auto;width: 195mm; border: 1px solid #ebebeb;position: relative;">
+        @php
+            $count = 0;
+            $total_product_data = count($product_data);
+        @endphp
+        @foreach ($product_data as $category)
+            @php
+                $count++;
+            @endphp
+            <div @if ($count < $total_product_data) style="page-break-after: always;" @endif>
+                @if (count($category->productIds) == 0)
+                    @continue
+                @endif
+                <div style="font-size: 20px; margin: 0 0 60px 0;">
+                    {{ $category->name }}
+                </div>
 
-                <div class=""style="width: 50%;position: absolute; margin-left: 375px; float: left;">
-                    <p style="margin-right: 33px;">{{ $catalog_data->address }}</p>
+                <div style="width: 100%;">
+                    @foreach ($category->productIds as $product)
+                        @if (!isset($product->product))
+                            @continue
+                        @endif
+                        <div
+                            style="width: 220px; display: inline-block; border-radius: 5px; overflow: hidden; background-color: #fbfbfb; border: 1px solid #e7e7e7;">
+                            <div class="pro_img">
+                                @if (isset($product->product->productImages[0]))
+                                    <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($product->product->productImages[0]->name))) }}"
+                                        alt="Logo">
+                                @else
+                                    <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('images/product1.jpg'))) }}"
+                                        alt="Logo">
+                                @endif
+                            </div>
+                            <div class="content">
+                                <div class="name">{{ $product->product->product_name }}</div>
+                                <div class="desc">{{ $product->product->specification }}</div>
+                                <div class="desc">{{ $product->product->notes }}</div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-        </div>
-
-        @forelse ($product_data as $category)
-            {{-- <div class="" @if ($loop->first) style="margin-bottom: 60px;" @endif> --}}
-            <div class="">
-                <h2 style="margin-bottom: 10px;" @if ($loop->first) style="margin-bottom: 60px;" @endif>{{ $category->name }}</h2>
-            </div>
-            <div style="width: 100%;">
-                @forelse ($category->productIds as $product)
-                    @if (!isset($product->product))
-                        @continue
-                    @endif
-                    <div
-                        style="width: 220px; margin: 5px;display: inline-block; border-radius: 5px; overflow: hidden; background-color: #fbfbfb; border: 1px solid #e7e7e7;">
-                        <div class="pro_img">
-                            {{-- @php
-                                prx($product->product->productImages[0]->name);
-                            @endphp --}}
-                            @if (isset($product->product->productImages[0]))
-                                <img  src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($product->product->productImages[0]->name))) }}"
-                                    alt="Logo">
-                            @else
-                                <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('images/product1.jpg'))) }}"
-                                    alt="Logo">
-                            @endif
-                        </div>
-                        <div class="content">
-                            <div class="name">{{ $product->product->product_name }}</div>
-                            <div class="desc">{{ $product->product->specification }}</div>
-                            <div class="desc">{{ $product->product->notes }}</div>
-                        </div>
-                    </div>
-                @empty
-                @endforelse
-            @empty
-        @endforelse
+        @endforeach
     </div>
-    
-
-    </div>
-    <!-- Page2 End -->
 </body>
 
 </html>
