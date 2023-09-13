@@ -219,11 +219,11 @@
     </div>
 
     <div class=""
-        style="margin: auto;width: 195mm;height: 280mm; border: 1px solid #ebebeb;padding: 30px;position: relative; page-break-after: always;">
+        style="margin: auto;width: 195mm; border: 1px solid #ebebeb;padding: 30px;position: relative; page-break-after: always;">
         <div
             class=""style="width: 100%;/* display: flex; */justify-content: space-between;align-items: center;border-bottom: 1px solid #e7e7e7;margin-bottom: 30px;padding-bottom: 100px;/* position: absolute; */">
             <div class=""style="width: 200px;height:80px">
-                <img style=" width: 208px;float: right;}"
+                <img style=" width: 175px;float: right;"
                     src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($catalog_data->logo))) }}"
                     alt="Logo">
 
@@ -233,7 +233,7 @@
             </div>
         </div>
 
-        <div style="margin: auto;width: 195mm; border: 1px solid #ebebeb;position: relative;">
+        <div style="width: 195mm;border: 1px solid #ebebeb;position: relative;padding: 10px 29px;margin-left: -31px;">
             @php
                 $count = 0;
                 $total_product_data = count($product_data);
