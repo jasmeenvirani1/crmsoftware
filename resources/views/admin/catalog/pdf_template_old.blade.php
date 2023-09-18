@@ -58,7 +58,9 @@
         .grid-container {
             margin: auto;
             width: 210mm;
+            /* height: 297mm; */
             overflow: hidden;
+            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); */
             border: 1px solid #ebebeb;
             padding: 30px;
             position: relative;
@@ -225,21 +227,11 @@
                 <h2>{{ $category->name }}</h2>
             </div>
             <div class="product_wrapper">
-                @php
-                    $count = 1;
-                @endphp
                 @foreach ($category->productIds as $product)
-                    @php
-                        $count++;
-                    @endphp
-                    @if ($count % 10 == 0)
-                        <div style="page-break-after: always;">
-                        </div>
-                    @endif
                     @if (!isset($product->product))
                         @continue
                     @endif
-                    <div class="product_box" @if ($count % 10 == 1) style="margin-top: 30px;" @endif>
+                    <div class="product_box">
                         <div class="pro_img">
                             @if (isset($product->product->productImages[0]))
                                 <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($product->product->productImages[0]->name))) }}"
@@ -256,8 +248,6 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
-            <div style="page-break-after: always;">
             </div>
         @endforeach
     </div>
