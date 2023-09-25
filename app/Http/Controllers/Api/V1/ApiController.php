@@ -444,7 +444,6 @@ class ApiController extends Controller
     {
         try {
             $group_id = Auth::user()->group_id;
-
             $validator = Validator::make($request->all(), [
                 'product_name' =>  [
                     'required',
@@ -453,12 +452,14 @@ class ApiController extends Controller
                     })->ignore($request->input('id'))
                 ],
                 'category' => 'required',
-                'product_price' => 'required'
+                'product_price' => 'required',
+                'product_images' => 'required|mimes:jpeg,png,jpg,gif'
             ]);
 
             if ($validator->fails()) {
                 return Helper::fail($validator->errors(), "Enter all require param.");
             }
+            prx($request->all());
             $date_time = GetDateTime();
 
             $stock_data =  $request;
@@ -560,7 +561,7 @@ class ApiController extends Controller
                     Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
                         return $query->where('group_id', $group_id);
                     })->ignore($request->input('id'))
-                ],     
+                ],
                 'category' => 'required',
                 'product_price' => 'required'
             ]);
