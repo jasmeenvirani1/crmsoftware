@@ -35,6 +35,9 @@ class CatalogController extends Controller
 
         $cat_sql = ProductCategory::groupBy('categories_id');
         if ($type == 'selected') {
+            if (!request()->has('product_ids')) {
+                abort(403, "Don't try to hit directly this url 😠");
+            }
             $product_ids_arr = $request->product_ids;
         } else {
             $product_ids_arr = StockManagement::pluck('id')->toArray();

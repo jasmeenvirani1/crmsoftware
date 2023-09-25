@@ -58,7 +58,7 @@
         .grid-container {
             margin: auto;
             width: 210mm;
-            height: 297mm;
+            /* height: 297mm; */
             overflow: hidden;
             /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); */
             border: 1px solid #ebebeb;
@@ -120,7 +120,7 @@
 
 
         .product_wrapper {
-            /* display: flex; */
+            display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
@@ -233,8 +233,8 @@
                     @endif
                     <div class="product_box">
                         <div class="pro_img">
-                            @if (isset($product->productImages[0]))
-                                <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($product->productImages[0]->name))) }}"
+                            @if (isset($product->product->productImages[0]))
+                                <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($product->product->productImages[0]->name))) }}"
                                     alt="Logo">
                             @else
                                 <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('images/product1.jpg'))) }}"
@@ -251,14 +251,14 @@
             </div>
         @endforeach
     </div>
-      <!-- Page2 End -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Page2 End -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-      <script>
-          $(document).ready(function() {
-              window.print();
-          });
-      </script>
+    <script>
+        $(document).ready(function() {
+            window.print();
+        });
+    </script>
 </body>
 
 </html>

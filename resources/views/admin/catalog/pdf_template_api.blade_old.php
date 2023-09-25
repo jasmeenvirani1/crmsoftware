@@ -5,23 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    {{-- <link rel="stylesheet" href="{{ asset('css/print-styles.css') }}" media="print"> --}}
 
     <title>Document</title>
     <style>
-        .logo_wrapper::after {
-            content: '';
-            height: 100%;
-            width: 100%;
-            background-image: url('{{ base64_encode(file_get_contents(public_path($catalog_data->logo))) }}');
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-size: 100%;
-            background-position: center;
-            z-index: 0;
-            opacity: 0.04;
-        }
-
         @media print {
             @page {
                 margin: 0;
@@ -58,7 +51,9 @@
         .grid-container {
             margin: auto;
             width: 210mm;
+            height: 297mm;
             overflow: hidden;
+            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); */
             border: 1px solid #ebebeb;
             padding: 30px;
             position: relative;
@@ -116,6 +111,19 @@
             z-index: 1;
         }
 
+        .logo_wrapper::after {
+            content: '';
+            height: 100%;
+            width: 100%;
+            background-image: url(./logo.jpg);
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-size: 100%;
+            background-position: center;
+            z-index: 0;
+            opacity: 0.04;
+        }
 
         .product_wrapper {
             display: flex;
@@ -140,7 +148,7 @@
         }
 
         .pro_img img {
-            width: 100%;
+            width: 218px;
             height: 100%;
             object-fit: cover;
         }
@@ -162,16 +170,18 @@
 
         .header {
             width: 100%;
-            display: flex;
+            /* display: flex; */
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #e7e7e7;
             margin-bottom: 30px;
-            padding-bottom: 15px;
+            padding-bottom: 99px;
+            /* position: absolute; */
         }
 
         .header .logo {
             width: 200px;
+            position: absolute;
         }
 
         .header .logo img {
@@ -180,10 +190,13 @@
 
         .header .add {
             width: 50%;
+            position: absolute;
+            margin-left: 387px;
         }
 
         .product_title {
             margin-bottom: 15px;
+            margin-top: 30px;
         }
 
         .product_title h2 {
@@ -191,56 +204,58 @@
             font-size: 24px;
         }
     </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <!-- You can print if you see this pen in debug mode -->
 
     <!-- Page1 Start -->
-    <div class="grid-container">
-        <div class="logo_wrapper">
+    <div
+        class=""style="margin: auto;width: 210mm;height: 297mm;overflow: hidden;/* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); */border: 1px solid #ebebeb;padding: 30px;position: relative;">
+        <div
+            class=""style="width: 100%;/* display: flex; */justify-content: center;align-items: center;position: relative;/* display: inline-block; */position: absolute;justify-content: center;align-items: center;position: relative;);position: absolute;top: 16%;left: 16%;/* transform: translate(-50%, -50%); */">
             <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($catalog_data->logo))) }}"
                 alt="Logo">
         </div>
-        <div class="footer">
+        <div class=""
+            style=" position: absolute; bottom: 66px;left: 30px;right: 30px;background-color: transparent;text-align: center;padding: 5px;">
             {{ $catalog_data->address }}&nbsp;&nbsp; <b>Mobile :</b>{{ $catalog_data->phonenumber }}
             &nbsp;&nbsp; <b>Email : </b>{{ $catalog_data->email }}
         </div>
     </div>
     <!-- Page1 End -->
     <!-- Page2 Start -->
-    <div class="grid-container">
-        <div class="header">
-            <div class="logo">
-                <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($catalog_data->logo))) }}"
+    <div
+        class=""style="margin: auto;width: 210mm;height: 297mm;overflow: hidden;/* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); */border: 1px solid #ebebeb;padding: 30px;position: relative;">
+        <div
+            class=""style="width: 100%;/* display: flex; */justify-content: space-between;align-items: center;border-bottom: 1px solid #e7e7e7;margin-bottom: 30px;padding-bottom: 99px;/* position: absolute; */">
+            <div class=""style="width: 200px;/* position: absolute; */">
+                <img style=" width: 208px;position: absolute;"
+                    src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($catalog_data->logo))) }}"
                     alt="Logo">
-            </div>
-            <div class="add">
-                <p>{{ $catalog_data->address }}</p>
+
+                <div class=""style="width: 50%;position: absolute;margin-left: 387px;">
+                    <p style="width: 80%;">{{ $catalog_data->address }}</p>
+                </div>
             </div>
         </div>
 
-        @foreach ($product_data as $category)
-            <div class="product_title">
+        @forelse ($product_data as $category)
+            <div class="product_title" @if ($loop->first) style="margin-top: 113px;" @endif>
                 <h2>{{ $category->name }}</h2>
             </div>
-            <div class="product_wrapper">
-                @php
-                    $count = 1;
-                @endphp
-                @foreach ($category->productIds as $product)
-                    @php
-                        $count++;
-                    @endphp
-                    @if ($count % 10 == 0)
-                        <div style="page-break-after: always;">
-                        </div>
-                    @endif
+            <div style="width: 100%;">
+                @forelse ($category->productIds as $product)
                     @if (!isset($product->product))
                         @continue
                     @endif
-                    <div class="product_box" @if ($count % 10 == 1) style="margin-top: 30px;" @endif>
+                    <div
+                        style="width: 220px; margin: 0 10px 10px 0; border-radius: 5px; overflow: hidden; background-color: #fbfbfb; border: 1px solid #e7e7e7; display: inline-block;">
                         <div class="pro_img">
+                            {{-- @php
+                                prx($product->product->productImages[0]->name);
+                            @endphp --}}
                             @if (isset($product->product->productImages[0]))
                                 <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path($product->product->productImages[0]->name))) }}"
                                     alt="Logo">
@@ -255,20 +270,14 @@
                             <div class="desc">{{ $product->product->notes }}</div>
                         </div>
                     </div>
-                @endforeach
-            </div>
-            <div style="page-break-after: always;">
-            </div>
-        @endforeach
+                @empty
+                @endforelse
+            @empty
+        @endforelse
+    </div>
+
     </div>
     <!-- Page2 End -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            window.print();
-        });
-    </script>
 </body>
 
 </html>
