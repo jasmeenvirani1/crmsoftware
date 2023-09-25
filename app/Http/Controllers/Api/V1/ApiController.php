@@ -459,7 +459,7 @@ class ApiController extends Controller
             if ($validator->fails()) {
                 return Helper::fail($validator->errors(), "Enter all require param.");
             }
-            prx($request->all());
+
             $date_time = GetDateTime();
 
             $stock_data =  $request;
