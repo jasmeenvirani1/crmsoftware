@@ -126,7 +126,7 @@
 
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                        Image</b><span class="text-danger">*</span></label></label>
+                                                        Image</b></label>
                                                 <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
@@ -166,8 +166,8 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Image</b><span
-                                                    class="text-danger">*</span></label></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Image</b>
+                                                   </label>
                                             <div class="input-group demo1 control-group lst increment1 parth"
                                                 id="vendor_img_div">
                                                 <input type="file" name="vendor_images[]"
@@ -208,7 +208,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Client/Sales
-                                                    Images</b><span class="text-danger">*</span></label></label>
+                                                    Images</b></label>
                                             <div class="input-group demo2 control-group lst increment2"
                                                 id="client_img_div">
                                                 <input type="file" name="client_images[]"
@@ -249,16 +249,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products PartNo</b><span
-                                                    class="text-danger">*</span></label></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products PartNo</b></label></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="partno"
                                                     value="{{ old('partno', isset($data->partno) ? $data->partno : '') }}"
                                                     id="partno" class="form-control" placeholder="Product PartNo">
-                                                @error('partno')
+                                                {{-- @error('partno')
                                                     <span class="invalid-feedback text-left" role="alert">
                                                         <strong>{{ $message }}</strong></span>
-                                                @enderror
+                                                @enderror --}}
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -295,7 +294,7 @@
 
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity
-                                                </b><span class="text-danger">*</span></label>
+                                                </b></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="minimum_order_quantity"
                                                     id="minimum_order_quantity" class="form-control"
@@ -384,12 +383,16 @@
 
                                         <div class="form-group row" id="productprice">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In
-                                                    INR.)</b></label>
+                                                    INR.)</b><span class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" pattern="\d*" maxlength="5" name="product_price"
                                                     value="{{ old('product_price', isset($data->product_price) ? $data->product_price : '') }}"
                                                     id="productprice" class="form-control allownumericwithoutdecimal"
                                                     placeholder="Product Price(INR)">
+                                                    @error('product_price')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror 
                                             </div>
                                         </div>
 

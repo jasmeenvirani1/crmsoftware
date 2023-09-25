@@ -452,15 +452,8 @@ class ApiController extends Controller
                         return $query->where('group_id', $group_id);
                     })->ignore($request->input('id'))
                 ],
-                'partno' => 'required',
                 'category' => 'required',
-                'product_company' => 'required',
-                'specification' => 'required',
-                'notes' => 'required',
-                'minimum_order_quantity' => 'required',
-                'corporate_price' => 'integer',
-                'retail_price' => 'integer',
-                'dealer_price' => 'integer',
+                'product_price' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -567,16 +560,9 @@ class ApiController extends Controller
                     Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
                         return $query->where('group_id', $group_id);
                     })->ignore($request->input('id'))
-                ],
-                'partno' => 'required',
+                ],     
                 'category' => 'required',
-                'product_company' => 'required',
-                'specification' => 'required',
-                'notes' => 'required',
-                'minimum_order_quantity' => 'required',
-                'corporate_price' => 'integer',
-                'retail_price' => 'integer',
-                'dealer_price' => 'integer',
+                'product_price' => 'required'
             ]);
 
             if ($validator->fails()) {

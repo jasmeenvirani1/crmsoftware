@@ -71,9 +71,10 @@ class StockManagementController extends Controller
                     return $query->where('group_id', $group_id);
                 })->ignore($request->input('id'))
             ],
-            'partno' => 'required',
+            // 'partno' => 'required',
             'category' => 'required',
-            'minimum_order_quantity' => 'required',
+            // 'minimum_order_quantity' => 'required',
+            'product_price' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -229,9 +230,10 @@ class StockManagementController extends Controller
                     return $query->where('group_id', $group_id);
                 })->ignore($request->input('id'))
             ],
-            'partno' => 'required',
+            // 'partno' => 'required',
             'category' => 'required',
-            'minimum_order_quantity' => 'required',
+            // 'minimum_order_quantity' => 'required',
+            'product_price' => 'required'
         ]);
 
         if ($validator->fails()) {

@@ -127,12 +127,14 @@
 
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product
-                                                        Image(s)</b><span class="text-danger">*</span></label></label>
+                                                        Image(s)</b>
+                                                        {{-- <span class="text-danger">*</span> --}}
+                                                </label></label>
 
                                                 <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple required>
+                                                        accept="image/png, image/jpeg" multiple>
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success products_img"
                                                             type="button">Add</button>
@@ -158,12 +160,14 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor
-                                                        Image(s)</b><span class="text-danger">*</span></label>
+                                                        Image(s)</b>
+                                                        {{-- <span class="text-danger">*</span> --}}
+                                                </label>
                                                 <div class="input-group demo1 control-group lst increment1 parth"
                                                     id="vendor_img_div">
                                                     <input type="file" name="vendor_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple required>
+                                                        accept="image/png, image/jpeg" multiple>
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success id1" id="vendor_img"
                                                             type="button">Add</button>
@@ -200,12 +204,14 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Client/Sales
-                                                        Image(s)</b><span class="text-danger">*</span></label>
+                                                        Image(s)</b>
+                                                        {{-- <span class="text-danger">*</span> --}}
+                                                </label>
                                                 <div class="input-group demo2 control-group lst increment2"
                                                     id="client_img_div">
                                                     <input type="file" name="client_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple required>
+                                                        accept="image/png, image/jpeg" multiple>
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success id2 client_img"
                                                             type="button">Add</button>
@@ -241,7 +247,9 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product
-                                                        PartNo</b><span class="text-danger">*</span></label>
+                                                        PartNo</b>
+                                                        {{-- <span class="text-danger">*</span> --}}
+                                                </label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="partno"
                                                         value="{{ old('partno', isset($data->partno) ? $data->partno : '') }}"
@@ -273,7 +281,9 @@
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity
-                                                    </b><span class="text-danger">*</span></label>
+                                                    </b>
+                                                    {{-- <span class="text-danger">*</span> --}}
+                                                </label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="minimum_order_quantity" value="{{ old('minimum_order_quantity', isset($data->minimum_order_quantity) ? $data->minimum_order_quantity : '') }}"
                                                         id="minqty" class="form-control"
@@ -373,23 +383,27 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                
                                                 </div>
                                             </div> --}}
                                             <div class="form-group row" id="productprice">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In
-                                                        INR.)</b></label>
+                                                        INR.)</b><span class="text-danger">*</span></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" pattern="\d*" maxlength="5"
                                                         name="product_price"
                                                         value="{{ old('product_price', isset($data->product_price) ? $data->product_price : '') }}"
                                                         id="productprice" class="form-control allownumericwithoutdecimal"
                                                         placeholder="Product Price(INR)">
+                                                        @error('product_price')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
 
                                             <div class="form-group row ">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD
-                                                        $.)
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD $.)
                                                     </b></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="total_amount" id="total_amount"
