@@ -128,13 +128,13 @@
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Product
                                                         Image(s)</b>
-                                                        {{-- <span class="text-danger">*</span> --}}
+                                                        <span class="text-danger">*</span>
                                                 </label></label>
 
                                                 <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple>
+                                                        accept="image/png, image/jpeg" multiple required>
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success products_img"
                                                             type="button">Add</button>

@@ -126,7 +126,7 @@
 
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                        Image</b></label>
+                                                        Image</b><span class="text-danger">*</span></label>
                                                 <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
