@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5rem 0;
+    padding: 1%;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 14px 14px 30px #cccccc,
+        -14px -14px 24px #ffffff;
+    height: 400px;
+
+}
+
+
+.button {
+    display: flex;
+    align-items: center;
+    border: 1px gray solid;
+    border-radius: 24px;
+    background-color: white;
+    padding: .5rem 4rem;
+    margin: 1rem 0;
+}
+
+.button:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.button .img {
+    padding-right: 1rem;
+}
+
+.button p {
+    font-weight: bolder;
+}
+
+.img {
+    max-width: 40px;
+    max-height: 40px;
+}
+
+.form {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    margin: .8rem;
+}
+
+select {
+    border: 1px gray solid;
+    border-radius: 4px;
+    padding-top: 0.4rem ;
+    padding-bottom: 0.4rem ;
+    text-align: center;
+    width: auto;
+    margin-top: 11px;
+    margin: 0.8rem;
+}
+
+input[type="text"] {
+    border: 1px gray solid;
+    border-radius: 4px;
+    padding: .4rem 4rem;
+    text-align: center;
+}
+
+input[type="password"] {
+    border: 1px gray solid;
+    border-radius: 4px;
+    padding: .4rem 4rem;
+    text-align: center;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border: 1px solid #1d9bf0;
+    cursor: pointer;
+}
+
+input[type="password"]:focus {
+    outline: none;
+    border: 1px solid #1d9bf0;
+    cursor: pointer;
+}
+
+#next {
+    background-color: black;
+    color: white;
+    border: 1px black solid;
+    border-radius: 24px;
+    padding: .5rem 4rem;
+    font-weight: bold;
+}
+
+#next:hover {
+    cursor: pointer;
+}
+
+#forgot {
+    background-color: white;
+    border: 1px gray solid;
+    border-radius: 24px;
+    padding: .5rem 4rem;
+}
+
+#forgot:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+#signup {
+    color: gray;
+    font-size: 14px;
+}
+
+#signup a {
+    color: #1d9bf0;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        height: 300px;
+        /* Adjust the height for smaller screens */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        height: 200px;
+        /* Adjust the height for even smaller screens */
+    }
+}
+
+.next {
+    background-color: black;
+    color: white;
+    border: 1px black solid;
+    border-radius: 24px;
+    padding: 0.5rem 4rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.input-div {
+    flex-direction: column;
+    display: flex;
+}
+
+.select-div {
+    flex-direction: column;
+    display: flex;
+}
+
+.d-none {
+    display: none;
+}
+
+.error-span {
+    font-size: 12px;
+    padding: 0.4rem 1rem;
+    color: red;
+}

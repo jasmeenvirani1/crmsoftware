@@ -20,7 +20,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class EditQuotationController extends Controller
 {
-  
+
     /**
      * Display a listing of the resource.
      *
@@ -68,7 +68,7 @@ class EditQuotationController extends Controller
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
-            $recordId = Quotation::updateOrCreate(['id' => $request->id], 
+            $recordId = Quotation::updateOrCreate(['id' => $request->id],
                 ['companyname' => $request->company_name,
                 'personname' => json_encode(array_filter($request->personmame)),
                 'phonenumber'=>json_encode(array_filter($request->phonenumber)),

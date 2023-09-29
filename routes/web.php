@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MerchantCategoryController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RoleController;
@@ -23,8 +23,11 @@ use App\Http\Controllers\Admin\OutwardController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\BalancedController;
 use App\Http\Controllers\Admin\CatalogController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\GstPercentageController;
 use App\Http\Livewire\Edit;
+use Illuminate\Support\Facades\Auth;
 
 /*
   |--------------------------------------------------------------------------
@@ -42,7 +45,9 @@ Route::post('resetpasswordemail', [ResetPasswordController::class, 'forgotPasswo
 Route::get('reset-password/{token}/{ismobile?}', [ResetPasswordController::class, 'showPasswordResetForm']);
 Route::post('reset-password', [ResetPasswordController::class, 'resetPassword'])->name('reset-password');
 // Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('check-login-credential', [LoginController::class, 'checkCredential'])->name('check-credential');
 Route::get('/', [LoginController::class, 'index']);
+// Route::get('/login-temp', [LoginController::class, 'temp'])->name('temp-login');
 Route::redirect('/dashboard', 'admin/dashboard');
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
@@ -56,12 +61,19 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::resource('category', MerchantCategoryController::class);
         Route::resource('notification', NotificationController::class);
         Route::resource('role', RoleController::class);
-        Route::resource('quotation', QuotationController::class);
-        Route::resource('editquotation', EditQuotationController::class);
-        Route::resource('customer', CustomerController::class);
+        Route::resource('vendors', QuotationController::class);
+        Route::resource('editvendors', EditQuotationController::class);
+        Route::resource('company', CustomerController::class);
+        Route::post('company/default', [CustomerController::class, 'defaultCustomer']);
+        Route::get('company-detail/{id}', [CustomerController::class, 'Detail'])->name('detail');
+        // Route::get('/generate-company-pdf/{id}', [CustomerController::class, 'generateCompanyPDF'])->name('generate.pdf');
+        Route::get('/generate-pdf/{id}', [CustomerController::class,'generatePdf'])->name('generate.pdf');
+
+
+
         Route::resource('stock', StockManagementController::class);
         Route::post('editstore', [StockManagementController::class, 'editstore'])->name('editstore');
-        Route::post('customereditstore', [CustomerController::class, 'customereditstore'])->name('customereditstore');
+        Route::post('customereditstore', [CustomerController::class, 'customereditstore'])->name('companyeditstore');
         Route::resource('vendor', VendorController::class);
         Route::resource('terms', TermsController::class);
         Route::resource('technicalspecification', TechnicalSpecificationController::class);
@@ -74,16 +86,20 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::resource('balanced', BalancedController::class);
         Route::resource('gst', GstPercentageController::class);
         Route::get('stock/{id}/view', [StockManagementController::class, 'view']);
-        Route::get('quotation/{id}/view', [Edit::class, 'increment']);
+        Route::get('vendors/{id}/view', [Edit::class, 'increment']);
         Route::get('stock/{id}/view', [StockManagementController::class, 'view']);
         Route::get('stock/{id}/inward', [StockManagementController::class, 'inward']);
         Route::get('stock/{id}/balanced', [StockManagementController::class, 'balanced']);
         Route::get('stock/{id}/outward', [StockManagementController::class, 'outward']);
         Route::post('product-image-delete', [StockManagementController::class, 'productImageDelete'])->name('product.image.delete');
+        Route::post('customer-image-delete', [CustomerController::class, 'imageDelete'])->name('customer.image.delete');
         Route::get('purchase/invoice/{id}', [PurchaseOrderController::class, 'invoice']);
-        Route::get('quotation/invoice/{id}', [QuotationController::class, 'invoice']);
+        Route::get('vendors/invoice/{id}', [QuotationController::class, 'invoice']);
         Route::resource('catalog', CatalogController::class);
-        Route::get('get-catalog/{type}', [CatalogController::class, 'GetCatalog'])->name('catalog.get-catalog');
+        Route::get('get-catalog/{type?}', [CatalogController::class, 'GetCatalog'])->name('catalog.get-catalog');
+        Route::resource('group', GroupController::class);
+        Route::post('group/change-group-id', [GroupController::class, 'ChangeGroupId'])->name('change-group-id');
+        Route::resource('role', RoleController::class);
     });
 });
 

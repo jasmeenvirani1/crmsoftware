@@ -8,26 +8,34 @@ use App\Helpers\Helper;
 use Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         try {
             $validator = Validator::make($request->all(), [
-                        'email' => 'required|email|max:40',
-                        'password' => 'required',
+                'email' => 'required|email|max:40',
+                'password' => 'required',
             ]);
             if ($validator->fails()) {
-                return Helper::fail([], Helper::error_parse($validator->errors()));
+                return Helper::fail($validator->errors());
             }
-            // $auth = Auth::attempt(['email' => request('email'), 'password' => request('password'), 'is_active' => '1']);
-            // dd($auth);
-            // if ($auth) {
-                $user = User::where('email','=',$request->email)->first();
-                if($user != null){
+            $user = User::where('email', '=', $request->email)->first();
+            if ($user != null) {
+                if (Hash::check($request->password, $user->password)) {
                     $success['user'] = $user;
-                    $success['token'] = $user->createToken('token')->accessToken;
-                    return Helper::success($success, 'User Login Successfully');
+                    $success['token'] = $token = $user->createToken('token')->accessToken;
+                    $model = User::find($user->id)->update(['api_token' => $token]);
+                    if ($model) {
+                        return Helper::success($success, 'User Login Successfully');
+                    }
+                    return Helper::fail([], 'Something went wrong');
+                } else {
+                    return Helper::fail([], 'Invalid password');
+                }
             } else {
                 return Helper::fail([], 'Unauthorised');
             }
@@ -36,7 +44,8 @@ class AuthController extends Controller {
         }
     }
 
-    public function getProfileData(Request $request) {
+    public function getProfileData(Request $request)
+    {
         try {
             if (Auth::user()) {
                 return Helper::success(Auth::user());
@@ -48,7 +57,8 @@ class AuthController extends Controller {
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         try {
             $isUser = $request->user()->token()->revoke();
             if ($isUser) {
@@ -60,5 +70,4 @@ class AuthController extends Controller {
             return Helper::fail([], $e->getMessage());
         }
     }
-
 }

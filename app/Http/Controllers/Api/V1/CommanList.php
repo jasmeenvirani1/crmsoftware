@@ -5,18 +5,26 @@ namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
-use Validator;
+use App\Models\Balanced;
+use App\Models\ClientAndSalesImage;
+use App\Models\Inward;
 use App\Models\MerchantCategory;
+use App\Models\OutWard;
+use App\Models\ProductDimension;
+use App\Models\ProductImage;
 use App\Models\StockManagement;
 use App\Models\State;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Quotation;
+use App\Models\StockVendor;
+use App\Models\VendorImage;
 use Illuminate\Support\Facades\Auth;
 use Svg\Tag\Rect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class CommanList extends Controller
 {
-
     public function getCategory(Request $request)
     {
         try {
@@ -67,30 +75,7 @@ class CommanList extends Controller
         }
     }
 
-    public function createproduct(Request $request)
-    {
-
-        $recordId = StockManagement::Create(
-            [
-                'product_name' => $request->name,
-                'partno' => $request->partno,
-                'product_company' => $request->company,
-                'product_size' => $request->size,
-                'product_price' => $request->price,
-                'usd_price' => $request->usd_price,
-                'category' => $request->category,
-                'product_dimension' => json_encode($request->product_dimension),
-                // 'images' => json_encode($files),
-                // 'vendorimage' => json_encode($vendorimages),
-                // 'clientimage' => json_encode($clientimage),
-                'notes' => $request->notes,
-                'specification' => $request->specification,
-                'status' => $request->status,
-                'vendor' => $request->vendor
-            ]
-        );
-        return Helper::success($recordId, 'product  created Successfully');
-    }
+    
 
     public function editproduct(Request $request)
     {
@@ -186,13 +171,13 @@ class CommanList extends Controller
     public function deletevendor(Request $request)
     {
         try {
-            if(Quotation::where(['id' => $request->id])->exists()){
-            $data = Quotation::where(['id' => $request->id])->delete();
-            $data = 'record delted successfully';
-        }else{
-            $data = 'no record found';
-        }
-        return Helper::success($data, 'vendor deleted successfully');
+            if (Quotation::where(['id' => $request->id])->exists()) {
+                $data = Quotation::where(['id' => $request->id])->delete();
+                $data = 'record delted successfully';
+            } else {
+                $data = 'no record found';
+            }
+            return Helper::success($data, 'vendor deleted successfully');
         } catch (\Exception $e) {
             return Helper::fail([], $e->getMessage());
         }

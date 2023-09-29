@@ -1,0 +1,34 @@
+21-8-2023
+
+CREATE TABLE `crmsoftware`.`product_categories` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `product_id` VARCHAR(255) NOT NULL , `categories_id` VARCHAR(255) NOT NULL , `deleted_at` TIMESTAMP NULL , `created_at` TIMESTAMP NULL , `updated_at` TIMESTAMP NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE `product_categories` CHANGE `deleted_at` `deleted_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, CHANGE `created_at` `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, CHANGE `updated_at` `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;
+
+
+ALTER TABLE `stock_management` ADD `retail_price` VARCHAR(255) NULL AFTER `notes`, ADD `dealer_price` VARCHAR(255) NULL AFTER `retail_price`, ADD `corporate_price` VARCHAR(255) NULL AFTER `dealer_price`, ADD `minimum_order_quantity` VARCHAR(255) NULL AFTER `corporate_price`;
+
+
+ALTER TABLE quotation
+ADD COLUMN `registered_address` TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `prepared_by`,
+ADD COLUMN `registered_address_latitude` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `registered_address`,
+ADD COLUMN `registered_address_longitude` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `registered_address_latitude`,
+ADD COLUMN `plant_address` TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `registered_address_longitude`,
+ADD COLUMN `plant_address_latitude` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `plant_address`,
+ADD COLUMN `plant_address_longitude` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `plant_address_latitude`,
+ADD COLUMN `billing_address` TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `plant_address_longitude`,
+ADD COLUMN `billing_address_latitude` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `billing_address`,
+ADD COLUMN `billing_address_longitude` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `billing_address`;
+
+
+ALTER TABLE quotation_details ADD COLUMN `designation` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `phone`;
+
+====================================================================================================================================================================================================================================================================================================================================================
+22-8-2023
+
+CREATE TABLE `crmsoftware`.`customer_extra_images` ( `id` INT(11) NULL AUTO_INCREMENT , `customer_id` VARCHAR(255) NULL , `image` TEXT NULL , `deleted_at` TIMESTAMP NULL , `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE customer ADD COLUMN `notes` TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `email`;
+
+ALTER TABLE stock_vendors ADD COLUMN `price` VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `quotation_id`;
+====================================================================================================================================================================================================================================================================================================================================================

@@ -11,13 +11,21 @@ use App\Models\OutWard;
 use App\Models\Balanced;
 use App\Models\ClientAndSalesImage;
 use App\Models\product_images;
+use App\Models\ProductCategory;
+use App\Models\ProductDimension;
 use App\Models\ProductImage;
+use App\Models\Quotation;
+use App\Models\StockVendor;
+use App\Models\Vendor;
 use App\Models\VendorImage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
+
 
 class StockManagementController extends Controller
 {
@@ -29,7 +37,9 @@ class StockManagementController extends Controller
      */
     public function index()
     {
-        return view('admin.stock.index', ['title' => "Product"]);
+        $category = MerchantCategory::all();
+
+        return view('admin.stock.index', ['title' => "Product", 'categories' => $category]);
     }
 
     /**
@@ -40,7 +50,9 @@ class StockManagementController extends Controller
     public function create()
     {
         $category = MerchantCategory::get();
-        return view('admin.stock.create', ['title' => "Product", 'btn' => "Save", 'data' => [], 'category' => $category]);
+        $vendors = Quotation::all();
+
+        return view('admin.stock.create', ['title' => "Product", 'btn' => "Save", 'data' => [], 'category' => $category, 'vendors' => $vendors]);
     }
 
     /**
@@ -51,9 +63,20 @@ class StockManagementController extends Controller
      */
     public function store(Request $request)
     {
+        $group_id = Auth::user()->group_id;
         $validator = Validator::make($request->all(), [
-            'product_name' => 'required',
+            'product_name' =>  [
+                'required',
+                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })->ignore($request->input('id'))
+            ],
+            // 'partno' => 'required',
+            'category' => 'required',
+            // 'minimum_order_quantity' => 'required',
+            'product_price' => 'required'
         ]);
+
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
         }
@@ -67,9 +90,12 @@ class StockManagementController extends Controller
                 'product_size' => $request->product_size,
                 'product_price' => $request->product_price,
                 'usd_price' => $request->total_amount,
-                'category' => $request->company_country,
                 'product_dimension' => json_encode($request->product_dimension),
                 'notes' => $request->notes,
+                'minimum_order_quantity' => $request->minimum_order_quantity,
+                'retail_price' => $request->retail_price,
+                'dealer_price' => $request->dealer_price,
+                'corporate_price' => $request->corporate_price,
                 'specification' => $request->specification,
                 'status' => $request->status
             ]
@@ -87,32 +113,53 @@ class StockManagementController extends Controller
             $files = $this->addImages('client_images', $product_id, $request->file('client_images'));
             ClientAndSalesImage::insert($files);
         }
-        $recordId1 = Inward::updateOrCreate(
+        $dimensionDetailsArr = [];
+        if (request()->has('dimension_name')) {
+            for ($i = 0; $i < count($request->dimension_name); $i++) {
+                $date_time = GetDateTime();
+                if ($request->dimension_name[$i] != null && $request->dimension_value[$i] != null && $request->quantities_value[$i] != null) {
+                    $arr = [
+                        'product_id' => $product_id,
+                        'dimension_name' => $request->dimension_name[$i],
+                        'dimension_value' => $request->dimension_value[$i],
+                        'quantities_value' => $request->quantities_value[$i],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    ProductDimension::create($arr);
+                    $dimensionDetailsArr[] = $arr;
+                }
+            }
+        }
+
+        Balanced::updateOrCreate(
             ['id' => $request->id],
             [
                 'stock_id' => $product_id,
-                'inward_qty' => $request->inward_qty,
-                'outward_qty' => $request->outward_qty,
-                'balanced_qty' => $request->inward_qty,
+                'balanced_qty' => 0,
                 'status' => $request->status
             ]
         );
-        $recordId2 = OutWard::updateOrCreate(
-            ['id' => $request->id],
-            [
-                'stock_id' => $product_id,
-                'outward_qty' => $request->outward_qty,
-                'status' => $request->status
-            ]
-        );
-        $recordId3 = Balanced::updateOrCreate(
-            ['id' => $request->id],
-            [
-                'stock_id' => $product_id,
-                'balanced_qty' => $request->inward_qty,
-                'status' => $request->status
-            ]
-        );
+
+        if (request()->has('category') && count($request->category) > 0) {
+            $category_data = [];
+            foreach ($request->category as $category) {
+                $category_data[] = ['product_id' => $product_id, 'categories_id' => $category];
+            }
+            ProductCategory::insert($category_data);
+        }
+
+        if (request()->has('vendors') && count($request->vendors) > 0) {
+            $date_time = GetDateTime();
+            for ($i = 0; $i < count($request->vendors); $i++) {
+                if ($request->vendors[$i] != null || $request->price[$i] != null) {
+                    $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $request->vendors[$i], 'price' => $request->price[$i]];
+                }
+            }
+            if ($vendor_data) {
+                StockVendor::insert($vendor_data);
+            }
+        }
 
         if ($product_id) {
             session()->flash('success', 'Product created successfully');
@@ -128,9 +175,14 @@ class StockManagementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        return Datatables::of(StockManagement::with('balanced')->select('*')->orderBy('id', 'desc')->get())->make(true);
+        $sql = StockManagement::with('balanced', 'productImages')->select('*')->orderBy('updated_at', 'desc');
+        if (request()->has('category_id') && strlen($request->category_id) > 0) {
+            $product_ids = ProductCategory::where('categories_id', $request->category_id)->groupBy('product_id')->get()->pluck('product_id')->toArray();
+            $sql->whereIn('id', $product_ids);
+        }
+        return Datatables::of($sql->get())->make(true);
     }
 
     /**
@@ -141,11 +193,15 @@ class StockManagementController extends Controller
      */
     public function edit($id)
     {
-        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages'])->find($id);
+        $data = StockManagement::with(['productImages', 'vendorImages', 'clientImages', 'productDimensionData', 'vendor'])->find($id);
         $data1 = Inward::where('stock_id', '=', $id)->get();
         $category = MerchantCategory::get();
-        // prx($data);
-        return view('admin.stock.edit', ['title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category]);
+        $vendors = Quotation::all();
+        $selected_vendors = StockVendor::where('product_id', $id)->pluck('quotation_id')->toArray();
+        $selected_category = ProductCategory::where('product_id', $id)->pluck('categories_id')->toArray();
+        return view('admin.stock.edit', [
+            'title' => "Product", 'btn' => "Update", 'data' => $data, 'data1' => $data1, 'category' => $category, 'vendors' => $vendors, 'selected_vendors' => $selected_vendors, 'selected_category' => $selected_category
+        ]);
     }
     // public function inward($id) {
     //     return view('admin.stock.inward', ['title' => "Inward", 'btn' => "Save", 'data' => []]);
@@ -166,6 +222,43 @@ class StockManagementController extends Controller
      */
     public function update($id, Request $request)
     {
+        $group_id = Auth::user()->group_id;
+        $validator = Validator::make($request->all(), [
+            'product_name' =>  [
+                'required',
+                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })->ignore($request->input('id'))
+            ],
+            // 'partno' => 'required',
+            'category' => 'required',
+            // 'minimum_order_quantity' => 'required',
+            'product_price' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withInput()->withErrors($validator->errors());
+        }
+
+        StockManagement::updateOrCreate(
+            ['id' => $request->id],
+            [
+                'product_name' => $request->product_name,
+                'partno' => $request->partno,
+                'product_company' => $request->product_company,
+                'product_size' => $request->product_size,
+                'product_price' => $request->product_price,
+                'usd_price' => $request->total_amount,
+                'minimum_order_quantity' => $request->minimum_order_quantity,
+                'retail_price' => $request->retail_price,
+                'dealer_price' => $request->dealer_price,
+                'corporate_price' => $request->corporate_price,
+                'notes' => $request->notes,
+                'specification' => $request->specification,
+                'status' => $request->status
+            ]
+        );
+
         $product_id = $id;
         if ($request->hasfile('product_images')) {
             $files = $this->addImages('product_images', $product_id, $request->file('product_images'));
@@ -179,6 +272,45 @@ class StockManagementController extends Controller
             $files = $this->addImages('client_images', $product_id, $request->file('client_images'));
             ClientAndSalesImage::insert($files);
         }
+        ProductDimension::where('product_id', $product_id)->delete();
+        $dimensionDetailsArr = [];
+        if (request()->has('dimension_name')) {
+
+            for ($i = 0; $i < count($request->dimension_name); $i++) {
+                $date_time = GetDateTime();
+                if ($request->dimension_name[$i] != null && $request->dimension_value[$i] != null && $request->quantities_value[$i] != null) {
+                    $arr = [
+                        'product_id' => $product_id,
+                        'dimension_name' => $request->dimension_name[$i],
+                        'dimension_value' => $request->dimension_value[$i],
+                        'quantities_value' => $request->quantities_value[$i],
+                        'created_at' => $date_time,
+                        'updated_at' => $date_time
+                    ];
+                    $dimensionDetailsArr[] = $arr;
+                }
+            }
+            ProductDimension::insert($dimensionDetailsArr);
+        }
+        if (request()->has('category')) {
+            ProductCategory::where('product_id', $product_id)->delete();
+            $category_data = [];
+            foreach ($request->category as $category) {
+                $category_data[] = ['product_id' => $product_id, 'categories_id' => $category];
+            }
+            ProductCategory::insert($category_data);
+        }
+
+        StockVendor::where('product_id', $product_id)->delete();
+        if (request()->has('vendors')) {
+            for ($i = 0; $i < count($request->vendors); $i++) {
+                $date_time = GetDateTime();
+
+                $vendor_data[] = ['product_id' => $product_id, 'quotation_id' => $request->vendors[$i], 'price' => $request->price[$i]];
+            }
+            StockVendor::insert($vendor_data);
+        }
+
         if ($product_id) {
             session()->flash('success', 'Product updated successfully');
         } else {
@@ -189,8 +321,16 @@ class StockManagementController extends Controller
     public function editstore(Request $request)
     {
         // try {
+        $group_id = Auth::user()->group_id;
         $validator = Validator::make($request->all(), [
-            // 'product_name' => 'required',
+            'product_name' =>  [
+                'required',
+                Rule::unique('stock_management', 'product_name')->where(function ($query) use ($group_id) {
+                    return $query->where('group_id', $group_id);
+                })->ignore($request->input('id'))
+            ],
+            'partno' => 'required',
+            'company_country' => 'required',
         ]);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator->errors());
@@ -263,16 +403,11 @@ class StockManagementController extends Controller
             session()->flash('error', "There is some thing went, Please try after some time.");
         }
         return redirect()->route('stock.index');
-        // } catch (\Exception $e) {
-        //     session()->flash('error', $e->getMessage());
-        //     return redirect()->route('stock.create');
-        // }
-
     }
     public function view($id)
     {
-        $data2 = StockManagement::where('id', $id)->get();
-        $data = Inward::where('stock_id', $id)->get();
+        $data2 = StockManagement::findOrFail($id);
+        $data = Inward::with('vendors')->where('stock_id', $id)->get();
         $data1 = Balanced::where('stock_id', $id)->get();
         return view('admin.stock.view', ['title' => "Transaction", 'btn' => "Save", 'data' => $data, 'data1' => $data1, 'data2' => $data2]);
     }

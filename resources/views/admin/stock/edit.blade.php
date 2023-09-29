@@ -7,51 +7,35 @@
             width: 100%;
         }
 
-        .img-wrap {
-            position: relative;
-            ...
+        .invalid-feedback {
+            color: #dc3545;
+            /* Red color for error messages */
+            display: block;
+            /* Display each error message on a new line */
+            font-size: 14px;
+            /* Adjust the font size as needed */
+            margin-top: 5px;
+            /* Add a little spacing above the error message */
         }
 
-        .image-delete-button {
-            display: inline-block;
-            height: 20px;
-            background-color: red;
-            color: white;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
+        .text-left {
+            text-align: left;
+            /* Align the error message text to the left */
         }
 
-        .remove-image {
-            cursor: pointer;
-            display: none;
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            border-radius: 10em;
-            padding: 3px 6px 3px;
-            text-decoration: none;
-            font: 700 21px/20px sans-serif;
-            background: #555;
-            border: 3px solid #fff;
-            color: #FFF;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-            -webkit-transition: background 0.5s;
-            transition: background 0.5s;
-        }
-
-        .remove-image:hover {
-            background: #E54E4E;
-            padding: 4px 7px 5px;
-            top: -11px;
-            right: -11px;
-        }
-
-        .remove-image:active {
-            background: #E54E4E;
-            top: -10px;
-            right: -11px;
+        .alert {
+            background-color: #f8d7da;
+            /* Light red background for alert */
+            border: 1px solid #f5c6cb;
+            /* Border color for alert */
+            color: #721c24;
+            /* Text color for alert */
+            padding: 8px;
+            /* Padding for alert */
+            border-radius: 4px;
+            /* Rounded corners for alert */
+            margin-top: 5px;
+            /* Add spacing above the alert */
         }
     </style>
     <?php
@@ -97,7 +81,7 @@
                 <div class="row">
                     <div class="col-xl-12">
 
-                        @include('errormessage')
+                        {{-- @include('errormessage') --}}
 
                         <div class="kt-portlet">
                             <div class="kt-portlet__head">
@@ -115,33 +99,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('stock.update', ['stock' => $data->id]) }}" method="POST" id="create_category"
-                                name="create_category" class="form-horizontal kt-form kt-form--label-right"
-                                enctype="multipart/form-data">
+                            <form action="{{ route('stock.update', ['stock' => $data->id]) }}" method="POST"
+                                id="create_category" name="create_category"
+                                class="form-horizontal kt-form kt-form--label-right" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-
+                                <input type="hidden" name="process_type" value="update">
                                 <input type="hidden" name="id" id="id"
                                     value="{{ isset($data->id) ? $data->id : '' }}">
                                 <div class="kt-portlet__body">
                                     <div class="kt-section kt-section--first">
                                         <div class="kt-section__body">
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Name</b></label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Name</b><span
+                                                        class="text-danger">*</span></label></label>
                                                 <div class="col-lg-9 col-xl-4">
                                                     <input type="text" name="product_name"
                                                         value="{{ old('product_name', isset($data->product_name) ? $data->product_name : '') }}"
                                                         id="product_name" class="form-control" placeholder="Product Name">
+                                                    @error('product_name')
+                                                        <span class="invalid-feedback text-left" role="alert">
+                                                            <strong>{{ $message }}</strong></span>
+                                                    @enderror
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                        Image</b></label>
+                                                        Image</b><span class="text-danger">*</span></label>
                                                 <div class="input-group demo control-group lst increment">
                                                     <input type="file" name="product_images[]"
                                                         class="col-xl-2 col-lg-2 form-control"
-                                                        accept="image/png, image/jpeg" multiple>
+                                                        accept="image/png, image/jpeg">
                                                     {{-- <div class="input-group-btn">
                                                         <button class="btn btn-success products_img"
                                                             type="button">Add</button>
@@ -177,7 +166,8 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Image</b></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor Image</b>
+                                                   </label>
                                             <div class="input-group demo1 control-group lst increment1 parth"
                                                 id="vendor_img_div">
                                                 <input type="file" name="vendor_images[]"
@@ -259,67 +249,127 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products PartNo</b></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products PartNo</b></label></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="partno"
                                                     value="{{ old('partno', isset($data->partno) ? $data->partno : '') }}"
                                                     id="partno" class="form-control" placeholder="Product PartNo">
+                                                {{-- @error('partno')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror --}}
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Products
-                                                    Category</b></label>
+                                                    Category</b><span class="text-danger">*</span></label></label>
                                             <div class="col-lg-9 col-xl-4">
-                                                <select class="form-control" id="company_country" name="company_country">
-                                                    <option value="">SELECT</option>
-                                                    @foreach ($category as $countries)
-                                                        <option value="{{ $countries->name }}">{{ $countries->name }}
+                                                <input type="hidden" id="old_selected_values"
+                                                    value="{{ json_encode(old('category', $selected_category)) }}">
+                                                {{-- <select class="form-control selectpicker" data-live-search="true"
+                                                    id="category" name="category[]" multiple>
+                                                    @foreach ($category as $cat)
+                                                        <option value="{{ $cat->id }}"
+                                                            @if (in_array($cat->id, $selected_category)) selected @endif>
+                                                            {{ $cat->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select> --}}
+                                                <select class="form-control selectpicker" data-live-search="true" id="category" name="category[]" multiple>
+                                                    @foreach ($category as $cat)
+                                                        <option value="{{ $cat->id }}"
+                                                            @if (in_array($cat->id, old('category', $selected_category))) selected @endif>
+                                                            {{ $cat->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
+
+                                                @error('category')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
                                             </div>
                                         </div>
 
+
                                         <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Dimension
-                                                    :</b></label>
-                                            <!-- <div class="col-lg-9 col-xl-2"> -->
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Height</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[0]) ? $data->product_dimension[0] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Height">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Weight</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[1]) ? $data->product_dimension[1] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Weigth">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Length</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[2]) ? $data->product_dimension[2] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Length">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Bridth</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[3]) ? $data->product_dimension[3] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Bridth">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Depth</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[4]) ? $data->product_dimension[4] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Depth">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Radius</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[5]) ? $data->product_dimension[5] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Radius">
-                                            <label class="col-xl-1 col-lg-1 col-form-label"><b>Thickness</b></label>
-                                            <input type="text" maxlength="12" name="product_dimension[]"
-                                                value="{{ old('product_dimension', isset($data->product_dimension[6]) ? $data->product_dimension[6] : '') }}"
-                                                id="product_dimension" class="col-xl-2 col-lg-2 form-control"
-                                                placeholder="Thickness">
-                                            <!-- </div> -->
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Minimum Order Quantity
+                                                </b></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="minimum_order_quantity"
+                                                    id="minimum_order_quantity" class="form-control"
+                                                    placeholder="Minimum Order Quantity"
+                                                    value="{{ old('minimum_order_quantity', isset($data->minimum_order_quantity) ? $data->minimum_order_quantity : '') }}">
+                                                @error('minimum_order_quantity')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+
+
+                                        <label class="col-xl-0 col-lg-0 col-form-label"
+                                            style="font-size: 15px;margin-left: -10px;"><b>Product Dimension
+                                                :</b></label>
+                                        <button class="btn btn-success add-contact mb-3" type="button"
+                                            style="float: right;">Add
+                                            Dimension</button>
+
+
+                                        <div class="card-body">
+                                            @php
+                                                $quantitiesValues = config('const.quantities');
+                                                $default_product_dimension = config('const.default_product_dimension');
+                                            @endphp
+                                            <!--begin: Datatable-->
+                                            <table class="table table-separate table-head-custom table-checkable border"
+                                                id="stock_datatable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Dimension Name</th>
+                                                        <th>Dimension Value</th>
+                                                        <th>Quantities Value</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="DimensionBody">
+                                                    @foreach ($data->productDimensionData as $product_dimension)
+                                                        <tr>
+                                                            <td><input type="text" maxlength="12"
+                                                                    name="dimension_name[]"
+                                                                    class="col-xl-6 col-lg-6  form-control"
+                                                                    placeholder="Dimension Name"
+                                                                    value="{{ ucfirst($product_dimension->dimension_name) }}"
+                                                                    readonly>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" maxlength="12"
+                                                                    name="dimension_value[]"
+                                                                    class="col-xl-6 col-lg-6  form-control"
+                                                                    placeholder="Dimension Value"
+                                                                    value="{{ $product_dimension->dimension_value }}">
+
+                                                            </td>
+                                                            <td>
+                                                                <select name="quantities_value[]"
+                                                                    class="col-xl-6 col-lg-6  form-control">
+                                                                    @foreach ($quantitiesValues as $quantitie)
+                                                                        <option value="{{ $quantitie }}"
+                                                                            @if ($quantitie == ucfirst($product_dimension->quantities_value)) selected @endif>
+                                                                            {{ $quantitie }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-danger remove-row"
+                                                                    type="button">Remove</button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <!--end: Datatable-->
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Company</b></label>
@@ -330,25 +380,24 @@
                                                     placeholder="Product Company">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Vendor</b></label>
-                                            <div class="col-lg-9 col-xl-4">
-                                                <input type="text" name="product_size"
-                                                    value="{{ old('product_size', isset($data->product_size) ? $data->product_size : '') }}"
-                                                    id="product_size" class="form-control" placeholder="Vendor">
-                                            </div>
-                                        </div>
+
                                         <div class="form-group row" id="productprice">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Price</b></label>
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In
+                                                    INR.)</b><span class="text-danger">*</span></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" pattern="\d*" maxlength="5" name="product_price"
                                                     value="{{ old('product_price', isset($data->product_price) ? $data->product_price : '') }}"
                                                     id="productprice" class="form-control allownumericwithoutdecimal"
                                                     placeholder="Product Price(INR)">
+                                                    @error('product_price')
+                                                    <span class="invalid-feedback text-left" role="alert">
+                                                        <strong>{{ $message }}</strong></span>
+                                                @enderror 
                                             </div>
                                         </div>
+
                                         <div class="form-group row ">
-                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>product price in usd
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Price (In USD $.)
                                                 </b></label>
                                             <div class="col-lg-9 col-xl-4">
                                                 <input type="text" name="total_amount" id="total_amount"
@@ -356,7 +405,35 @@
                                                     class="form-control " readonly />
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Corporate Price
+                                                </b></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="corporate_price"
+                                                    value="{{ old('corporate_price', isset($data->corporate_price) ? $data->corporate_price : '') }}"
+                                                    id="corporate_price" class="form-control"
+                                                    placeholder="Corporate Price">
 
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Retail Price
+                                                </b></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="retail_price"
+                                                    value="{{ old('retail_price', isset($data->retail_price) ? $data->retail_price : '') }}"
+                                                    id="retail_price" class="form-control" placeholder="Retail Price">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Dealer Price
+                                                </b></label>
+                                            <div class="col-lg-9 col-xl-4">
+                                                <input type="text" name="dealer_price"
+                                                    value="{{ old('dealer_price', isset($data->dealer_price) ? $data->dealer_price : '') }}"
+                                                    id="dealer_price" class="form-control" placeholder="Dealer Price">
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
                                             <label class="col-xl-3 col-lg-3 col-form-label"><b>Product Specification
                                                 </b></label>
@@ -375,44 +452,112 @@
                                                     id="notes" class="form-control" placeholder="Product Notes">
                                             </div>
                                         </div>
-                                        <!-- <div class="form-group row">
-                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Products Inward Qty.</b></label>
-                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                <input type="text" name="inward_qty" value="{{ old('inward_qty', isset($data->inward_qty) ? $data->inward_qty : '') }}" id="inward_qty" class="form-control" placeholder="Qty.">
-                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                        </div> -->
-                                        <!-- <div class="form-group row">
-                                                                                                                                                                                                            <label class="col-xl-3 col-lg-3 col-form-label"><b>Outward Qty.</b></label>
-                                                                                                                                                                                                            <div class="col-lg-9 col-xl-4">
-                                                                                                                                                                                                                <input type="text" name="outward_qty" value="{{ old('outward_qty', isset($data->outward_qty) ? $data->outward_qty : '') }}" id="outward_qty" class="form-control" placeholder="Qty">
-                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                        </div> -->
+
+                                        <label class="col-xl-3 col-lg-3 col-form-label"
+                                            style="font-size: 15px;margin-left: -10px;"><b>Vendor
+                                                Details</b></label>
+                                        <button class="btn btn-success col-lg-0 add-vendor-btn" id="addVendorBtn"
+                                            type="button" style="float: right;">Add Vendor</button>
+                                        @foreach ($data->vendor as $selected_vendor)
+                                            <div class="row mt-3">
+                                                <label class="col-xl-0 col-lg-0 col-form-label"><b>Vendor</b></label>
+
+                                                <div class="col-lg-4 col-xl-4">
+                                                    <select class="form-control" name="vendors[]">
+                                                        @foreach ($vendors as $vendor)
+                                                            <option value="{{ $vendor->id }}"
+                                                                @if ($vendor->id == $selected_vendor->quotation_id) selected @endif>
+                                                                {{ $vendor->companyname }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <label class="col-xl-0 col-lg-0 col-form-label"><b>Price</b></label>
+                                                <div class="col-lg-4 col-xl-4">
+                                                    <input type="number" name="price[]" class="form-control"
+                                                        value="{{ $selected_vendor->price }}">
+                                                </div>
+                                                <button class="btn btn-danger remove-vendor-add"
+                                                    type="button">Remove</button>
+
+                                            </div>
+                                        @endforeach
+                                        <div class="vendor-increment"></div>
                                     </div>
                                 </div>
-                        </div>
-                        <div class="kt-portlet__foot">
-                            <div class="kt-form__actions">
-                                <div class="row">
-                                    <div class="col-lg-3 col-xl-3">
-                                    </div>
-                                    <div class="col-lg-9 col-xl-9">
-                                        <button type="submit" class="btn btn-success">{{ $btn }}</button>&nbsp;
-                                        <a href="{{ route('stock.index') }}" id="cancel_btn"
-                                            class="btn btn-secondary">Cancel</a>
+                                <div class="kt-portlet__foot">
+                                    <div class="kt-form__actions">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-xl-3">
+                                            </div>
+                                            <div class="col-lg-9 col-xl-9">
+                                                <button type="submit"
+                                                    class="btn btn-success">{{ $btn }}</button>&nbsp;
+                                                <a href="{{ route('stock.index') }}" id="cancel_btn"
+                                                    class="btn btn-secondary">Cancel</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
+            <!--End:: App Content-->
         </div>
-        <!--End:: App Content-->
-    </div>
-    <!--End::App-->
+        <!--End::App-->
     </div>
     <!-- end :: Contest -->
+    <!-- end :: Contest -->
+    <div class="hidden d-none">
+        <table> <!-- Add a table tag here -->
+            <tbody class="clone-product-dimension"> <!-- Add a tbody tag here -->
+                <tr>
+                    <td>
+                        <input type="text" maxlength="12" name="dimension_name[]" id="product_dimension"
+                            class="col-xl-6 col-lg-6  form-control" placeholder="Dimension Name">
+                    </td>
+                    <td>
+                        <input type="text" maxlength="12" name="dimension_value[]" id="product_dimension"
+                            class="col-xl-6 col-lg-6  form-control" placeholder="Dimension Value">
+                    </td>
+                    <td>
+                        <select name="quantities_value[]" class="col-xl-6 col-lg-6  form-control">
+                            @foreach ($quantitiesValues as $quantitie)
+                                <option>{{ $quantitie }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger remove-row" type="button">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clone-vendor-add hidden d-none">
+
+        <div class="row mt-3">
+            <label class="col-xl-0 col-lg-0 col-form-label"><b>Vendor</b></label>
+            <div class="col-lg-4 col-xl-4">
+                <select class="form-control" name="vendors[]">
+                    @foreach ($vendors as $vendor)
+                        <option value="{{ $vendor->id }}">
+                            {{ $vendor->companyname }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <label class="col-xl-0 col-lg-0 col-form-label"><b>Price</b></label>
+            <div class="col-lg-4 col-xl-4">
+                <input type="number" name="price[]" class="form-control" required>
+            </div>
+            <button class="btn btn-danger remove-vendor-add" type="button">Remove</button>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script type="text/javascript">
@@ -447,8 +592,20 @@
 
         });
         $(".allownumericwithoutdecimal").on("keypress keyup blur", function(event) {
+            var product_price = $(this).val() / st_km;
+            var rounded_price = product_price.toFixed(2);
 
-            document.getElementById("total_amount").value = $(this).val() * st_km;
+            // document.getElementById("total_amount").value = $(this).val() * st_km;
+
+            // $(this).val($(this).val().replace(/[^\d].+/, ""));
+            // if ((event.which < 48 || event.which > 57)) {
+            //     event.preventDefault();
+            // }
+
+            var product_price = $(this).val() / st_km;
+            var rounded_price = product_price.toFixed(2); // Round to two decimal places
+
+            document.getElementById("total_amount").value = rounded_price;
 
             $(this).val($(this).val().replace(/[^\d].+/, ""));
             if ((event.which < 48 || event.which > 57)) {
@@ -467,6 +624,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.image.delete') }}",
@@ -485,6 +643,24 @@
                 }
             });
 
+        });
+        $(".add-contact").click(function() {
+            var lsthmtl = $(".clone-product-dimension").html();
+            console.log(lsthmtl);
+            $("#DimensionBody").append(lsthmtl);
+        });
+
+
+        $(document).on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
+        });
+
+        $(".add-vendor-btn").click(function() {
+            var lsthmtl = $(".clone-vendor-add").html()
+            $(".vendor-increment").append(lsthmtl);
+        });
+        $(document).on('click', '.remove-vendor-add', function() {
+            $(this).closest('.row').remove();
         });
     </script>
 @endsection

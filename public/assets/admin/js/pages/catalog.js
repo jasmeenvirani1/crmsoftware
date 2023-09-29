@@ -1,5 +1,6 @@
-'use strict';
-// Class definition
+var StockDatatable;
+var checkedBoxeIds = [];
+
 jQuery(document).ready(function () {
     // begin first table
     StockDatatable = $('#stock_datatable').DataTable({
@@ -7,6 +8,7 @@ jQuery(document).ready(function () {
         searchDelay: 500,
         processing: true,
         serverSide: true,
+        ordering: false,
         buttons: [
             'print',
             'copyHtml5',
@@ -15,7 +17,7 @@ jQuery(document).ready(function () {
             'pdfHtml5',
         ],
         ajax: {
-            url: window.baseUrl + '/admin/stock/show',
+            url: window.baseUrl + '/admin/catalog/show',
             type: 'POST',
             method: 'GET',
             headers: {
@@ -27,25 +29,78 @@ jQuery(document).ready(function () {
         columns: [
             {
                 render: function (data, type, full, meta) {
-                    return '<input type="checkbox" class="form-control form-control-sm catalog-checkbox" placeholder="" aria-controls="stock_datatable" data-id="' + full.id + '" >';
+                    var isChecked = checkedBoxeIds.indexOf(full.id) !== -1;
+                    var checkboxHTML = '<input type="checkbox" class="form-control form-control-sm catalog-checkbox" placeholder="" aria-controls="stock_datatable" data-id="' + full.id + '"';
+                    if (isChecked) {
+                        checkboxHTML += ' checked="checked"';
+                    }
+                    checkboxHTML += '>';
+                    return checkboxHTML;
+                }
+            },
+            {
+                render: function (data, type, full, meta) {
+                    var image_url = window.baseUrl;
+                    if (typeof full.product_images !== 'undefined' && Array.isArray(full.product_images) && full.product_images.length > 0) {
+                        image_url += '/' + full.product_images[0].name;
+                    } else {
+                        image_url += '/images/logo.jpg';
+                    }
+                    return '<img src="' + image_url + '" style="height: 50px;width: 50px;">';
                 },
             },
             { data: 'product_name' },
-            { data: 'product_company' },
             {
-                data: null,
                 render: function (data, type, full, meta) {
-                    return '<a href="' + baseUrl + '/admin/stock/' + full.id + '/edit" class="btn btn-sm btn-clean btn-icon btn-icon-md " title="Edit details">\
-                            <i class="la la-edit"></i>\
-                            <a href="javascript:void(0);" id="' + full.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md deleteRecord" title="Delete">\
-                            <i class="la la-trash"></i>\
-                        </a>\
-                       ';
-                }
+                    var categories_str = "";
+                    if (full.categories != null) {
+
+                        if (full.categories.length != 0) {
+                            full.categories.forEach(function (data, element) {
+                                if (data.get_categories_name != null) {
+                                    categories_str += data.get_categories_name.name + ' ,';
+                                }
+                            });
+                            return categories_str.slice(0, -1);
+                        }
+                        else {
+                            return null;
+                        }
+                    } else {
+                        return null;
+                    }
+
+                },
             },
+            { data: 'product_company' },
         ]
     });
+
+    // Event listener for individual row checkboxes
+    $('#stock_datatable tbody').on('change', 'input[type="checkbox"]', function () {
+        var rowId = $(this).data('id');
+        if (this.checked) {
+            checkedBoxeIds.push(rowId);
+        } else {
+            var indexToRemove = checkedBoxeIds.indexOf(rowId);
+            if (indexToRemove !== -1) {
+                checkedBoxeIds.splice(indexToRemove, 1);
+            }
+        }
+    });
+
+
+    jQuery(document).on("click", "#GetCatalogBtn", function () {
+
+        var str = "";
+        checkedBoxeIds.forEach(function (element) {
+            str += 'product_ids[]=' + element + '&';
+        });
+        var url = window.baseUrl + '/admin/get-catalog/selected?' + str;
+        window.open(url, '_blank');
+    });
 });
+
 jQuery(document).on("change", ".catalog-checkbox", function () {
     var selectedCount = $('input[type="checkbox"]:checked').length;
     var _btn = false;
@@ -54,16 +109,3 @@ jQuery(document).on("change", ".catalog-checkbox", function () {
     }
     $('#GetCatalogBtn').prop('disabled', _btn);
 });
-jQuery(document).on("click", "#GetCatalogBtn", function () {
-
-    var formInputs = $("#productIdInputs");
-    formInputs.html("");
-    var checkedCheckboxes = $('input[type="checkbox"]:checked');
-    checkedCheckboxes.each(function () {
-        // selectedIDs.push($(this).data('id'));
-        var str = "<input type='hidden' name='product_ids[]' value='" + $(this).data('id') + "'>";
-        formInputs.append(str);
-    });
-
-});
-

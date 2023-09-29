@@ -6,8 +6,11 @@ use Closure;
 use Illuminate\Http\Request;
 use Validator;
 use App\Helpers\Helper;
+use App\Models\User;
+use PHPUnit\TextUI\Help;
 
-class checkHeader {
+class checkHeader
+{
 
     /**
      * Handle an incoming request.
@@ -16,20 +19,28 @@ class checkHeader {
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next) {
+    public function handle(Request $request, Closure $next)
+    {
         // $validator = Validator::make($request->headers->all(), [
         //             'api-key' => 'required',
         // ]);
         // if ($validator->fails()) {
         //     return Helper::fail([], Helper::error_parse($validator->errors()));
         // }
-        $api_key = $request->header('api-key');
-        $original_api_key = env('API_KEY', 'pASDASfszTddANGLN8989561HKzaXoelFo1Gs');
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
 
-        // if ($original_api_key == $api_key) {
-        //     return Helper::fail([], 'api-key not valid');
-        // }
-        return $next($request);
+            $token = str_replace('Bearer ', '', $authHeader);
+            $api_key = $request->header('api-key');
+            $original_api_key = env('API_KEY', 'pASDASfszTddANGLN8989561HKzaXoelFo1Gs');
+            $users =  User::where('api_token', $token)->first();
+            if ($users) {
+                return $next($request);
+            }else{
+                return Helper::fail([], 'Invalid token');
+            }
+        } else {
+            return Helper::fail([], 'HTTP_AUTHORIZATION not found');
+        }
     }
-
 }

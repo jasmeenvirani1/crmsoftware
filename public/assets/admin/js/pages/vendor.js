@@ -36,7 +36,7 @@ jQuery(document).ready(function () {
                         return moment(full.created_at).format('DD/MM/YYYY');
                     }
                 },
-                
+
                 {
                     data: null,
                     render: function (data, type, full, meta) {

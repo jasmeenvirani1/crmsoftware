@@ -47,7 +47,7 @@
                         <div class="kt-portlet__head-wrapper col-md-6">
                             <div class="dropdown dropdown-inline">
                                 <a href="{{ route('catalog.get-catalog', ['type' => 'all']) }}"
-                                    class="btn btn-brand btn-icon-sm" aria-expanded="false">
+                                    class="btn btn-brand btn-icon-sm" aria-expanded="false" target="_blank">
                                     All Catalog
                                 </a>
                             </div>
@@ -63,9 +63,10 @@
                             <thead>
                                 <tr>
                                     <th>Select</th>
+                                    <th>Image</th>
                                     <th>Product Name</th>
+                                    <th>Category</th>
                                     <th>Product Company</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -76,12 +77,6 @@
         </div>
         <!-- end:: Content -->
     </div>
-    <form action="#" method="POST">
-        @csrf
-        <div id="productIdInputs">
-
-        </div>
-    </form>
 @endsection
 @section('script')
     <script src="{{ url('assets/admin/js/pages/catalog.js') }}" type="text/javascript"></script>

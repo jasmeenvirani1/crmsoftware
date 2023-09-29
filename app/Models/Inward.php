@@ -9,7 +9,7 @@ class Inward extends Model
 {
     use HasFactory;
     public $table = "inward_quantity";
-    public $timestamps= true;
+    public $timestamps = true;
     protected $fillable = [
         'stock_id',
         'inward_qty',
@@ -24,4 +24,8 @@ class Inward extends Model
         'created_at',
         'updated_at',
     ];
+    function vendors()
+    {
+        return $this->belongsTo(Quotation::class, 'vendor_name', 'id');
+    }
 }

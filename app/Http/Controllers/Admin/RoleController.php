@@ -18,7 +18,8 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         return view('admin.roles.index', ['title' => "Role"]);
     }
 
@@ -27,7 +28,8 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return view('admin.roles.create', ['title' => "Role", 'btn' => "Save", 'data' => []]);
     }
 
@@ -37,135 +39,35 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         try {
             $validator = Validator::make($request->all(), [
-                        // 'user_name' => 'required',
+                'name' => 'required|string',
             ]);
+
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
 
-            if(isset($request['organization'])){
-                if(($request['organization']) == "on"){
-                    $organization = '1';
-                }
-            }else{
-                $organization = '0';
+            $temp = AddDateTime($request);
+            unset($temp['name'], $temp['created_at'], $temp['updated_at']);
+
+            $input['permissions'] = json_encode($temp);
+            $input['name'] = $request->name;
+
+            $key = strtolower(preg_replace('/[^a-zA-Z0-9\-]/', '', str_replace(' ', '-', $request->name)));
+            $input['key'] = $key;
+
+            $count = Role::where('key', $key)->count();
+            if ($count > 0) {
+                session()->flash('error', ucfirst($key) . " role already exits.");
+            } else {
+                $recordId = Role::create($input);
             }
 
-            if(isset($request['user_role'])){
-                if(($request['user_role']) == "on"){
-                    $user_role = '1';
-                }
-            }else{
-                $user_role = '0';
-            }
-
-            if(isset($request['sales'])){
-                if(($request['sales']) == "on"){
-                    $sales = '1';
-                }
-            }else{
-                $sales = '0';
-            }
-
-            if(isset($request['inventory_management'])){
-                if(($request['inventory_management']) == "on"){
-                    $inventory_management = '1';
-                }
-            }else{
-                $inventory_management = '0';
-            }
-
-            if(isset($request['purchase'])){
-                if(($request['purchase']) == "on"){
-                    $purchase = '1';
-                }
-            }else{
-                $purchase = '0';
-            }
-
-            if(isset($request['customer'])){
-                if(($request['customer']) == "on"){
-                    $customer = '1';
-                }
-            }else{
-                $customer = '0';
-            }
-
-            if(isset($request['technical_specification'])){
-                if(($request['technical_specification']) == "on"){
-                    $technical_specification = '1';
-                }
-            }else{
-                $technical_specification = '0';
-            }
-
-            if(isset($request['notification'])){
-                if(($request['notification']) == "on"){
-                    $notification = '1';
-                }
-            }else{
-                $notification = '0';
-            }
-
-            if(isset($request['setting'])){
-                if(($request['setting']) == "on"){
-                    $setting = '1';
-                }
-            }else{
-                $setting = '0';
-            }
-
-            if(isset($request['terms'])){
-                if(($request['terms']) == "on"){
-                    $terms = '1';
-                }
-            }else{
-                $terms = '0';
-            }
-            $data[] = $organization;
-            $data[] = $user_role;
-            $data[] = $sales;
-            $data[] = $inventory_management;
-            $data[] = $purchase;
-            $data[] = $customer;
-            $data[] = $technical_specification;
-            $data[] = $terms;
-            $data[] = $notification;
-            $data[] = $setting;
-            
-            $recordId = User::updateOrCreate(['id' => $request->id], [
-                'name' => $request->user_name,
-                'email' => $request->email_id,
-                'mobile_number' => $request->phone,
-                'password' => Hash::make($request->password),
-                'user_type' => 'Admin',
-                'permission' => json_encode($data),
-            ]);
-            $recordId1 = Role::updateOrCreate(['id' => $request->id1], [
-                'user_id' => $recordId['id'],
-                'user_name' => $request->user_name,
-                'email_id' => $request->email_id,
-                'phone' => $request->phone,
-                'password' => $request->password,
-                'confirm_password' => $request->confirm_password,
-                'designation' => $request->designation,
-                'organization' => $organization,
-                'sales' => $sales,
-                'inventory_management' => $inventory_management,
-                'customer' => $customer,
-                'user_role' => $user_role,
-                'technical_specification' => $technical_specification,
-                'terms' => $terms,
-                'notification' => $notification,
-                'setting' => $setting,
-                'purchase' => $purchase]);
             if ($recordId) {
                 session()->flash('success', 'Role created successfully');
-            } else {
-                session()->flash('error', "There is some thing went, Please try after some time.");
             }
             return redirect()->route('role.index');
         } catch (\Exception $e) {
@@ -180,8 +82,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        return Datatables::of(Role::orderBy('id','desc')->get())->make(true);
+    public function show($id)
+    {
+        return Datatables::of(Role::orderBy('id', 'desc')->get())->make(true);
     }
 
     /**
@@ -190,8 +93,10 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
-        return view('admin.roles.edit', ['title' => "Role", 'btn' => "Update", 'data' => Role::where('id','=',$id)->first()]);
+    public function edit($id)
+    {
+        $data = Role::find($id);
+        return view('admin.roles.edit', ['title' => "Role", 'btn' => "Update", 'data' => $data]);
     }
 
     /**
@@ -201,8 +106,35 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        //
+    public function update(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withInput()->withErrors($validator->errors());
+            }
+
+            $temp = AddDateTime($request);
+            unset($temp['name'], $temp['created_at'], $temp['updated_at'],$temp['_method']);
+
+            $input['permissions'] = json_encode($temp);
+            $input['name'] = $request->name;
+
+            $key = strtolower(preg_replace('/[^a-zA-Z0-9\-]/', '', str_replace(' ', '-', $request->name)));
+            $input['key'] = $key;
+            $recordId = Role::find($id)->update($input);
+
+            if ($recordId) {
+                session()->flash('success', 'Role updated successfully');
+            }
+            return redirect()->route('role.index');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+            return redirect()->route('role.edit');
+        }
     }
 
     /**
@@ -210,15 +142,11 @@ class RoleController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */
-    public function destroy($id) {
-        
-        $data = Role::find($id);
-        $data1 = User::find($data->user_id);
-        $data1->delete();
-        $data->delete();
-        $response = array('status' => 'success', 'msg' => 'Record Deleted Successfully.');
+     **/
+    public function destroy($id)
+    {
+        $data = Role::find($id)->delete();
+        $response = array('status' => 'success', 'msg' => 'Role Deleted Successfully.');
         return response()->json($response);
     }
-
 }

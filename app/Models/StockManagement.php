@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StockManagement extends Model
 {
     use HasFactory;
+
     public $table = "stock_management";
     public $timestamps = true;
     protected $fillable = [
@@ -27,6 +29,11 @@ class StockManagement extends Model
         'specification',
         'notes',
         'outward_qty',
+        'minimum_order_quantity',
+        'corporate_price',
+        'retail_price',
+        'dealer_price',
+        'group_id',
         'created_at',
         'updated_at',
     ];
@@ -76,18 +83,47 @@ class StockManagement extends Model
     }
     public function productImages()
     {
-        return $this->hasMany(ProductImage::class,'product_id','id');
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
     }
     public function vendorImages()
     {
-        return $this->hasMany(VendorImage::class,'product_id','id');
+        return $this->hasMany(VendorImage::class, 'product_id', 'id');
     }
     public function clientImages()
     {
-        return $this->hasMany(ClientAndSalesImage::class,'product_id','id');
+        return $this->hasMany(ClientAndSalesImage::class, 'product_id', 'id');
+    }
+    public function productDimensionData()
+    {
+        return $this->hasMany(ProductDimension::class, 'product_id', 'id');
+    }
+    public function categories()
+    {
+        return $this->hasMany(ProductCategory::class, 'product_id', 'id');
+    }
+    public function vendor()
+    {
+        return $this->hasMany(StockVendor::class, 'product_id', 'id');
     }
 
     // public function getClientImageUrlAttribute($value) {
     //     return Storage::disk('public')->url('client_image/' . $this->clientimage);
     // }
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->group_id = Auth::user()->group_id;
+        });
+    }
+
+    public function newQuery($excludeDeleted = true)
+    {
+        // Call the parent method to get the base query builder
+        $query = parent::newQuery($excludeDeleted);
+
+        // Add the default 'role' condition to the query
+        $query->where('group_id', Auth::user()->group_id);
+
+        return $query;
+    }
 }
